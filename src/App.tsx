@@ -1,12 +1,21 @@
 import "./App.css";
-import Nav from "./components/Nav";
+import { CartProvider } from "./context/CartContext";
+import ECommerceApp from "./components/ECommerceApp";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ScrollRestoration } from "@tanstack/react-router";
 
+export const queryClient = new QueryClient();
 function App() {
   return (
-    //appending to the #root element
     <>
-      <Nav />
-      <h1>App.tsx</h1>
+      <QueryClientProvider client={queryClient}>
+        <CartProvider>
+          <ScrollRestoration />
+          <ECommerceApp />
+        </CartProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </>
   );
 }
