@@ -33,4 +33,14 @@ export type ProductResponse = {
   records_count: number;
   total_pages: number;
   products: ProductType[];
+  review_info: ReviewInfoType[];
+};
+
+export type ReviewInfoType = {
+  _id: string;
+  rating_average: number;
+  rating_highest: number;
+  rating_lowest: number;
+  rating_count: number;
+  review_ids: string[];
 };

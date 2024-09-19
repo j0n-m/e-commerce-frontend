@@ -32,6 +32,7 @@ export type ShopURLQuery = {
   price_low?: number;
   price_high?: number;
   pageSize?: number;
+  category?: string;
 };
 
 export const Route = createFileRoute("/shop/category/$categoryId")({
@@ -46,13 +47,14 @@ export const Route = createFileRoute("/shop/category/$categoryId")({
   ),
   notFoundComponent: () => <MissingPage />,
   loaderDeps: ({
-    search: { page, sort, price_low, price_high, pageSize },
+    search: { page, sort, price_low, price_high, pageSize, category },
   }) => ({
     page,
     sort,
     price_low,
     price_high,
     pageSize,
+    category,
   }),
   loader: async ({ params, deps }) => {
     try {

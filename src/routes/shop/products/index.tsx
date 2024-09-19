@@ -1,18 +1,33 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { queryClient } from "../../../App";
-import { queryOptions } from "@tanstack/react-query";
+import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import ProductResults from "../../../components/ProductResults";
 import LoadingComponent from "../../../components/LoadingComponent";
 import fetch from "../../../utilities/fetch";
+import { AxiosError } from "axios";
+import MissingPage from "../../../components/MissingPage";
+import ErrorPage from "../../../components/ErrorPage";
 
-type ProductSearch = {
+export type ProductSearch = {
   q: string;
+  page: number;
+  sort?: string;
+  price_low?: number;
+  price_high?: number;
+  pageSize?: number;
 };
 
-export function queryFormSearchOptions(search: string) {
+export function queryFormSearchOptions(
+  search: string,
+  searchDeps: ProductSearch
+) {
   return queryOptions({
-    queryKey: ["searchQuery", search],
-    queryFn: async () => await fetch.get(`/api/products?search=${search}`),
+    queryKey: ["searchQuery", search, { ...searchDeps }],
+    queryFn: async () =>
+      await fetch.get(
+        `/api/products?search=${search}&deals=true&page=${searchDeps.page}${searchDeps.pageSize && `&limit=${searchDeps.pageSize}`}`
+      ),
+    placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
   });
 }
@@ -27,13 +42,29 @@ export const Route = createFileRoute("/shop/products/")({
   validateSearch: (search: Record<string, unknown>): ProductSearch => {
     return {
       q: (search.q as string) || "",
+      page: Number(search?.page || 1) || 1,
     };
   },
   pendingComponent: () => <LoadingComponent />,
-  loaderDeps: ({ search: { q } }) => ({ q }),
-  loader: async ({ deps: { q } }) => {
-    const data = await queryClient.ensureQueryData(queryFormSearchOptions(q));
-    return data;
+  notFoundComponent: () => <MissingPage />,
+
+  loaderDeps: ({
+    search: { q, page, pageSize, price_high, price_low, sort },
+  }) => ({ q, page, pageSize, price_high, price_low, sort }),
+
+  loader: async ({ deps }) => {
+    try {
+      const data = await queryClient.ensureQueryData(
+        queryFormSearchOptions(deps.q, deps)
+      );
+      return data;
+    } catch (error) {
+      if ((error as AxiosError)?.response?.status == 404) {
+        throw notFound();
+      }
+    }
   },
-  errorComponent: () => <p>Error loading resources.</p>,
+  errorComponent: ({ error, reset }) => (
+    <ErrorPage error={error} reset={reset} />
+  ),
 });

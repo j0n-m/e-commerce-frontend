@@ -9,8 +9,27 @@
 </head>
 
 <body>
+  <script async>
+    const lsTheme = localStorage.getItem("theme");
+
+    const preferDarkTheme = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches
+
+    if (lsTheme === "auto") {
+      document.documentElement.className = (preferDarkTheme ? "dark" : "light");
+    } else if (lsTheme === "dark") {
+      document.documentElement.className = "dark";
+    }
+  </script>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
+  <style>
+    .dark {
+      background-color: #0f172a;
+      color: white;
+    }
+  </style>
 </body>
 
 </html>

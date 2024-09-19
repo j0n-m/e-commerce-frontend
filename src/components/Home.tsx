@@ -60,6 +60,7 @@ function Home() {
             </Fragment>
           ))}
       </div>
+      <div className="blank-space min-h-[300px]"></div>
     </div>
   );
 }

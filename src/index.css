@@ -6,24 +6,16 @@
   font-family: Roboto;
   src: url("/src/assets/fonts/Roboto-Regular.ttf");
 }
-/* :root {
-  @media (prefers-color-scheme: dark) {
-    html {
-      background-color: black;
-      color: white;
-    }
-  }
-} */
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  /* overflow-x: visible; */
 }
-/* html {
-  transition-property: all;
-  transition-duration: 700ms;
-  transition-timing-function: ease-out;
-} */
+
 html {
   font-family:
     Roboto,
@@ -35,20 +27,24 @@ html {
     Ubuntu,
     sans-serif;
   letter-spacing: 0.5px;
+  height: 100%;
 }
-body {
-  font-size: 1rem;
-}
+/* body {
+  overflow: scroll;
+} */
 nav {
   overflow: auto;
 }
-#root {
-  overflow: auto;
-}
+/* #root {
+  flex: 1;
+ width: 100%; 
+ overflow: auto;
+ }  */
+
 /* .dark {
   background-color: #0f172a;
   color: #94a3b8;
-} */
+}  */
 /* .search_filter {
   filter: invert(100%) sepia(37%) saturate(2%) hue-rotate(3deg) brightness(116%)
     contrast(101%);
@@ -63,3 +59,25 @@ nav {
   filter: invert(100%) sepia(37%) saturate(2%) hue-rotate(3deg) brightness(116%)
     contrast(101%);
 } */
+.addToCart-modal {
+  &[data-entering] {
+    animation: mymodal-slide 300ms;
+  }
+
+  &[data-exiting] {
+    animation: mymodal-slide 300ms reverse ease-in;
+  }
+}
+@keyframes mymodal-slide {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.bg-light-gray {
+  background-color: #f2f2f2;
+}
