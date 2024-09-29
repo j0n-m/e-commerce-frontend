@@ -27,13 +27,12 @@ function ProductsByCategory() {
   const products_data = useProductsFromCategory(categoryId, searchDeps);
   const { cart } = useContext(CartContext);
   const cartList = cart.map((p) => p._id);
-
   // const screenS = window.matchMedia("(min-width: 1024px)").matches;
   // const [isLargeScreen, setIsLargeScreen] = useState(screenS);
   const { isDesktop } = useContext(ScreenSizeContext);
 
   return (
-    <main className="xl:max-w-[1500px] xl:mx-auto my-6 lg:p-6">
+    <main className="xl:max-w-[1500px] xl:mx-auto mt-4 mb-6 lg:p-6">
       <h1 className="font-bold ml-2 lg:ml-0">{searchDeps.category}</h1>
       <div
         className={

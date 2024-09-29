@@ -2,17 +2,43 @@ import { useContext, useRef, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import React from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import {
+  Link as LinkAria,
+  Menu,
+  MenuItem,
+  MenuTrigger,
+  Popover,
+} from "react-aria-components";
 import { Switch, Button } from "react-aria-components";
-import { IconSearch, IconX } from "@tabler/icons-react";
+import {
+  IconSearch,
+  IconX,
+  IconShoppingCart,
+  IconChevronDown,
+} from "@tabler/icons-react";
 import { ThemeContext } from "../context/ThemeContext";
+import useAuth from "../hooks/useAuth";
+import SignOutBtn from "./SignOutBtn";
+import { LogoutRef } from "./SignOutBtn";
 
 function Nav() {
   const { cart } = useContext(CartContext);
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { setTheme } = useContext(ThemeContext);
   const searchFormSubmit = useRef<HTMLFormElement | null>(null);
   const searchInputElement = useRef<HTMLInputElement | null>(null);
   const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const isDarkMode = Array.from(document.documentElement.classList).includes(
+    "dark"
+  );
+
+  // const signoutBtn = useRef<ChildRef>(null)
+  const signout2 = useRef<LogoutRef>(null);
+  const cartQuantity = cart.reduce(
+    (prev, curr) => prev + curr.cart_quantity,
+    0
+  );
 
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
@@ -41,6 +67,11 @@ function Nav() {
       localStorage.setItem("theme", themeValue);
     }
     setTheme(themeValue);
+  };
+  const handleSignout = () => {
+    if (signout2.current) {
+      signout2.current.handleSignOut();
+    }
   };
 
   return (
@@ -96,7 +127,7 @@ function Nav() {
                 className={({
                   isFocusVisible,
                   isHovered,
-                }) => `h-full dark:bg-blue-600 z-10 rounded-tr-md flex justify-center items-center rounded-br-md px-1 transition-all
+                }) => `h-full dark:bg-blue-600 rounded-tr-md flex justify-center items-center rounded-br-md px-1 transition-all
                   ${isHovered || isFocusVisible ? "dark:bg-blue-700 scale-[1.025] shadow-md bg-white" : ""}
                   `}
                 aria-label="search"
@@ -113,13 +144,13 @@ function Nav() {
             </form>
           </div>
         </li>
-        <ul className="nav-right flex gap-5 items-center">
+        <ul className="nav-right flex gap-4">
           <li>
             <Switch
               onChange={(isSelected) =>
                 handleThemeChange(isSelected ? "light" : "dark")
               }
-              isSelected={theme === "light"}
+              isSelected={isDarkMode === false}
               className={`flex flex-col justify-center items-center group data-[hovered]:cursor-pointer`}
             >
               Theme
@@ -133,23 +164,111 @@ function Nav() {
             </Switch>
           </li>
           <li>
-            <Button className={`p-2 border-2`}>
-              <span className="welcome text-sm">Welcome</span>
-              <br />
-              <span>Sign In / Register</span>
-            </Button>
+            {user ? (
+              <MenuTrigger>
+                <LinkAria
+                  // href="/account/profile"
+                  className={({ isHovered, isFocusVisible }) =>
+                    `p-2 inline-flex flex-col ${isHovered || isFocusVisible ? "outline outline-neutral-300 dark:outline-neutral-200 cursor-pointer" : ""}`
+                  }
+                >
+                  {({ isPressed }) => (
+                    <>
+                      <span className="welcome text-sm text-center text-gray-700 dark:text-neutral-300">
+                        Welcome {user.first_name}
+                      </span>
+                      <p className="flex items-center justify-center">
+                        <span className="">Account</span>
+                        {isPressed ? (
+                          <span className="rotate-180 transition-transform duration-200">
+                            <IconChevronDown
+                              stroke={2.5}
+                              size={14}
+                              color="#a3a3a3"
+                            />
+                          </span>
+                        ) : (
+                          <span className="transition-transform duration-200">
+                            <IconChevronDown
+                              stroke={2.5}
+                              size={14}
+                              color="#a3a3a3"
+                            />
+                          </span>
+                        )}
+                      </p>
+                    </>
+                  )}
+                </LinkAria>
+
+                <Popover
+                  className={
+                    "bg-white text-black dark:bg-slate-900 dark:text-white -mt-1 rounded-md border border-gray-300 py-4 px-8"
+                  }
+                >
+                  <Menu
+                    className="flex flex-col gap-3 outline-none z-50"
+                    aria-label="links"
+                  >
+                    <MenuItem
+                      className={({ isHovered, isFocusVisible }) =>
+                        `outline-none w-fit ${isHovered || isFocusVisible ? "underline underline-offset-[6px] cursor-pointer" : ""}`
+                      }
+                      href="/account/profile"
+                    >
+                      Profile
+                    </MenuItem>
+                    <MenuItem
+                      className={({ isHovered, isFocusVisible }) =>
+                        `outline-none w-fit ${isHovered || isFocusVisible ? "underline underline-offset-[6px] cursor-pointer" : ""}`
+                      }
+                      onAction={() => alert("Nothing here yet.")}
+                    >
+                      Order History
+                    </MenuItem>
+                    <MenuItem
+                      className={({ isHovered, isFocusVisible }) =>
+                        `outline-none w-fit ${isHovered || isFocusVisible ? "underline underline-offset-[6px] cursor-pointer" : ""}`
+                      }
+                      onAction={handleSignout}
+                    >
+                      Sign out
+                      <SignOutBtn className="inline" text="" ref={signout2} />
+                    </MenuItem>
+                  </Menu>
+                </Popover>
+              </MenuTrigger>
+            ) : (
+              <LinkAria
+                className={({ isHovered, isFocusVisible }) =>
+                  `p-2 flex flex-col cursor-pointer ${isHovered || isFocusVisible ? "outline outline-neutral-300 dark:outline-neutral-200" : ""}`
+                }
+                href="/signin"
+              >
+                <span className="welcome text-sm text-center text-neutral-500 dark:text-neutral-300">
+                  Welcome
+                </span>
+
+                <span>Sign In / Register</span>
+              </LinkAria>
+            )}
           </li>
           {/* /cart */}
-          <li className="border-2">
+          <li className="flex w-[60px] h-[60px] justify-center relative">
             <Button
               aria-label="Go to cart"
-              className={"nav-cart p-2"}
+              className={({ isHovered, isFocusVisible }) =>
+                `nav-cart px-2 flex-1 flex justify-center items-center ${isHovered || isFocusVisible ? "outline outline-neutral-300 dark:outline-neutral-200" : ""}`
+              }
               onPress={() => navigate({ to: "/cart" })}
             >
-              <span className="nav-cartItems-number">
-                {cart.reduce((prev, curr) => prev + curr.cart_quantity, 0)}
-              </span>
-              <div>CartIcon</div>
+              {cartQuantity > 0 && (
+                <p className="nav-cartItems-number absolute bottom-0 font-bold text-[.75rem] text-neutral-400 dark:text-neutral-300">
+                  <span className="text-orange-500">{cartQuantity}</span>
+                  <span> {cartQuantity > 1 ? "items" : "item"}</span>
+                </p>
+              )}
+              <IconShoppingCart size={34} stroke={1.25} />
             </Button>
             {/* <button className="nav-cart p-2">
                 <span className="nav-cartItems-number">{cart.length}</span>
@@ -163,7 +282,7 @@ function Nav() {
       <ul className="flex justify-between items-center font-bold text-[.9rem] px-1 pt-2 pb-1.5 overflow-auto tracking-wide">
         <li className="flex hover:underline hover:underline-offset-8 hover:decoration-2">
           <Link to="/">
-            <span className="hamburger-icon">Menu *</span>
+            <span className="hamburger-icon">Menu[x]</span>
           </Link>
         </li>
         <li className="text-[#CC0C39] dark:text-red-500">
@@ -171,7 +290,7 @@ function Nav() {
             to={"/"}
             className="hover:underline hover:underline-offset-8 hover:decoration-2"
           >
-            Best Deals
+            Best Deals[x]
           </Link>
         </li>
         <li>
@@ -179,7 +298,7 @@ function Nav() {
             to={"/"}
             className="hover:underline hover:underline-offset-8 hover:decoration-2"
           >
-            Best Sellers
+            Best Sellers[x]
           </Link>
         </li>
         <li>

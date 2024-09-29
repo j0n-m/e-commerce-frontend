@@ -11,9 +11,13 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as CheckoutImport } from './routes/checkout'
+import { Route as SignupImport } from './routes/signup'
+import { Route as SigninImport } from './routes/signin'
 import { Route as CartImport } from './routes/cart'
 import { Route as IndexImport } from './routes/index'
+import { Route as CheckoutIndexImport } from './routes/checkout/index'
+import { Route as CheckoutCompleteImport } from './routes/checkout/complete'
+import { Route as AccountProfileImport } from './routes/account/profile'
 import { Route as ShopProductsIndexImport } from './routes/shop/products/index'
 import { Route as ShopProductProductIdImport } from './routes/shop/product/$productId'
 import { Route as ShopCategoryCategoryIdImport } from './routes/shop/category/$categoryId'
@@ -21,8 +25,13 @@ import { Route as ShopProductProductIdEditImport } from './routes/shop/product_/
 
 // Create/Update Routes
 
-const CheckoutRoute = CheckoutImport.update({
-  path: '/checkout',
+const SignupRoute = SignupImport.update({
+  path: '/signup',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SigninRoute = SigninImport.update({
+  path: '/signin',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -33,6 +42,21 @@ const CartRoute = CartImport.update({
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CheckoutIndexRoute = CheckoutIndexImport.update({
+  path: '/checkout/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CheckoutCompleteRoute = CheckoutCompleteImport.update({
+  path: '/checkout/complete',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountProfileRoute = AccountProfileImport.update({
+  path: '/account/profile',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -74,11 +98,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartImport
       parentRoute: typeof rootRoute
     }
-    '/checkout': {
-      id: '/checkout'
+    '/signin': {
+      id: '/signin'
+      path: '/signin'
+      fullPath: '/signin'
+      preLoaderRoute: typeof SigninImport
+      parentRoute: typeof rootRoute
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupImport
+      parentRoute: typeof rootRoute
+    }
+    '/account/profile': {
+      id: '/account/profile'
+      path: '/account/profile'
+      fullPath: '/account/profile'
+      preLoaderRoute: typeof AccountProfileImport
+      parentRoute: typeof rootRoute
+    }
+    '/checkout/complete': {
+      id: '/checkout/complete'
+      path: '/checkout/complete'
+      fullPath: '/checkout/complete'
+      preLoaderRoute: typeof CheckoutCompleteImport
+      parentRoute: typeof rootRoute
+    }
+    '/checkout/': {
+      id: '/checkout/'
       path: '/checkout'
       fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutImport
+      preLoaderRoute: typeof CheckoutIndexImport
       parentRoute: typeof rootRoute
     }
     '/shop/category/$categoryId': {
@@ -117,7 +169,11 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
   CartRoute,
-  CheckoutRoute,
+  SigninRoute,
+  SignupRoute,
+  AccountProfileRoute,
+  CheckoutCompleteRoute,
+  CheckoutIndexRoute,
   ShopCategoryCategoryIdRoute,
   ShopProductProductIdRoute,
   ShopProductsIndexRoute,
@@ -134,7 +190,11 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/cart",
-        "/checkout",
+        "/signin",
+        "/signup",
+        "/account/profile",
+        "/checkout/complete",
+        "/checkout/",
         "/shop/category/$categoryId",
         "/shop/product/$productId",
         "/shop/products/",
@@ -147,8 +207,20 @@ export const routeTree = rootRoute.addChildren({
     "/cart": {
       "filePath": "cart.tsx"
     },
-    "/checkout": {
-      "filePath": "checkout.tsx"
+    "/signin": {
+      "filePath": "signin.tsx"
+    },
+    "/signup": {
+      "filePath": "signup.tsx"
+    },
+    "/account/profile": {
+      "filePath": "account/profile.tsx"
+    },
+    "/checkout/complete": {
+      "filePath": "checkout/complete.tsx"
+    },
+    "/checkout/": {
+      "filePath": "checkout/index.tsx"
     },
     "/shop/category/$categoryId": {
       "filePath": "shop/category/$categoryId.tsx"

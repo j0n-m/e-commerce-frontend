@@ -1,11 +1,58 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CartContext, CartItemsType } from "../context/CartContext";
 import { Button } from "react-aria-components";
 import CartProductCard from "./CartProductCard";
-import { useNavigate } from "@tanstack/react-router";
+import { useLocation, useNavigate } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import fetch from "../utilities/fetch";
+import { CustomerType, PaymentContext } from "../context/PaymentSecretContext";
+import { IconAlertCircle } from "@tabler/icons-react";
+import useAuth from "../hooks/useAuth";
 
 function Cart() {
   const { cart, setCart } = useContext(CartContext);
+  const {
+    clientSecret,
+    setClientSecret,
+    setCustomerSessionSecret,
+    setCustomer,
+    setPaymentAmount,
+  } = useContext(PaymentContext);
+  const [responseMessage, setResponseMessage] = useState<null | string>(null);
+  const { user } = useAuth();
+  const location = useLocation();
+
+  const mutation = useMutation({
+    mutationKey: ["checkout"],
+    mutationFn: (cart: unknown) => {
+      return fetch.post("api/create-payment-intent", { cart: cart });
+    },
+    onSuccess: (response) => {
+      setClientSecret(response.data["clientSecret"]);
+      const customerSession = response.data[
+        "customer_session_client_secret"
+      ] as string;
+      if (customerSession.length > 0) {
+        setCustomerSessionSecret(customerSession);
+      }
+      setPaymentAmount(response.data.payAmount || 0);
+
+      const customerData = response?.data?.customer as CustomerType | null;
+
+      // setCustomer(customerData);
+
+      // localStorage.setItem(
+      //   "customer",
+      //   JSON.stringify(response.data["customer"])
+      // );
+      console.log("response data", response.data);
+    },
+    onError: () => {
+      setResponseMessage(
+        "Unable to fullfill your order.\n Try again next time."
+      );
+    },
+  });
   const navigate = useNavigate();
   const subtotal = cart.reduce(
     (prev, product) => prev + product.price * product.cart_quantity,
@@ -31,8 +78,23 @@ function Cart() {
 
     localStorage.setItem("cart", JSON.stringify(newCart));
     setCart(newCart);
-    // setProductQuantity(value);
   };
+  const handleCheckout = async () => {
+    if (!user) {
+      return await navigate({
+        to: "/signin",
+        search: { from: location.pathname },
+      });
+    } else {
+      mutation.mutate(cart);
+    }
+  };
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      navigate({ to: "/checkout" });
+    }
+    // setIsLoading(false);
+  }, [clientSecret]);
 
   return (
     <div className="page-container mx-2 max-w-[1800px] 2xl:mx-auto my-2 flex flex-col gap-8 lg:flex-row lg:mx-4">
@@ -70,17 +132,24 @@ function Cart() {
           <div className="payment-btn flex justify-center mt-4">
             {cart.length > 0 && (
               <Button
+                isDisabled={mutation.isPending || mutation.isError}
                 aria-label="Go to checkout"
-                onPress={() => navigate({ to: "/checkout" })}
+                onPress={handleCheckout}
                 type="button"
-                className={({ isHovered, isFocusVisible }) =>
-                  `rounded-full py-2 px-10 bg-[#0070ba] text-white uppercase text-base font-bold ${isFocusVisible || isHovered ? "bg-[#0069af]" : ""}`
+                className={({ isHovered, isFocusVisible, isDisabled }) =>
+                  `rounded-full py-2 px-10 bg-[#0070ba] text-white uppercase text-base font-bold ${isFocusVisible || isHovered ? "bg-[#0069af]" : ""} ${isDisabled && "bg-gray-500"}`
                 }
               >
                 Secure Checkout
               </Button>
             )}
           </div>
+          {responseMessage && (
+            <p className="border whitespace-pre text-lg text-red-700 flex flex-col justify-center items-center gap-1 rounded-md p-2 my-4 text-center dark:bg-dark-secondary-gray dark:text-red-600 bg-white">
+              <IconAlertCircle stroke={2} />
+              <span>{responseMessage}</span>
+            </p>
+          )}
         </form>
       </div>
     </div>

@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import tw from "tailwindcss-react-aria-components";
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "selector",
@@ -21,5 +23,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [tw({ prefix: "rac" })],
 };

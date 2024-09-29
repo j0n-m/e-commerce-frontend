@@ -125,6 +125,10 @@ const ProductPage = memo(function ProductPage() {
         <span key={i}>{v}</span>
       )
     );
+  const subtotal = cart.reduce(
+    (prev, product) => prev + product.price * product.cart_quantity,
+    0
+  );
   return (
     <div className="wrapper max-w-[1600px] mx-auto">
       {product ? (
@@ -368,11 +372,7 @@ const ProductPage = memo(function ProductPage() {
                                     </Heading>
                                     <p className="text-center font-bold text-red-500 border-b pb-2">
                                       Subtotal: $
-                                      <span>
-                                        {cart
-                                          .reduce((p, c) => p + c.price, 0)
-                                          .toFixed(2)}
-                                      </span>
+                                      <span>{subtotal.toFixed(2)}</span>
                                     </p>
                                     <div className="cart-body">
                                       <div className="cart-product-details py-2">

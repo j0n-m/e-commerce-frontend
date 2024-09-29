@@ -77,7 +77,7 @@ const calculateStars = (rating?: number) => {
       return (
         <IconStar
           key={i}
-          color="white"
+          color="orange"
           fill="white"
           stroke={1}
           width={sizeInPx}
@@ -154,6 +154,10 @@ function ProductCard({
       console.error("error occured while adding items to cart.");
     }
   };
+  const subtotal = cart.reduce(
+    (prev, product) => prev + product.price * product.cart_quantity,
+    0
+  );
 
   return (
     <div
@@ -330,10 +334,7 @@ function ProductCard({
                             Added to Cart
                           </Heading>
                           <p className="text-center font-bold text-red-500 border-b pb-2">
-                            Subtotal: $
-                            <span>
-                              {cart.reduce((p, c) => p + c.price, 0).toFixed(2)}
-                            </span>
+                            Subtotal: $<span>{subtotal.toFixed(2)}</span>
                           </p>
                           <div className="cart-body">
                             <div className="cart-product-details py-2">

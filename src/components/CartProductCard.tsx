@@ -25,7 +25,7 @@ function CartProductCard({
   const [productQuantity, setProductQuantity] = useState(product.cart_quantity);
 
   return (
-    <div className="cart-product-card dark:bg-dark-secondary-gray mb-4 bg-white shadow-around">
+    <div className="cart-product-card dark:bg-dark-secondary-gray mb-4 bg-white shadow-around dark:shadow-none">
       <div className="product-details flex gap-4">
         <div className="product-image flex-1">
           <img

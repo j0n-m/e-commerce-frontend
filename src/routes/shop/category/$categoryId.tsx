@@ -33,6 +33,7 @@ export type ShopURLQuery = {
   price_high?: number;
   pageSize?: number;
   category?: string;
+  from?: string;
 };
 
 export const Route = createFileRoute("/shop/category/$categoryId")({

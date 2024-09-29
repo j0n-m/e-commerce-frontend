@@ -3,27 +3,47 @@ import { CartProvider } from "./context/CartContext";
 import ECommerceApp from "./components/ECommerceApp";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ScrollRestoration } from "@tanstack/react-router";
+import {
+  NavigateOptions,
+  ScrollRestoration,
+  ToOptions,
+  useRouter,
+} from "@tanstack/react-router";
 import { ThemeProvider } from "./context/ThemeContext";
-import { useState } from "react";
-import { PaymentContext } from "./context/PaymentSecretContext";
+import { PaymentProvider } from "./context/PaymentSecretContext";
+import { AuthProvider } from "./context/AuthContext";
+import { RouterProvider } from "react-aria-components";
+
+declare module "react-aria-components" {
+  interface RouterConfig {
+    href: ToOptions["to"];
+    routerOptions: Omit<NavigateOptions, keyof ToOptions>;
+  }
+}
 
 export const queryClient = new QueryClient();
 function App() {
-  const [clientSecret, setClientSecret] = useState("");
+  const router = useRouter();
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <CartProvider>
-          <ThemeProvider>
-            <PaymentContext.Provider value={{ clientSecret, setClientSecret }}>
-              <ScrollRestoration />
-              <ECommerceApp />
-            </PaymentContext.Provider>
-          </ThemeProvider>
-        </CartProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      <RouterProvider
+        navigate={(to, options) => router.navigate({ to, ...options })}
+        useHref={(to) => router.buildLocation({ to }).href}
+      >
+        <QueryClientProvider client={queryClient}>
+          <CartProvider>
+            <ThemeProvider>
+              <PaymentProvider>
+                <AuthProvider>
+                  <ScrollRestoration />
+                  <ECommerceApp />
+                </AuthProvider>
+              </PaymentProvider>
+            </ThemeProvider>
+          </CartProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </RouterProvider>
     </>
   );
 }

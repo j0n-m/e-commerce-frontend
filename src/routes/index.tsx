@@ -5,6 +5,7 @@ import { queryClient } from "../App";
 import LoadingComponent from "../components/LoadingComponent";
 import MissingPage from "../components/MissingPage";
 import fetch from "../utilities/fetch";
+import ErrorPage from "../components/ErrorPage";
 
 export const dealProductsQueryOptions = queryOptions({
   queryKey: ["indexUnder25Products"],
@@ -27,5 +28,7 @@ export const Route = createFileRoute("/")({
     await queryClient.ensureQueryData(dealProductsQueryOptions);
     await queryClient.ensureQueryData(popularProductQueryOptions);
   },
-  errorComponent: () => <p>Failed loading resources.</p>,
+  errorComponent: ({ error, reset }) => (
+    <ErrorPage error={error} reset={reset} />
+  ),
 });

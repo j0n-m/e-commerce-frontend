@@ -1,15 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Nav from "./Nav";
-import { Outlet, useLocation } from "@tanstack/react-router";
+import { useLocation } from "@tanstack/react-router";
 import Footer from "./Footer";
 import { ScreenSizeContext } from "../context/ScreenSizeContext";
-import { CartContext } from "../context/CartContext";
-import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
-import fetch from "../utilities/fetch";
-import { Elements } from "@stripe/react-stripe-js";
-import { ThemeContext } from "../context/ThemeContext";
-import Cart from "./Cart";
-import { PaymentContext } from "../context/PaymentSecretContext";
+import PersistAuth from "./PersistAuth";
 
 function useScreenSize() {
   function checkScreenSize() {
@@ -51,67 +45,30 @@ function useScreenSize() {
   //return object from hook
   return { isMobile, isTablet, isDesktop };
 }
-// const defaultComponents = (
-//   <>
-//     <Nav />
-//     <Outlet></Outlet>
-//   </>
-// );
-const stripePublishKey =
-  "pk_test_51Q0TEsP2PfjUIESRgbKfEbmEtiIKYbJKRmaNsi27hTUCBNXiCUuy6PvIYsohIzECYR4rWEnrp6luTapCDrxY2Lq200hpM9dWSq";
-const stripePromise = loadStripe(stripePublishKey);
 
 function ECommerceApp() {
   const { isMobile, isTablet, isDesktop } = useScreenSize();
-  const { cart } = useContext(CartContext);
-  const { theme: pageTheme } = useContext(ThemeContext);
-  const { clientSecret, setClientSecret } = useContext(PaymentContext);
   const route = useLocation();
   const path = route.pathname.replace("/", "").split("/");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // const { user, setUser } = useAuth();
 
-  // const ElementTheme = (theme === "dark" ? ({theme:"night"}): ({theme:"stripe"}))
-  const ElementOptions: StripeElementsOptions | undefined = {
-    clientSecret: clientSecret,
-    appearance: { theme: pageTheme === "dark" ? "night" : "stripe" },
-  };
-
-  useEffect(() => {
-    const getClientSecret = async () => {
-      try {
-        // console.log(stripePromise);
-        const response = await fetch.post("api/create-payment-intent", {
-          cart: cart,
-        });
-        console.log("create-payment-intent response:", response);
-
-        if (response.status === 200) {
-          setClientSecret(response.data["clientSecret"]);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    // if (cart.length <= 0) return;
-    getClientSecret().catch((e) => console.log(e));
-  }, [cart]);
-  console.log("client secret?", clientSecret);
+  // if (getUserAuth.data?.data?.isAuth && !user) {
+  //   setUser(getUserAuth.data?.data?.user);
+  // }
+  // if (!getUserAuth.data?.data?.isAuth && user) {
+  //   setUser(null);
+  // }
+  // console.log(getUserAuth.data?.data);
+  // console.log("user", user);
 
   return (
     <ScreenSizeContext.Provider value={{ isMobile, isDesktop, isTablet }}>
       <div className="app-container flex flex-col">
         {!path[0].match(/checkout/i) && <Nav />}
         <div className="bg-light-primary-gray dark:bg-dark-primary-gray outlet-container flex-1 min-h-[768px] relative">
-          {clientSecret ? (
-            <Elements options={{ ...ElementOptions }} stripe={stripePromise}>
-              <p>This is the Elements Path</p>
-              <Outlet></Outlet>
-            </Elements>
-          ) : (
-            <>
-              <p>no elements provider</p>
-              <Outlet></Outlet>
-            </>
-          )}
+          <PersistAuth />
+          {/* <Outlet></Outlet> */}
         </div>
         <Footer />
       </div>

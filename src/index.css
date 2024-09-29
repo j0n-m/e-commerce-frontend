@@ -28,10 +28,19 @@ html {
     sans-serif;
   letter-spacing: 0.5px;
   height: 100%;
+  width: 100%;
 }
-/* body {
-  overflow: scroll;
-} */
+body {
+  width: 100%;
+  height: 100%;
+}
+.app-container {
+  /* overflow-x: hidden; */
+}
+#root {
+  width: 100%;
+  height: 100%;
+}
 nav {
   overflow: auto;
 }
@@ -59,6 +68,13 @@ nav {
   filter: invert(100%) sepia(37%) saturate(2%) hue-rotate(3deg) brightness(116%)
     contrast(101%);
 } */
+
+/* dark mode bg color: bg-[#30313d] */
+.shadow-card {
+  box-shadow:
+    0px 1px 1px rgba(0, 0, 0, 0.03),
+    0px 3px 6px rgba(0, 0, 0, 0.02);
+}
 .addToCart-modal {
   &[data-entering] {
     animation: mymodal-slide 300ms;
@@ -66,6 +82,17 @@ nav {
 
   &[data-exiting] {
     animation: mymodal-slide 300ms reverse ease-in;
+  }
+}
+.modal-overlay {
+  z-index: 20;
+  background-color: rgba(0, 0, 0, 0.5);
+  &[data-entering] {
+    animation: overlay-fade 300ms;
+  }
+
+  &[data-exiting] {
+    animation: overlay-fade 300ms reverse;
   }
 }
 @keyframes mymodal-slide {
@@ -77,7 +104,67 @@ nav {
     transform: translateX(0);
   }
 }
+@keyframes overlay-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
 
 .bg-light-gray {
   background-color: #f2f2f2;
+}
+.radioBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.571rem;
+  /* font-size: 1.143rem; */
+  forced-color-adjust: none;
+  max-width: 320px;
+
+  &:before {
+    content: "";
+    display: block;
+    width: 1.286rem;
+    height: 1.286rem;
+    box-sizing: border-box;
+    border: 0.143rem solid rgb(126, 126, 126);
+    /* inner circle color */
+    background-color: white;
+    border-radius: 1.286rem;
+    transition: all 200ms;
+  }
+  &[data-disabled]:before {
+    background-color: rgb(220, 220, 220);
+  }
+  /* when holding down the click on radio button */
+  &[data-pressed]:before {
+    border-color: black;
+  }
+
+  &[data-selected] {
+    &:before {
+      border-color: #6f46ed;
+      border-width: 0.429rem;
+    }
+    /* when radio btn is selected but pressed again */
+    &[data-pressed]:before {
+      border-color: #5026cf;
+    }
+  }
+
+  &[data-selected][data-disabled] {
+    &:before {
+      border-color: rgb(60, 60, 60);
+      border-width: 0.429rem;
+    }
+  }
+
+  &[data-focus-visible]:before {
+    outline: 2px solid pink;
+    outline-offset: 2px;
+  }
 }
