@@ -15,7 +15,7 @@ import { queryClient } from "../App";
 import { useQuery } from "@tanstack/react-query";
 import { trimString } from "../utilities/trimString";
 import isAuthenticated from "../utilities/isAuthenticated";
-import { redirect, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import useAuth from "../hooks/useAuth";
 
 function CheckoutPage() {
@@ -202,7 +202,7 @@ function CheckoutPage() {
       <header>
         <div className="header flex p-4 justify-around items-center bg-white dark:bg-gray-900 dark:border-b dark:border-b-gray-800 dark:text-neutral-300">
           <div className="logo flex items-center font-bold text-xl">
-            <a href="/cart">Cyber Den</a>
+            <Link to="/">Cyber Den</Link>
           </div>
           <div className="header-name">
             <p className="flex items-center gap-1">

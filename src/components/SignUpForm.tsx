@@ -345,7 +345,7 @@ function SignUpForm() {
       </Form>
       <p className="text-center mt-1">
         <span>Already have an account? </span>
-        <Link to="/signup">
+        <Link to="/signin">
           <span className="font-bold hover:underline hover:underline-offset-2">
             Sign in here
           </span>
