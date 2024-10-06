@@ -168,7 +168,12 @@ function SignUpForm() {
           typeof errorMessage === "undefined" ? undefined : errorMessage
         }
       >
-        <h2 className="font-bold pt-2 text-2xl">Create an Account</h2>
+        <span className="logo text-center text-3xl uppercase items-stretch tracking-wider">
+          Cyber Den
+        </span>
+        <h2 className="font-bold pt-2 text-2xl text-center">
+          Create an Account
+        </h2>
         <div className="names-field lg:flex lg:gap-4 lg:items-start lg:justify-center relative">
           <TextField
             name="first_name"
@@ -346,8 +351,8 @@ function SignUpForm() {
       <p className="text-center mt-1">
         <span>Already have an account? </span>
         <Link to="/signin">
-          <span className="font-bold hover:underline hover:underline-offset-2">
-            Sign in here
+          <span className="font-bold underline underline-offset-2 hover:text-blue-500">
+            Sign in
           </span>
         </Link>
       </p>

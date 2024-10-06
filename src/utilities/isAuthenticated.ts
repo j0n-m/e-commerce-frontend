@@ -3,7 +3,7 @@ import fetch from "./fetch";
 
 export default async function isAuthenticated(): Promise<boolean> {
   //because __root route handles invalidating queries, we no longer need to add this line
-  // await queryClient.invalidateQueries({ queryKey: ["auth"] });
+  await queryClient.invalidateQueries({ queryKey: ["auth"] });
   const getUserAuth = await queryClient.fetchQuery({
     queryKey: ["auth"],
     queryFn: () =>

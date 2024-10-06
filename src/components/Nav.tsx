@@ -80,8 +80,10 @@ function Nav() {
         <li>
           <div className="nav-left flex items-center">
             <Link to={"/"}>
-              <div className="logo-container border-2 items-stretch text-2xl font-bold tracking-wide">
-                Cyber Den
+              <div className="logo-container ">
+                <span className="logo text-2xl uppercase items-stretch tracking-wider">
+                  Cyber Den
+                </span>
               </div>
             </Link>
           </div>
@@ -174,7 +176,7 @@ function Nav() {
                 >
                   {({ isPressed }) => (
                     <>
-                      <span className="welcome text-sm text-center text-gray-700 dark:text-neutral-300">
+                      <span className="welcome text-sm text-center text-[#565959] dark:text-[#a5a8a8]">
                         Welcome {user.first_name}
                       </span>
                       <p className="flex items-center justify-center">
@@ -222,7 +224,7 @@ function Nav() {
                       className={({ isHovered, isFocusVisible }) =>
                         `outline-none w-fit ${isHovered || isFocusVisible ? "underline underline-offset-[6px] cursor-pointer" : ""}`
                       }
-                      onAction={() => alert("Nothing here yet.")}
+                      href={"/account/orders"}
                     >
                       Order History
                     </MenuItem>
@@ -245,7 +247,7 @@ function Nav() {
                 }
                 href="/signin"
               >
-                <span className="welcome text-sm text-center text-neutral-500 dark:text-neutral-300">
+                <span className="welcome text-sm text-center text-[#565959] dark:text-[#a5a8a8]">
                   Welcome
                 </span>
 

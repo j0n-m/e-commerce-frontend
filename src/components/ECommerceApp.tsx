@@ -66,7 +66,7 @@ function ECommerceApp() {
     <ScreenSizeContext.Provider value={{ isMobile, isDesktop, isTablet }}>
       <div className="app-container flex flex-col">
         {!path[0].match(/checkout/i) && <Nav />}
-        <div className="bg-light-primary-gray dark:bg-dark-primary-gray outlet-container flex-1 min-h-[768px] relative">
+        <div className="bg-white dark:bg-dark-primary-gray outlet-container flex-1 min-h-[768px] relative">
           <PersistAuth />
           {/* <Outlet></Outlet> */}
         </div>

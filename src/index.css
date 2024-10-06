@@ -6,6 +6,16 @@
   font-family: Roboto;
   src: url("/src/assets/fonts/Roboto-Regular.ttf");
 }
+@font-face {
+  font-family: Poppins;
+  font-weight: 700;
+  src: url("/src/assets/fonts/Poppins-Bold.ttf");
+}
+@font-face {
+  font-family: Poppins;
+  font-weight: normal;
+  src: url("/src/assets/fonts/Poppins-Regular.ttf");
+}
 
 *,
 *::before,
@@ -17,6 +27,7 @@
 }
 
 html {
+  scroll-behavior: smooth;
   font-family:
     Roboto,
     system-ui,
@@ -68,12 +79,25 @@ nav {
   filter: invert(100%) sepia(37%) saturate(2%) hue-rotate(3deg) brightness(116%)
     contrast(101%);
 } */
+.logo {
+  font-family: Poppins;
+  color: #ff914d;
+  font-weight: bold;
+}
 
-/* dark mode bg color: bg-[#30313d] */
+/* dark mode bg color: bg-[#30313d]
+light mode secondary text color text-[#565959]
+
+*/
 .shadow-card {
   box-shadow:
     0px 1px 1px rgba(0, 0, 0, 0.03),
     0px 3px 6px rgba(0, 0, 0, 0.02);
+}
+/* border border-[#d5d9d9] */
+.shadow-card2 {
+  border: 1px solid #d5d9d9;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
 }
 .addToCart-modal {
   &[data-entering] {
@@ -167,4 +191,31 @@ nav {
     outline: 2px solid pink;
     outline-offset: 2px;
   }
+}
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loading-circle {
+  width: 100px;
+  height: 100px;
+  border: solid 10px #ff914d;
+  border-radius: 50%;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  -webkit-transition: all 0.5s ease-in;
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 1.5s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+
+  transition: all 0.5s ease-in;
+  animation-name: rotate;
+  animation-duration: 1.1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
 }

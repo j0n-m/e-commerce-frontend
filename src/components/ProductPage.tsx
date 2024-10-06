@@ -1,5 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { singleProductQueryOption } from "../routes/shop/product/$productId";
+import {
+  singleProductQueryOption,
+  singleProductReviewQuery,
+} from "../routes/shop/product/$productId";
 import { getRouteApi, Link } from "@tanstack/react-router";
 import { ProductType } from "../types/ProductType";
 import noImage from "../assets/images/no_product_image.jpg";
@@ -26,25 +29,33 @@ import {
   CartItemZodSchema,
 } from "../context/CartContext";
 import { trimString } from "../utilities/trimString";
+import { SingleProductReview } from "../types/ReviewType";
+import { calculateStars } from "./ProductCard";
+import ExpandableReviewDescription from "./ExpandableReviewDescription";
 const route = getRouteApi("/shop/product/$productId");
-
 function useProductPage(productId: string) {
   const { data } = useSuspenseQuery(singleProductQueryOption(productId));
+  const review = useSuspenseQuery(singleProductReviewQuery(productId));
   // console.log("data", data);
   const product = (data.product[0] as ProductType) || null;
+  const reviews = review.data.data as SingleProductReview;
   // console.log(product);
   // const reviews = data.reviews as ReviewType[];
   // const rating_average = (data?.rating_info[0]?.rating_average as number) || 0;
-  return { product };
+  console.log(reviews);
+  return { product, reviews };
 }
 const quantityList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
 const ProductPage = memo(function ProductPage() {
   const { productId } = route.useParams();
-  const { product } = useProductPage(productId);
+  const { product, reviews } = useProductPage(productId);
   const [quantity, setQuantity] = useState(1);
   const { cart, setCart } = useContext(CartContext);
   const cartList = cart.map((p) => p._id); //stores a list of product ids that is in the cart
+  const { starCount, stars } = calculateStars(
+    reviews?.rating_info[0]?.rating_average ?? 0
+  );
 
   const productTableHighlights: JSX.Element = (
     <table className="mt-6 text-base overflow-scroll w-max">
@@ -54,7 +65,7 @@ const ProductPage = memo(function ProductPage() {
             <tr key={i}>
               {/* "w-[160px] mr-6" */}
 
-              <td className="">
+              <td className="py-1">
                 <span className="heading font-bold">{d.heading}</span>
               </td>
               <td className="pl-8">
@@ -140,7 +151,10 @@ const ProductPage = memo(function ProductPage() {
                 <h1 className="product-name font-semibold pb-3 lg:text-2xl">
                   {product.name}
                 </h1>
-                <Link to=".">
+                <Link
+                  to="/shop/products"
+                  search={{ q: product.brand, page: 1 }}
+                >
                   <p className="text-blue-600 dark:text-blue-400 hover:text-blue-300 hover:underline">
                     Shop {product.brand} Products
                   </p>
@@ -151,11 +165,30 @@ const ProductPage = memo(function ProductPage() {
                   ? "Be the first to review this product."
                   : `${rating_average}Stars...${reviews.length} reviews`}
               </p> */}
-                <p className="product-rating text-end">
-                  Be the first to review this product.
-                </p>
+                <div className="product-rating">
+                  {reviews.records_count < 1 ? (
+                    <p className="text-end">
+                      Be the first to review this product.
+                    </p>
+                  ) : (
+                    <div className="flex items-center gap-1">
+                      <span className="flex items-end">
+                        {starCount?.toFixed(1) || 0}{" "}
+                      </span>{" "}
+                      {stars}
+                      <Link
+                        to={"."}
+                        hash={"reviews"}
+                        className="flex items-end hover:underline hover:underline-offset-2"
+                      >
+                        {reviews.records_count}{" "}
+                        {reviews.records_count > 1 ? "ratings" : "rating"}
+                      </Link>
+                    </div>
+                  )}
+                </div>
                 <div className="expanded-section hidden lg:flex lg:flex-col lg:text-lg">
-                  <p className="flex items-end">
+                  <p className="flex items-end mt-2">
                     {product.discount && product.discount > 0 ? (
                       <span className="discount-price text-[1.75rem] font-normal text-[#CC0C39] dark:text-red-500">
                         -{(product?.discount * 100).toFixed(0)}%
@@ -195,7 +228,7 @@ const ProductPage = memo(function ProductPage() {
                   </h2>
                   <p className="flex-1 border-b border-gray-400"></p>
                 </div>
-                <div className="purchase-card rounded-md flex flex-col m-4 lg:m-0 p-4 outline outline-1 outline-neutral-400">
+                <div className="purchase-card rounded-md flex flex-col m-4 lg:m-0 p-4 shadow-card2">
                   <div className="purchase-card-section-header flex justify-between">
                     <p className="font-semibold">One-time purchase</p>
                     <div className="flex items-center">
@@ -398,14 +431,11 @@ const ProductPage = memo(function ProductPage() {
                                             <span>Go to Cart</span>
                                           </p>
                                         </Link>
-                                        <Link
-                                          onClick={() => close()}
-                                          tabIndex={0}
-                                        >
+                                        <Button onPress={() => close()}>
                                           <p className="text-center bg-orange-400 text-black rounded-full p-1 font-normal h-[30px] flex items-center justify-center hover:bg-orange-300">
                                             <span>Continue Shopping</span>
                                           </p>
-                                        </Link>
+                                        </Button>
                                       </div>
                                     </div>
                                   </div>
@@ -431,18 +461,85 @@ const ProductPage = memo(function ProductPage() {
                   </div>
                 </div>
               </section>
-              <section className="product-card px-4 pt-4 pb-6 lg:hidden border-t border-b border-neutral-400">
-                <h2 className="font-bold text-lg">Details</h2>
-                {productTableHighlights}
-              </section>
+              {product.highlights.length > 0 && (
+                <section className="product-card px-4 pt-4 pb-6 lg:hidden border-t border-b border-neutral-400">
+                  <h2 className="font-bold text-lg">Details</h2>
+                  {productTableHighlights}
+                </section>
+              )}
             </div>
 
-            <section className="product-card flex flex-col pt-6 px-4 pb-[300px]">
-              <h2 className="font-semibold">Product Description</h2>
+            <section className="product-card flex flex-col pt-6 px-4 lg:mt-6">
+              <h2 className="font-semibold text-lg">Product Description</h2>
               <p className="p-4">
                 {product.description || "Not available yet."}
               </p>
             </section>
+            <section
+              id="reviews"
+              className="product-card reviews flex flex-col md:flex-row pt-6 px-4 mt-4 border-t border-t-gray-400"
+            >
+              <div className="review-left py-4">
+                <h2 className="font-semibold pb-3 text-lg">Customer Reviews</h2>
+                <div className="customer-ratings mb-2">
+                  <div className="review-stars flex gap-2">
+                    {stars}
+                    <span className="text-lg">{starCount || 0} out of 5</span>
+                  </div>
+                  <p className="total-ratings">
+                    <span className="text-[#565959] dark:text-[#a5a8a8]">
+                      {reviews?.rating_info[0]?.rating_count || 0} total ratings
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <div className="review-right flex flex-col flex-[3] py-4 md:py-6">
+                <div className="review-cards flex flex-col gap-4 md:mx-auto">
+                  {reviews.records_count < 1 ? (
+                    <p className="p-4">
+                      There are no reviews for this product.
+                    </p>
+                  ) : (
+                    reviews.reviews.map((r) => (
+                      <div className="review-card lg:w-[625px]" key={r._id}>
+                        <div className="reviewer flex items-center mb-1 gap-2">
+                          <div className="reviewer-icon h-[25px] w-[25px] text-center rounded-full bg-gray-300 inline-flex justify-center items-center">
+                            {r.reviewer_name[0].toUpperCase()}
+                          </div>
+                          <span>{r.reviewer_name}</span>
+                        </div>
+                        <div className="reviewer-rating">
+                          {calculateStars(r.rating).stars}
+                        </div>
+                        <p className="review-title font-bold">
+                          {r.review_title}
+                        </p>
+                        <p>
+                          <span className="text-sm">
+                            Reviewed on {new Date(r.review_date).toDateString()}
+                          </span>
+                        </p>
+                        {r.review_edit_date && (
+                          <p className="text-sm">
+                            <span>Edited on </span>
+                            <span>
+                              {new Date(r.review_edit_date).toDateString()}
+                            </span>
+                          </p>
+                        )}
+                        <div className="mt-1">
+                          <ExpandableReviewDescription
+                            reviewDescription={r.review_description}
+                            trimCap={300}
+                          />
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </section>
+            <div className="h-[300px]"></div>
           </div>
         </>
       ) : (

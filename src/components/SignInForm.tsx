@@ -22,6 +22,8 @@ function SignInForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, setUser } = useAuth();
+  const [locationFrom, setLocationFrom] = useState<string | undefined>();
+
   const signInMutate = useMutation({
     mutationKey: ["signin"],
     mutationFn: async (formData: { email: string; password: string }) => {
@@ -85,13 +87,16 @@ function SignInForm() {
   };
 
   useEffect(() => {
+    if (typeof locationFrom === "undefined") {
+      setLocationFrom(location?.search?.from || "");
+    }
     if (signInMutate.isSuccess && user) {
       const run = async () => {
         setPassword("");
         // await queryClient.invalidateQueries({ queryKey: ["auth"] });
         console.log("Successful sign in");
 
-        await navigate({ to: location.search.from || "/", replace: true });
+        await navigate({ to: locationFrom ?? "/", replace: true });
       };
       run();
     }
@@ -105,6 +110,9 @@ function SignInForm() {
           typeof errorMessage === "undefined" ? undefined : errorMessage
         }
       >
+        <span className="logo text-center text-3xl uppercase items-stretch tracking-wider">
+          Cyber Den
+        </span>
         <h2 className="font-bold pt-2 text-2xl">Sign In</h2>
         <TextField
           name="email"
@@ -167,8 +175,8 @@ function SignInForm() {
           type="button"
           onPress={() =>
             signInMutate.mutate({
-              email: "test.email@mail.com",
-              password: "test.pass",
+              email: "dirt@mail.com",
+              password: "12345",
             })
           }
           className={({ isHovered, isFocusVisible, isDisabled }) =>
@@ -182,7 +190,7 @@ function SignInForm() {
       <p className="text-center mt-1">
         <span>New user? </span>
         <Link to="/signup">
-          <span className="font-bold hover:underline hover:underline-offset-2">
+          <span className="font-bold underline underline-offset-2 hover:text-blue-500">
             Create an account
           </span>
         </Link>

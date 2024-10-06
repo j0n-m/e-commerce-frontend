@@ -28,7 +28,7 @@ type ProductCardProps = {
   reviewInfo?: ReviewInfoType[];
   cartList?: string[];
 };
-const calculateStars = (rating?: number) => {
+export const calculateStars = (rating?: number) => {
   if (typeof rating !== "number") return {};
   const starCount = rating - (rating % 0.5);
   let starsArr = [];
@@ -82,6 +82,7 @@ const calculateStars = (rating?: number) => {
           stroke={1}
           width={sizeInPx}
           height={sizeInPx}
+          className="dark:fill-black"
         />
       );
     }
@@ -360,11 +361,11 @@ function ProductCard({
                                   <span>Go to Cart</span>
                                 </p>
                               </Link>
-                              <Link onClick={() => close()} tabIndex={0}>
+                              <Button onPress={() => close()}>
                                 <p className="text-center bg-orange-400 text-black rounded-full p-1 font-normal h-[30px] flex items-center justify-center hover:bg-orange-300">
                                   <span>Continue Shopping</span>
                                 </p>
-                              </Link>
+                              </Button>
                             </div>
                           </div>
                         </div>

@@ -16,8 +16,10 @@ import { Route as SigninImport } from './routes/signin'
 import { Route as CartImport } from './routes/cart'
 import { Route as IndexImport } from './routes/index'
 import { Route as CheckoutIndexImport } from './routes/checkout/index'
+import { Route as CheckoutIncompleteImport } from './routes/checkout/incomplete'
 import { Route as CheckoutCompleteImport } from './routes/checkout/complete'
 import { Route as AccountProfileImport } from './routes/account/profile'
+import { Route as AccountOrdersImport } from './routes/account/orders'
 import { Route as ShopProductsIndexImport } from './routes/shop/products/index'
 import { Route as ShopProductProductIdImport } from './routes/shop/product/$productId'
 import { Route as ShopCategoryCategoryIdImport } from './routes/shop/category/$categoryId'
@@ -50,6 +52,11 @@ const CheckoutIndexRoute = CheckoutIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const CheckoutIncompleteRoute = CheckoutIncompleteImport.update({
+  path: '/checkout/incomplete',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const CheckoutCompleteRoute = CheckoutCompleteImport.update({
   path: '/checkout/complete',
   getParentRoute: () => rootRoute,
@@ -57,6 +64,11 @@ const CheckoutCompleteRoute = CheckoutCompleteImport.update({
 
 const AccountProfileRoute = AccountProfileImport.update({
   path: '/account/profile',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountOrdersRoute = AccountOrdersImport.update({
+  path: '/account/orders',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -112,6 +124,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
+    '/account/orders': {
+      id: '/account/orders'
+      path: '/account/orders'
+      fullPath: '/account/orders'
+      preLoaderRoute: typeof AccountOrdersImport
+      parentRoute: typeof rootRoute
+    }
     '/account/profile': {
       id: '/account/profile'
       path: '/account/profile'
@@ -124,6 +143,13 @@ declare module '@tanstack/react-router' {
       path: '/checkout/complete'
       fullPath: '/checkout/complete'
       preLoaderRoute: typeof CheckoutCompleteImport
+      parentRoute: typeof rootRoute
+    }
+    '/checkout/incomplete': {
+      id: '/checkout/incomplete'
+      path: '/checkout/incomplete'
+      fullPath: '/checkout/incomplete'
+      preLoaderRoute: typeof CheckoutIncompleteImport
       parentRoute: typeof rootRoute
     }
     '/checkout/': {
@@ -171,8 +197,10 @@ export const routeTree = rootRoute.addChildren({
   CartRoute,
   SigninRoute,
   SignupRoute,
+  AccountOrdersRoute,
   AccountProfileRoute,
   CheckoutCompleteRoute,
+  CheckoutIncompleteRoute,
   CheckoutIndexRoute,
   ShopCategoryCategoryIdRoute,
   ShopProductProductIdRoute,
@@ -192,8 +220,10 @@ export const routeTree = rootRoute.addChildren({
         "/cart",
         "/signin",
         "/signup",
+        "/account/orders",
         "/account/profile",
         "/checkout/complete",
+        "/checkout/incomplete",
         "/checkout/",
         "/shop/category/$categoryId",
         "/shop/product/$productId",
@@ -213,11 +243,17 @@ export const routeTree = rootRoute.addChildren({
     "/signup": {
       "filePath": "signup.tsx"
     },
+    "/account/orders": {
+      "filePath": "account/orders.tsx"
+    },
     "/account/profile": {
       "filePath": "account/profile.tsx"
     },
     "/checkout/complete": {
       "filePath": "checkout/complete.tsx"
+    },
+    "/checkout/incomplete": {
+      "filePath": "checkout/incomplete.tsx"
     },
     "/checkout/": {
       "filePath": "checkout/index.tsx"

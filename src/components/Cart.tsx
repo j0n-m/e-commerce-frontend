@@ -5,9 +5,11 @@ import CartProductCard from "./CartProductCard";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import fetch from "../utilities/fetch";
-import { CustomerType, PaymentContext } from "../context/PaymentSecretContext";
+import { PaymentContext } from "../context/PaymentSecretContext";
 import { IconAlertCircle } from "@tabler/icons-react";
 import useAuth from "../hooks/useAuth";
+import isAuthenticated from "../utilities/isAuthenticated";
+import checkAndParseCart from "../utilities/checkAndParseCart";
 
 function Cart() {
   const { cart, setCart } = useContext(CartContext);
@@ -15,7 +17,6 @@ function Cart() {
     clientSecret,
     setClientSecret,
     setCustomerSessionSecret,
-    setCustomer,
     setPaymentAmount,
   } = useContext(PaymentContext);
   const [responseMessage, setResponseMessage] = useState<null | string>(null);
@@ -37,7 +38,7 @@ function Cart() {
       }
       setPaymentAmount(response.data.payAmount || 0);
 
-      const customerData = response?.data?.customer as CustomerType | null;
+      // const customerData = response?.data?.customer as CustomerType | null;
 
       // setCustomer(customerData);
 
@@ -80,13 +81,20 @@ function Cart() {
     setCart(newCart);
   };
   const handleCheckout = async () => {
-    if (!user) {
+    const isAuth = await isAuthenticated();
+    if (!user || !isAuth) {
       return await navigate({
         to: "/signin",
         search: { from: location.pathname },
       });
     } else {
-      mutation.mutate(cart);
+      const check = checkAndParseCart();
+      if (!check.success) {
+        window.location.reload(); //cart context will delete for no conforming to schema
+      } else {
+        console.log(check);
+        mutation.mutate(cart);
+      }
     }
   };
   useEffect(() => {

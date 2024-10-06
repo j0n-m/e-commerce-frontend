@@ -62,7 +62,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
     if (storedTheme != "light" && storedTheme != "dark") {
       localStorage.setItem("theme", "auto");
-
+      cbThemeChange();
       window
         .matchMedia("(prefers-color-scheme: dark)")
         .addEventListener("change", cbThemeChange);
@@ -77,7 +77,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
         localStorage.setItem("theme", storedTheme);
       }
     }
-    console.log(theme);
+    console.log("theme", theme);
 
     return () => {
       window

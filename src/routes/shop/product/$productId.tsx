@@ -15,6 +15,13 @@ export function singleProductQueryOption(productId: string) {
     staleTime: 1000 * 60 * 5,
   });
 }
+export function singleProductReviewQuery(productId: string) {
+  return queryOptions({
+    queryKey: [productId, "review"],
+    queryFn: async () => await fetch.get(`api/reviews/product/${productId}`),
+    staleTime: 1000 * 60 * 5,
+  });
+}
 
 export const Route = createFileRoute("/shop/product/$productId")({
   component: () => <ProductPage />,
@@ -26,7 +33,11 @@ export const Route = createFileRoute("/shop/product/$productId")({
       const data = await queryClient.ensureQueryData(
         singleProductQueryOption(params.productId)
       );
-      return data;
+      const review = await queryClient.ensureQueryData(
+        singleProductReviewQuery(params.productId)
+      );
+
+      return { data, review };
     } catch (error) {
       if ((error as AxiosError)?.response?.status === 404) {
         throw notFound();
