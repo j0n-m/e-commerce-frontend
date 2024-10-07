@@ -26,7 +26,11 @@ function Cart() {
   const mutation = useMutation({
     mutationKey: ["checkout"],
     mutationFn: (cart: unknown) => {
-      return fetch.post("api/create-payment-intent", { cart: cart });
+      return fetch.post(
+        "api/create-payment-intent",
+        { cart: cart },
+        { withCredentials: true }
+      );
     },
     onSuccess: (response) => {
       setClientSecret(response.data["clientSecret"]);

@@ -90,7 +90,7 @@ function CartProductCard({
             </Group>
           </NumberField>
         </div>
-        <div className="cart-delete-section flex items-end">
+        <div className="cart-delete-section flex">
           <Button
             className={({ isFocusVisible, isHovered }) =>
               `rounded-full px-2 py-1 [box-shadow:0px_0px_2px_#c3c3c3] dark:[box-shadow:0px_0px_2px_white] ${isFocusVisible || isHovered ? "bg-neutral-200 dark:bg-[#2e2e2e]" : ""}`
