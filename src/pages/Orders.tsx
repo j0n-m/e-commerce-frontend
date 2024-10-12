@@ -28,7 +28,6 @@ function Orders() {
   );
 
   // const orderHistory = [];
-  console.log(orderHistoryResponse);
 
   return (
     <div className="p-4 max-w-[1000px] mx-auto mt-4">

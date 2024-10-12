@@ -42,7 +42,7 @@ function SignUpForm() {
           username,
           email,
           password,
-          createdAt: new Date(),
+          createdAt: new Date().toString(),
           first_name: firstName,
           last_name: lastName,
           shipping_address: null,
