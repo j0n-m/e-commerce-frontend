@@ -17,7 +17,7 @@ import { RouterProvider } from "react-aria-components";
 declare module "react-aria-components" {
   interface RouterConfig {
     href: ToOptions["to"];
-    routerOptions: Omit<NavigateOptions, keyof ToOptions>;
+    routerOptions: NavigateOptions;
   }
 }
 

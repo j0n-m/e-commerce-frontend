@@ -1,9 +1,11 @@
 import { queryOptions } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import axios from "axios";
 import { queryClient } from "../../../../App";
 import EditProduct from "../../../../components/EditProduct";
 import LoadingComponent from "../../../../components/LoadingComponent";
+import ErrorPage from "../../../../components/ErrorPage";
+import isAuthenticated from "../../../../utilities/isAuthenticated";
 
 //Gets the most current product details
 export function editProductOption(productId: string) {
@@ -29,6 +31,23 @@ export const Route = createFileRoute("/shop/product/$productId/edit")({
     queryClient.ensureQueryData(editProductOption(params.productId));
     return queryClient.ensureQueryData(allCategoriesOption());
   },
-  errorComponent: () => <p>Error loading resources.</p>,
+  beforeLoad: async ({ params }) => {
+    const auth = (await isAuthenticated(true)) as {
+      isAuth: boolean;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      user: any;
+    };
+
+    if (!auth.isAuth || !auth.user?.is_admin) {
+      throw redirect({
+        to: "/shop/product/$productId",
+        replace: true,
+        params: { productId: params.productId },
+      });
+    }
+  },
+  errorComponent: ({ error, reset }) => (
+    <ErrorPage error={error} reset={reset} />
+  ),
   pendingComponent: () => <LoadingComponent />,
 });

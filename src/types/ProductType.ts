@@ -1,4 +1,21 @@
-export type ProductType = {
+export type ProductType = [
+  {
+    _id: string;
+    name: string;
+    brand: string;
+    price: number;
+    retail_price: number;
+    description: string;
+    highlights: Highlight[];
+    quantity: number;
+    category: Category[];
+    total_bought: number;
+    tags: string[];
+    image_src: string;
+    discount?: number;
+  },
+];
+export type ProductType2 = {
   _id: string;
   name: string;
   brand: string;
@@ -25,7 +42,7 @@ export type Highlight = {
 };
 
 export function isProduct(product: unknown): product is ProductType {
-  return (product as ProductType)._id !== undefined;
+  return (product as ProductType)[0]._id !== undefined;
 }
 
 export type ProductResponse = {

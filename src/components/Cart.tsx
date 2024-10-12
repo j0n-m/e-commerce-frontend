@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { CartContext, CartItemsType } from "../context/CartContext";
 import { Button } from "react-aria-components";
 import CartProductCard from "./CartProductCard";
-import { useLocation, useNavigate } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import fetch from "../utilities/fetch";
 import { PaymentContext } from "../context/PaymentSecretContext";
@@ -109,15 +109,18 @@ function Cart() {
   }, [clientSecret]);
 
   return (
-    <div className="page-container mx-2 max-w-[1800px] 2xl:mx-auto my-2 flex flex-col gap-8 lg:flex-row lg:mx-4">
+    <div className="page-container mx-2 my-2 flex flex-col gap-8 lg:flex-row lg:mx-4">
       <div className="cartCard flex-[3]">
         <h1 className="text-3xl tracking-wide pb-4">Shopping Cart</h1>
         {cart.length <= 0 ? (
-          <div className="cart-nothing p-3 bg-white dark:bg-dark-secondary-gray">
+          <div className="cart-nothing p-3 bg-white dark:bg-[#282828] dark:border dark:border-[#575757]">
             <p className="text-2xl font-extralight">Your cart is empty.</p>
-            <a href="/" className="text-purple-600 hover:underline">
+            <Link
+              to="/"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
               Shop today's deals
-            </a>
+            </Link>
           </div>
         ) : (
           <div className="cart-products">
@@ -134,10 +137,10 @@ function Cart() {
           </div>
         )}
       </div>
-      <div className="payment-section border-b lg:border-l lg:border-b-0 flex-1 p-4 -order-1 lg:order-1">
+      <div className="payment-section border-b dark:border-[#424353] lg:border-l lg:border-b-0 flex-1 p-4 -order-1 lg:order-1">
         <form className="p-6">
           <h2 className="text-2xl font-bold text-center mb-4">Summary</h2>
-          <p className="text-center lg:border-b pb-4">
+          <p className="text-center lg:border-b dark:border-[#424353] pb-4">
             <span>Subtotal ({cartQuantity} items): </span>
             <span className="subtotal font-bold">${subtotal.toFixed(2)}</span>
           </p>

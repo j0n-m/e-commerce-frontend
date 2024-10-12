@@ -6,6 +6,7 @@ import { CartContext } from "../context/CartContext";
 import fetch from "../utilities/fetch";
 import useAuth from "../hooks/useAuth";
 import checkAndParseCart from "../utilities/checkAndParseCart";
+import { queryClient } from "../App";
 const stripePublishKey =
   "pk_test_51Q0TEsP2PfjUIESRgbKfEbmEtiIKYbJKRmaNsi27hTUCBNXiCUuy6PvIYsohIzECYR4rWEnrp6luTapCDrxY2Lq200hpM9dWSq";
 const stripePromise = loadStripe(stripePublishKey);
@@ -52,14 +53,19 @@ function CheckoutComplete() {
 function Complete() {
   const stripe = useStripe();
   const [message, setMessage] = useState<string | undefined>(undefined);
-  const { setCart } = useContext(CartContext);
+  const { cart, setCart } = useContext(CartContext);
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   const clientSecret = new URLSearchParams(window.location.search).get(
     "payment_intent_client_secret"
   );
-  const orderId = new URLSearchParams(window.location.search).get("orderId");
+  const customerId = new URLSearchParams(window.location.search).get(
+    "customerId"
+  );
+  const paymentIntentId = new URLSearchParams(window.location.search).get(
+    "pId"
+  );
 
   useEffect(() => {
     if (stripe && user) {
@@ -70,6 +76,7 @@ function Complete() {
       stripe
         .retrievePaymentIntent(clientSecret!)
         .then(({ paymentIntent }) => {
+          // console.log(paymentIntent.)
           // Inspect the PaymentIntent `status` to indicate the status of the payment
           // to your customer.
           //
@@ -79,13 +86,37 @@ function Complete() {
           // [0]: https://stripe.com/docs/payments/payment-methods#payment-notification
 
           switch (paymentIntent!.status) {
-            case "succeeded":
+            case "succeeded": {
+              fetch
+                .post(
+                  "api/orderhistory",
+                  {
+                    paymentIntentId,
+                    customerId,
+                    cart,
+                  },
+                  { withCredentials: true }
+                )
+                .then(() => {
+                  console.log("sent order history payload");
+                  queryClient
+                    .invalidateQueries({ queryKey: ["orderhistory"] })
+                    .catch((e) => console.error(e));
+                  queryClient
+                    .invalidateQueries({ queryKey: ["product"] })
+                    .catch((e) => console.error(e));
+                  setCart([]);
+                })
+                .catch((e) => console.error(e));
+
               if (localStorage.getItem("cart")) {
                 localStorage.removeItem("cart");
               }
-              setCart([]);
+
+              // setCart([]);
               setMessage("Success! Payment received.");
               break;
+            }
 
             case "processing":
               setMessage(
@@ -96,28 +127,15 @@ function Complete() {
             case "requires_payment_method":
               // Redirect your user back to your payment page to attempt collecting
               // payment again
-              fetch
-                .delete(`api/orderhistory/${orderId}`)
-                .then()
-                .catch((e) => console.log(e));
               setMessage("Payment failed. Please try another payment method.");
               break;
 
             default:
-              fetch
-                .delete(`api/orderhistory/${orderId}`)
-                .then()
-                .catch((e) => console.log(e));
               setMessage("Something went wrong! Please try again later.");
               break;
           }
         })
         .catch(() => {
-          fetch
-            .delete(`api/orderhistory/${orderId}`)
-            .then()
-            .catch((e) => console.log(e));
-
           setMessage("Something went wrong! Please try again later.");
         });
     }

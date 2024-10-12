@@ -45,6 +45,24 @@ function useScreenSize() {
   //return object from hook
   return { isMobile, isTablet, isDesktop };
 }
+function SkipLink({
+  skipToId,
+  skipToText,
+}: {
+  skipToId: string;
+  skipToText: string;
+}) {
+  return (
+    <>
+      <a
+        href={`#${skipToId}`}
+        className="bg-black text-white ring-2 p-2 skipNav"
+      >
+        {skipToText}
+      </a>
+    </>
+  );
+}
 
 function ECommerceApp() {
   const { isMobile, isTablet, isDesktop } = useScreenSize();
@@ -64,11 +82,18 @@ function ECommerceApp() {
 
   return (
     <ScreenSizeContext.Provider value={{ isMobile, isDesktop, isTablet }}>
-      <div className="app-container flex flex-col">
+      <div className="app-container flex flex-col relative">
+        <SkipLink skipToId="content" skipToText="Skip to content" />
         {!path[0].match(/checkout/i) && <Nav />}
-        <div className="bg-white dark:bg-dark-primary-gray outlet-container flex-1 min-h-[768px] relative">
-          <PersistAuth />
-          {/* <Outlet></Outlet> */}
+        <div
+          id="content"
+          className={`bg-white dark:bg-dark-primary-gray dark:text-a0d outlet-container flex-1 relative`}
+        >
+          <div
+            className={`width-container max-w-[1800px] mx-auto flex flex-col`}
+          >
+            <PersistAuth />
+          </div>
         </div>
         <Footer />
       </div>

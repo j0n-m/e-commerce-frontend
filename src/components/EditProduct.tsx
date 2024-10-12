@@ -10,39 +10,38 @@ import { ProductType } from "../types/ProductType";
 import { Category } from "../types/ProductType";
 
 function assertIsProductType(val: unknown): asserts val is ProductType {
-  if ((val as ProductType)._id === undefined) {
+  console.log(val);
+  if ((val as ProductType)._id == undefined) {
     throw new Error("Not a product");
   }
 }
 function assertIsCategoryType(val: unknown): asserts val is Category[] {
   if (Array.isArray(val)) {
-    if ((val as Category[])[0]._id === undefined) {
+    if ((val as Category[])[0]._id == undefined) {
       throw new Error("Not a category");
     }
   }
 }
 function useProductCategories() {
   const {
-    data: {
-      data: { data: categories },
-    },
+    data: { data },
   } = useSuspenseQuery(allCategoriesOption());
-  return { categories };
+  const categories = data.categories;
+  return categories;
 }
 function useProductData(productId: string) {
   const {
-    data: {
-      data: { data },
-    },
+    data: { data },
   } = useSuspenseQuery(editProductOption(productId));
-  return { data };
+  const product = data.product[0];
+  return product;
 }
 
 function EditProduct() {
   const { productId } = route.useParams();
 
-  const { data } = useProductData(productId);
-  const { categories: productCategories } = useProductCategories();
+  const data = useProductData(productId);
+  const productCategories = useProductCategories();
   assertIsProductType(data);
   assertIsCategoryType(productCategories);
 

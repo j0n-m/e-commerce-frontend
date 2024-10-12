@@ -1,7 +1,11 @@
 import React, { useContext } from "react";
 import noProductImage from "../assets/images/no_product_image.jpg";
 import { trimString } from "../utilities/trimString";
-import { ProductType, ReviewInfoType } from "../types/ProductType";
+import {
+  ProductType,
+  ProductType2,
+  ReviewInfoType,
+} from "../types/ProductType";
 import {
   Button,
   Dialog,
@@ -23,7 +27,7 @@ import {
 
 type ProductCardProps = {
   orientation?: "row" | "col";
-  item: ProductType;
+  item: ProductType2;
   isScreenSizeLarge: boolean;
   reviewInfo?: ReviewInfoType[];
   cartList?: string[];
@@ -162,7 +166,7 @@ function ProductCard({
 
   return (
     <div
-      className={`product-card shadow-around dark:shadow-none dark:border-gray-900 p-2 lg:px-6 lg:pt-4 lg:pb-6 ${orientation === "col" && "h-full"} rounded-md dark:bg-dark-secondary-gray bg-white`}
+      className={`product-card dark:bg-[#212121] border border-[#e6e6e6] dark:border-[#30313D] p-2 lg:px-6 lg:pt-4 lg:pb-6 ${orientation === "col" && "h-full"} rounded-md dark:bg-dark-secondary-gray bg-white`}
     >
       <div
         className={`product-content flex ${"flex-" + orientation} gap-4 ${orientation === "col" && "h-full"}`}
@@ -195,7 +199,7 @@ function ProductCard({
             >
               <p className="lg:font-semibold">
                 {isScreenSizeLarge
-                  ? trimString(item.name, 200)
+                  ? trimString(item.name, 100)
                   : trimString(item.name)}
               </p>
             </Link>

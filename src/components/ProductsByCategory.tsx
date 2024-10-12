@@ -32,24 +32,26 @@ function ProductsByCategory() {
   const { isDesktop } = useContext(ScreenSizeContext);
 
   return (
-    <main className="xl:max-w-[1500px] xl:mx-auto mt-4 mb-6 lg:p-6">
-      <h1 className="font-bold ml-2 lg:ml-0">{searchDeps.category}</h1>
-      <div
-        className={
-          "card-container lg:grid lg:grid-cols-[repeat(4,1fr)] xl:grid-cols-[repeat(5,1fr)] flex flex-col mt-6 gap-4"
-        }
-      >
-        {products_data.products.map((product, i) => (
-          <ProductCard
-            key={i}
-            orientation={isDesktop ? "col" : "row"}
-            item={product}
-            isScreenSizeLarge={isDesktop}
-            reviewInfo={products_data.review_info}
-            cartList={cartList}
-          ></ProductCard>
-        ))}
-      </div>
+    <>
+      <main className="mt-4 mb-6 lg:px-6 flex-1">
+        <h1 className="font-bold ml-2 lg:ml-0">{searchDeps.category}</h1>
+        <div
+          className={
+            "card-container lg:grid lg:grid-cols-[repeat(4,1fr)] xl:grid-cols-[repeat(5,1fr)] flex flex-col mt-6 gap-4"
+          }
+        >
+          {products_data.products.map((product, i) => (
+            <ProductCard
+              key={i}
+              orientation={isDesktop ? "col" : "row"}
+              item={product}
+              isScreenSizeLarge={isDesktop}
+              reviewInfo={products_data.review_info}
+              cartList={cartList}
+            ></ProductCard>
+          ))}
+        </div>
+      </main>
       {products_data.products && (
         <div className="pagination-bar bg-white dark:bg-dark-secondary-gray px-4 py-2 mt-6 flex justify-center lg:justify-end">
           <PaginationBar
@@ -60,8 +62,7 @@ function ProductsByCategory() {
           />
         </div>
       )}
-      <div className="blank-space min-h-[300px]"></div>
-    </main>
+    </>
   );
 }
 

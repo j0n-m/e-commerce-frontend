@@ -7,6 +7,7 @@ import { ProductResponse } from "../types/ProductType";
 import ProductCard from "./ProductCard";
 import { PaginationBar } from "./PaginationBar";
 import { ScreenSizeContext } from "../context/ScreenSizeContext";
+import { trimString } from "../utilities/trimString";
 function useSearchProducts(query: string, searchDeps: ProductSearch) {
   const {
     data: { data: products_data },
@@ -21,24 +22,39 @@ function ProductResults() {
   const products_data = useSearchProducts(searchDeps.q, searchDeps);
 
   const { isDesktop } = useContext(ScreenSizeContext);
+  console.log(products_data);
 
   return (
-    <div className="page-container xl:max-w-[1500px] xl:mx-auto pt-4 lg:p-6">
-      <h1 className="font-bold mb-6 pl-2">Search: "{searchDeps.q}"</h1>
-      <div className="filters bg-white dark:bg-dark-secondary-gray px-4 py-1 rounded-md">
-        filters
-      </div>
-      <main className="content flex flex-col lg:mt-4 rounded-md">
-        {products_data.products.map((product, i) => (
-          <ProductCard
-            item={product}
-            reviewInfo={products_data.review_info}
-            key={i}
-            isScreenSizeLarge={isDesktop}
-          />
-        ))}
+    <>
+      <main className="page-container mt-2 px-4 lg:px-6 flex-1">
+        {/* <h1 className="font-bold mb-6 pl-2">Search: "{searchDeps.q}"</h1> */}
+        <div className="filters bg-white dark:bg-dark-secondary-gray px-4 py-1 rounded-md">
+          filters
+        </div>
+        <h1 className="text-xl font-bold mt-4">Results</h1>
+        <h2 className="text-sm dark:text-slate-400 text-slate-500">
+          for "{trimString(searchDeps.q, 20)}"
+        </h2>
+        <div className="content flex flex-col lg:mt-4">
+          {products_data.products.map((product, i) => (
+            <ProductCard
+              item={product}
+              reviewInfo={products_data.review_info}
+              key={i}
+              isScreenSizeLarge={isDesktop}
+            />
+          ))}
+          {products_data.products.length <= 0 && (
+            <div>
+              <p className="dark:text-red-500 text-[#CC0C39]">
+                We have found zero searches for "{trimString(searchDeps.q, 70)}"
+              </p>
+            </div>
+          )}
+        </div>
+        {/* <div className="space h-[200px]"></div> */}
       </main>
-      <div className="pagination-bar bg-white dark:bg-dark-secondary-gray px-4 py-2 mt-6 flex justify-center lg:justify-end">
+      <div className="pagination-bar px-4 py-2 mt-6 flex justify-center">
         <PaginationBar
           currentPage={searchDeps.page}
           totalPages={products_data.total_pages}
@@ -46,9 +62,7 @@ function ProductResults() {
           isLargeScreenSize={isDesktop}
         />
       </div>
-
-      <div className="blank-space min-h-[300px]"></div>
-    </div>
+    </>
   );
 }
 

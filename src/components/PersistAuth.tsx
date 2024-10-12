@@ -31,16 +31,9 @@ function PersistAuth() {
         setUser(null);
       }
     }
-  }, [user, getUserAuth.data, getUserAuth.isSuccess]);
+  }, [user, getUserAuth.data, getUserAuth.isSuccess, setUser]);
   return (
     <>
-      <div className="fixed bottom-0 right-16 z-10 bg-neutral-200 dark:bg-gray-800 outline outline-neutral-400 dark:outline-gray-600 px-2 rounded-t-md">
-        <p className="border-b border-gray-600">Test only:</p>
-        <p>{user ? `user is ${user.first_name}` : "user is unknown"}</p>
-        <p>
-          {getUserAuth.isSuccess ? getUserAuth.data.data.message : "loading"}
-        </p>
-      </div>
       <Outlet></Outlet>
     </>
   );

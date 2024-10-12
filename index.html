@@ -3,13 +3,14 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cyber Den</title>
 </head>
 
 <body>
   <script async>
+    const minScreenHeight = window.screen.height;
+    window.minHeight = minScreenHeight;
     const lsTheme = localStorage.getItem("theme");
 
     const preferDarkTheme = window.matchMedia(
@@ -26,8 +27,8 @@
   <script type="module" src="/src/main.tsx"></script>
   <style>
     .dark {
-      background-color: #0f172a;
-      color: white;
+      background-color: #121212;
+      color: #dbdbdb;
     }
   </style>
 </body>

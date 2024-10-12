@@ -7,19 +7,34 @@ import LoadingComponent from "../../../components/LoadingComponent";
 import MissingPage from "../../../components/MissingPage";
 import ErrorPage from "../../../components/ErrorPage";
 import fetch from "../../../utilities/fetch";
+import { ReviewType } from "../../../types/ReviewType";
+import isAuthenticated from "../../../utilities/isAuthenticated";
 
 export function singleProductQueryOption(productId: string) {
   return queryOptions({
-    queryKey: [productId],
+    queryKey: ["product", { id: productId }],
     queryFn: async () => (await fetch.get(`/api/product/${productId}`)).data,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 10,
   });
 }
-export function singleProductReviewQuery(productId: string) {
+export function productReviewsQuery(productId: string) {
   return queryOptions({
-    queryKey: [productId, "review"],
+    queryKey: ["reviews", { id: productId }],
     queryFn: async () => await fetch.get(`api/reviews/product/${productId}`),
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 10,
+  });
+}
+export function orderHistoryByUserQuery(userId: string, productId: string) {
+  return queryOptions({
+    queryKey: ["orderhistory", { id: userId, product: productId }],
+    queryFn: async () =>
+      await fetch.get(
+        `api/orderhistory/customer/${userId}?product=${productId}`,
+        {
+          withCredentials: true,
+        }
+      ),
+    staleTime: 1000 * 60 * 10,
   });
 }
 
@@ -29,15 +44,37 @@ export const Route = createFileRoute("/shop/product/$productId")({
   errorComponent: ({ error }) => <ErrorPage error={error} />,
   notFoundComponent: () => <MissingPage />,
   loader: async ({ params }) => {
+    let isEligibleToReview: boolean = false;
     try {
       const data = await queryClient.ensureQueryData(
         singleProductQueryOption(params.productId)
       );
       const review = await queryClient.ensureQueryData(
-        singleProductReviewQuery(params.productId)
+        productReviewsQuery(params.productId)
       );
+      const auth = (await isAuthenticated(true)) as {
+        isAuth: boolean;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        user: any;
+      };
 
-      return { data, review };
+      if (auth.isAuth) {
+        const userId = auth.user.id;
+        //look through review arr for this user id return true/false
+        const hasReviewed: boolean = review.data?.reviews
+          .map((obj: ReviewType) => obj.reviewer)
+          .some((v: string) => v === userId);
+        const usersOrders = (
+          await queryClient.ensureQueryData(
+            orderHistoryByUserQuery(userId, params.productId)
+          )
+        ).data;
+        const hasPurchasedProduct = !!usersOrders.records_count;
+        isEligibleToReview = hasPurchasedProduct && !hasReviewed;
+        return { data, review, isEligibleToReview };
+      }
+
+      return { data, review, isEligibleToReview };
     } catch (error) {
       if ((error as AxiosError)?.response?.status === 404) {
         throw notFound();

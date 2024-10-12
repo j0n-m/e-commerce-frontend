@@ -16,14 +16,19 @@ import { Route as SigninImport } from './routes/signin'
 import { Route as CartImport } from './routes/cart'
 import { Route as IndexImport } from './routes/index'
 import { Route as CheckoutIndexImport } from './routes/checkout/index'
+import { Route as AccountIndexImport } from './routes/account/index'
 import { Route as CheckoutIncompleteImport } from './routes/checkout/incomplete'
 import { Route as CheckoutCompleteImport } from './routes/checkout/complete'
 import { Route as AccountProfileImport } from './routes/account/profile'
 import { Route as AccountOrdersImport } from './routes/account/orders'
 import { Route as ShopProductsIndexImport } from './routes/shop/products/index'
+import { Route as AccountMyreviewsIndexImport } from './routes/account/myreviews/index'
 import { Route as ShopProductProductIdImport } from './routes/shop/product/$productId'
 import { Route as ShopCategoryCategoryIdImport } from './routes/shop/category/$categoryId'
+import { Route as ShopReviewReviewIdIndexImport } from './routes/shop/review/$reviewId/index'
+import { Route as ShopReviewReviewIdEditImport } from './routes/shop/review/$reviewId_/edit'
 import { Route as ShopProductProductIdEditImport } from './routes/shop/product_/$productId/edit'
+import { Route as ShopProductProductIdCreateReviewImport } from './routes/shop/product_/$productId/create-review'
 
 // Create/Update Routes
 
@@ -52,6 +57,11 @@ const CheckoutIndexRoute = CheckoutIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AccountIndexRoute = AccountIndexImport.update({
+  path: '/account/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const CheckoutIncompleteRoute = CheckoutIncompleteImport.update({
   path: '/checkout/incomplete',
   getParentRoute: () => rootRoute,
@@ -77,6 +87,11 @@ const ShopProductsIndexRoute = ShopProductsIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AccountMyreviewsIndexRoute = AccountMyreviewsIndexImport.update({
+  path: '/account/myreviews/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ShopProductProductIdRoute = ShopProductProductIdImport.update({
   path: '/shop/product/$productId',
   getParentRoute: () => rootRoute,
@@ -87,10 +102,26 @@ const ShopCategoryCategoryIdRoute = ShopCategoryCategoryIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ShopReviewReviewIdIndexRoute = ShopReviewReviewIdIndexImport.update({
+  path: '/shop/review/$reviewId/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ShopReviewReviewIdEditRoute = ShopReviewReviewIdEditImport.update({
+  path: '/shop/review/$reviewId/edit',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ShopProductProductIdEditRoute = ShopProductProductIdEditImport.update({
   path: '/shop/product/$productId/edit',
   getParentRoute: () => rootRoute,
 } as any)
+
+const ShopProductProductIdCreateReviewRoute =
+  ShopProductProductIdCreateReviewImport.update({
+    path: '/shop/product/$productId/create-review',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -152,6 +183,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutIncompleteImport
       parentRoute: typeof rootRoute
     }
+    '/account/': {
+      id: '/account/'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/checkout/': {
       id: '/checkout/'
       path: '/checkout'
@@ -173,11 +211,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopProductProductIdImport
       parentRoute: typeof rootRoute
     }
+    '/account/myreviews/': {
+      id: '/account/myreviews/'
+      path: '/account/myreviews'
+      fullPath: '/account/myreviews'
+      preLoaderRoute: typeof AccountMyreviewsIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/shop/products/': {
       id: '/shop/products/'
       path: '/shop/products'
       fullPath: '/shop/products'
       preLoaderRoute: typeof ShopProductsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/shop/product/$productId/create-review': {
+      id: '/shop/product/$productId/create-review'
+      path: '/shop/product/$productId/create-review'
+      fullPath: '/shop/product/$productId/create-review'
+      preLoaderRoute: typeof ShopProductProductIdCreateReviewImport
       parentRoute: typeof rootRoute
     }
     '/shop/product/$productId/edit': {
@@ -187,26 +239,198 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopProductProductIdEditImport
       parentRoute: typeof rootRoute
     }
+    '/shop/review/$reviewId/edit': {
+      id: '/shop/review/$reviewId/edit'
+      path: '/shop/review/$reviewId/edit'
+      fullPath: '/shop/review/$reviewId/edit'
+      preLoaderRoute: typeof ShopReviewReviewIdEditImport
+      parentRoute: typeof rootRoute
+    }
+    '/shop/review/$reviewId/': {
+      id: '/shop/review/$reviewId/'
+      path: '/shop/review/$reviewId'
+      fullPath: '/shop/review/$reviewId'
+      preLoaderRoute: typeof ShopReviewReviewIdIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({
-  IndexRoute,
-  CartRoute,
-  SigninRoute,
-  SignupRoute,
-  AccountOrdersRoute,
-  AccountProfileRoute,
-  CheckoutCompleteRoute,
-  CheckoutIncompleteRoute,
-  CheckoutIndexRoute,
-  ShopCategoryCategoryIdRoute,
-  ShopProductProductIdRoute,
-  ShopProductsIndexRoute,
-  ShopProductProductIdEditRoute,
-})
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/signin': typeof SigninRoute
+  '/signup': typeof SignupRoute
+  '/account/orders': typeof AccountOrdersRoute
+  '/account/profile': typeof AccountProfileRoute
+  '/checkout/complete': typeof CheckoutCompleteRoute
+  '/checkout/incomplete': typeof CheckoutIncompleteRoute
+  '/account': typeof AccountIndexRoute
+  '/checkout': typeof CheckoutIndexRoute
+  '/shop/category/$categoryId': typeof ShopCategoryCategoryIdRoute
+  '/shop/product/$productId': typeof ShopProductProductIdRoute
+  '/account/myreviews': typeof AccountMyreviewsIndexRoute
+  '/shop/products': typeof ShopProductsIndexRoute
+  '/shop/product/$productId/create-review': typeof ShopProductProductIdCreateReviewRoute
+  '/shop/product/$productId/edit': typeof ShopProductProductIdEditRoute
+  '/shop/review/$reviewId/edit': typeof ShopReviewReviewIdEditRoute
+  '/shop/review/$reviewId': typeof ShopReviewReviewIdIndexRoute
+}
+
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/signin': typeof SigninRoute
+  '/signup': typeof SignupRoute
+  '/account/orders': typeof AccountOrdersRoute
+  '/account/profile': typeof AccountProfileRoute
+  '/checkout/complete': typeof CheckoutCompleteRoute
+  '/checkout/incomplete': typeof CheckoutIncompleteRoute
+  '/account': typeof AccountIndexRoute
+  '/checkout': typeof CheckoutIndexRoute
+  '/shop/category/$categoryId': typeof ShopCategoryCategoryIdRoute
+  '/shop/product/$productId': typeof ShopProductProductIdRoute
+  '/account/myreviews': typeof AccountMyreviewsIndexRoute
+  '/shop/products': typeof ShopProductsIndexRoute
+  '/shop/product/$productId/create-review': typeof ShopProductProductIdCreateReviewRoute
+  '/shop/product/$productId/edit': typeof ShopProductProductIdEditRoute
+  '/shop/review/$reviewId/edit': typeof ShopReviewReviewIdEditRoute
+  '/shop/review/$reviewId': typeof ShopReviewReviewIdIndexRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/signin': typeof SigninRoute
+  '/signup': typeof SignupRoute
+  '/account/orders': typeof AccountOrdersRoute
+  '/account/profile': typeof AccountProfileRoute
+  '/checkout/complete': typeof CheckoutCompleteRoute
+  '/checkout/incomplete': typeof CheckoutIncompleteRoute
+  '/account/': typeof AccountIndexRoute
+  '/checkout/': typeof CheckoutIndexRoute
+  '/shop/category/$categoryId': typeof ShopCategoryCategoryIdRoute
+  '/shop/product/$productId': typeof ShopProductProductIdRoute
+  '/account/myreviews/': typeof AccountMyreviewsIndexRoute
+  '/shop/products/': typeof ShopProductsIndexRoute
+  '/shop/product/$productId/create-review': typeof ShopProductProductIdCreateReviewRoute
+  '/shop/product/$productId/edit': typeof ShopProductProductIdEditRoute
+  '/shop/review/$reviewId/edit': typeof ShopReviewReviewIdEditRoute
+  '/shop/review/$reviewId/': typeof ShopReviewReviewIdIndexRoute
+}
+
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/cart'
+    | '/signin'
+    | '/signup'
+    | '/account/orders'
+    | '/account/profile'
+    | '/checkout/complete'
+    | '/checkout/incomplete'
+    | '/account'
+    | '/checkout'
+    | '/shop/category/$categoryId'
+    | '/shop/product/$productId'
+    | '/account/myreviews'
+    | '/shop/products'
+    | '/shop/product/$productId/create-review'
+    | '/shop/product/$productId/edit'
+    | '/shop/review/$reviewId/edit'
+    | '/shop/review/$reviewId'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/cart'
+    | '/signin'
+    | '/signup'
+    | '/account/orders'
+    | '/account/profile'
+    | '/checkout/complete'
+    | '/checkout/incomplete'
+    | '/account'
+    | '/checkout'
+    | '/shop/category/$categoryId'
+    | '/shop/product/$productId'
+    | '/account/myreviews'
+    | '/shop/products'
+    | '/shop/product/$productId/create-review'
+    | '/shop/product/$productId/edit'
+    | '/shop/review/$reviewId/edit'
+    | '/shop/review/$reviewId'
+  id:
+    | '__root__'
+    | '/'
+    | '/cart'
+    | '/signin'
+    | '/signup'
+    | '/account/orders'
+    | '/account/profile'
+    | '/checkout/complete'
+    | '/checkout/incomplete'
+    | '/account/'
+    | '/checkout/'
+    | '/shop/category/$categoryId'
+    | '/shop/product/$productId'
+    | '/account/myreviews/'
+    | '/shop/products/'
+    | '/shop/product/$productId/create-review'
+    | '/shop/product/$productId/edit'
+    | '/shop/review/$reviewId/edit'
+    | '/shop/review/$reviewId/'
+  fileRoutesById: FileRoutesById
+}
+
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  CartRoute: typeof CartRoute
+  SigninRoute: typeof SigninRoute
+  SignupRoute: typeof SignupRoute
+  AccountOrdersRoute: typeof AccountOrdersRoute
+  AccountProfileRoute: typeof AccountProfileRoute
+  CheckoutCompleteRoute: typeof CheckoutCompleteRoute
+  CheckoutIncompleteRoute: typeof CheckoutIncompleteRoute
+  AccountIndexRoute: typeof AccountIndexRoute
+  CheckoutIndexRoute: typeof CheckoutIndexRoute
+  ShopCategoryCategoryIdRoute: typeof ShopCategoryCategoryIdRoute
+  ShopProductProductIdRoute: typeof ShopProductProductIdRoute
+  AccountMyreviewsIndexRoute: typeof AccountMyreviewsIndexRoute
+  ShopProductsIndexRoute: typeof ShopProductsIndexRoute
+  ShopProductProductIdCreateReviewRoute: typeof ShopProductProductIdCreateReviewRoute
+  ShopProductProductIdEditRoute: typeof ShopProductProductIdEditRoute
+  ShopReviewReviewIdEditRoute: typeof ShopReviewReviewIdEditRoute
+  ShopReviewReviewIdIndexRoute: typeof ShopReviewReviewIdIndexRoute
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  CartRoute: CartRoute,
+  SigninRoute: SigninRoute,
+  SignupRoute: SignupRoute,
+  AccountOrdersRoute: AccountOrdersRoute,
+  AccountProfileRoute: AccountProfileRoute,
+  CheckoutCompleteRoute: CheckoutCompleteRoute,
+  CheckoutIncompleteRoute: CheckoutIncompleteRoute,
+  AccountIndexRoute: AccountIndexRoute,
+  CheckoutIndexRoute: CheckoutIndexRoute,
+  ShopCategoryCategoryIdRoute: ShopCategoryCategoryIdRoute,
+  ShopProductProductIdRoute: ShopProductProductIdRoute,
+  AccountMyreviewsIndexRoute: AccountMyreviewsIndexRoute,
+  ShopProductsIndexRoute: ShopProductsIndexRoute,
+  ShopProductProductIdCreateReviewRoute: ShopProductProductIdCreateReviewRoute,
+  ShopProductProductIdEditRoute: ShopProductProductIdEditRoute,
+  ShopReviewReviewIdEditRoute: ShopReviewReviewIdEditRoute,
+  ShopReviewReviewIdIndexRoute: ShopReviewReviewIdIndexRoute,
+}
+
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* prettier-ignore-end */
 
@@ -224,11 +448,16 @@ export const routeTree = rootRoute.addChildren({
         "/account/profile",
         "/checkout/complete",
         "/checkout/incomplete",
+        "/account/",
         "/checkout/",
         "/shop/category/$categoryId",
         "/shop/product/$productId",
+        "/account/myreviews/",
         "/shop/products/",
-        "/shop/product/$productId/edit"
+        "/shop/product/$productId/create-review",
+        "/shop/product/$productId/edit",
+        "/shop/review/$reviewId/edit",
+        "/shop/review/$reviewId/"
       ]
     },
     "/": {
@@ -255,6 +484,9 @@ export const routeTree = rootRoute.addChildren({
     "/checkout/incomplete": {
       "filePath": "checkout/incomplete.tsx"
     },
+    "/account/": {
+      "filePath": "account/index.tsx"
+    },
     "/checkout/": {
       "filePath": "checkout/index.tsx"
     },
@@ -264,11 +496,23 @@ export const routeTree = rootRoute.addChildren({
     "/shop/product/$productId": {
       "filePath": "shop/product/$productId.tsx"
     },
+    "/account/myreviews/": {
+      "filePath": "account/myreviews/index.tsx"
+    },
     "/shop/products/": {
       "filePath": "shop/products/index.tsx"
     },
+    "/shop/product/$productId/create-review": {
+      "filePath": "shop/product_/$productId/create-review.tsx"
+    },
     "/shop/product/$productId/edit": {
       "filePath": "shop/product_/$productId/edit.tsx"
+    },
+    "/shop/review/$reviewId/edit": {
+      "filePath": "shop/review/$reviewId_/edit.tsx"
+    },
+    "/shop/review/$reviewId/": {
+      "filePath": "shop/review/$reviewId/index.tsx"
     }
   }
 }

@@ -9,7 +9,7 @@ import {
   Label,
   NumberField,
 } from "react-aria-components";
-import { IconTrash } from "@tabler/icons-react";
+import { IconMinus, IconPlus, IconTrash } from "@tabler/icons-react";
 
 type CartProductCardProps = {
   product: CartItemsType;
@@ -24,8 +24,9 @@ function CartProductCard({
 }: CartProductCardProps) {
   const [productQuantity, setProductQuantity] = useState(product.cart_quantity);
 
+  // dark:bg-[#30313d]
   return (
-    <div className="cart-product-card dark:bg-dark-secondary-gray mb-4 bg-white shadow-around dark:shadow-none">
+    <div className="cart-product-card bg-white dark:bg-[#282828] border border-[#e6e6e6] dark:border-[#30313D] mb-4 rounded-sm">
       <div className="product-details flex gap-4">
         <div className="product-image flex-1">
           <img
@@ -46,7 +47,7 @@ function CartProductCard({
           <p>Free Shipping</p>
           <p>
             {product.quantity > 0 && (
-              <span className="text-[#018786] dark:text-[#03dac6]">
+              <span className="text-green-600 dark:text-[#22DD67]">
                 In Stock
               </span>
             )}
@@ -54,7 +55,7 @@ function CartProductCard({
         </div>
       </div>
       <div className="cart-details flex gap-3 py-3 px-[2px] ml-3">
-        <div className="product-quantity">
+        <div className="product-quantity flex">
           <NumberField
             value={productQuantity}
             onChange={(v: number) => {
@@ -62,30 +63,33 @@ function CartProductCard({
               handleQuantityChange(v, product);
             }}
             minValue={0}
-            className="text-center"
+            maxValue={product.quantity}
+            className="text-center flex"
           >
             <Label aria-label="product quantity"></Label>
-            <Group
-              className={`[box-shadow:0px_0px_2px_#c3c3c3] dark:[box-shadow:0px_0px_2px_white] rounded-md flex`}
-            >
+            <Group className={`border dark:border-[#575757] rounded-md flex`}>
               <Button
                 slot="decrement"
                 className={({ isHovered, isFocusVisible }) =>
-                  `text-2xl font-bold min-w-[32px] rounded-l-md border-r dark:border-r-neutral-500 flex justify-center items-center ${isFocusVisible || isHovered ? "bg-neutral-200 dark:bg-[#2e2e2e]" : ""}`
+                  `min-w-[32px] rounded-l-md border-r dark:border-r-[#575757] flex justify-center items-center ${isFocusVisible || isHovered ? "bg-[#EFEFEF] dark:bg-[#3f3f3f]" : ""}`
                 }
               >
-                {productQuantity <= 1 ? <IconTrash /> : "-"}
+                {productQuantity <= 1 ? (
+                  <IconTrash stroke={1.25} size={18} />
+                ) : (
+                  <IconMinus stroke={2} width={16} />
+                )}
               </Button>
               <Input
-                className={`w-20 text-center text-black text-lg dark:text-white dark:bg-gray-900`}
+                className={`w-20 text-center text-black text-lg dark:text-white dark:bg-[#121212]`}
               />
               <Button
                 slot="increment"
                 className={({ isHovered, isFocusVisible }) =>
-                  `h-full text-2xl font-bold min-w-[32px] rounded-r-md flex justify-center items-center border-l dark:border-l-neutral-500 ${isFocusVisible || isHovered ? "bg-neutral-200 dark:bg-[#2e2e2e]" : ""}`
+                  `min-w-[32px] rounded-r-md flex justify-center items-center border-l dark:border-l-[#575757] ${isFocusVisible || isHovered ? "bg-[#EFEFEF] dark:bg-[#3f3f3f]" : ""}`
                 }
               >
-                +
+                <IconPlus size={16} stroke={2}></IconPlus>
               </Button>
             </Group>
           </NumberField>
@@ -93,7 +97,7 @@ function CartProductCard({
         <div className="cart-delete-section flex">
           <Button
             className={({ isFocusVisible, isHovered }) =>
-              `rounded-full px-2 py-1 [box-shadow:0px_0px_2px_#c3c3c3] dark:[box-shadow:0px_0px_2px_white] ${isFocusVisible || isHovered ? "bg-neutral-200 dark:bg-[#2e2e2e]" : ""}`
+              `rounded-full text-sm px-2 py-1 border dark:border-[#575757] ${isFocusVisible || isHovered ? "bg-[#EFEFEF] dark:bg-[#3f3f3f]" : ""}`
             }
             onPress={() => handleQuantityChange(0, product)}
           >

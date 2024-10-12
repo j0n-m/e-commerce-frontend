@@ -1,7 +1,7 @@
 import { queryClient } from "../App";
 import fetch from "./fetch";
 
-export default async function isAuthenticated(): Promise<boolean> {
+export default async function isAuthenticated(includeUserId = false) {
   //because __root route handles invalidating queries, we no longer need to add this line
   await queryClient.invalidateQueries({ queryKey: ["auth"] });
   const getUserAuth = await queryClient.fetchQuery({
@@ -18,13 +18,11 @@ export default async function isAuthenticated(): Promise<boolean> {
   });
   const data = getUserAuth.data;
 
-  if (data) {
-    return data.isAuth;
+  if (data && includeUserId) {
+    return { isAuth: data.isAuth as boolean, user: data.user };
+  } else if (data && !includeUserId) {
+    return data.isAuth as boolean;
   }
-  if (!data) {
-    const error = new Error("Error retrieving auth info.");
-    console.error(error);
-  }
-
+  //no data
   return false;
 }

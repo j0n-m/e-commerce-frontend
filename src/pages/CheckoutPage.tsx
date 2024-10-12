@@ -56,31 +56,6 @@ function CheckoutPage() {
     enabled: !!paymentIntentId,
     placeholderData: keepPreviousData,
   });
-  // const handleQuantityChange = (value: number, product: CartItemsType) => {
-  //   let newCart = [...cart];
-
-  //   if (value <= 0) {
-  //     newCart = newCart.filter((p) => p._id !== product._id);
-  //   } else {
-  //     const currentProductIndex = newCart.findIndex(
-  //       (p) => p._id === product._id
-  //     );
-  //     if (currentProductIndex !== -1) {
-  //       newCart[currentProductIndex].cart_quantity = value;
-  //     }
-  //   }
-
-  //   localStorage.setItem("cart", JSON.stringify(newCart));
-  //   setCart(newCart);
-  // };
-
-  // const md = queryClient.getMutationCache()?.find({ mutationKey: ["checkout"] })
-  //   ?.state?.data;
-  // console.log("query client -> ", md);
-
-  // const today = new Date();
-  // const month = today.getMonth();
-  // const day = today.getDate();
 
   const contactsList: ContactOption[] = [
     (customer as ContactOption) ?? {
@@ -99,42 +74,6 @@ function CheckoutPage() {
     (prev, item) => prev + item.cart_quantity,
     0
   );
-  async function addToOrderHistory(paymentIntentId: string) {
-    try {
-      //get payment info
-      // console.log("inside getpayinfo()");
-      const response = await fetch.post("api/payment/info", {
-        payIntent: paymentIntentId,
-      });
-      const payInfo = response.data.data as {
-        cartTotal: string;
-        shipping: string;
-        shipping_code: string;
-        total: string;
-      };
-      // console.log("payinfo", payInfo);
-      const orderRes = await fetch.post("api/orderhistory", {
-        order_date: new Date(),
-        customer_id: user?.id,
-        cart_total: +payInfo.cartTotal,
-        shipping: {
-          code: +payInfo.shipping_code,
-          cost: +payInfo.shipping,
-        },
-        cart,
-      });
-      console.log("Added to user's order history", orderRes);
-      if (orderRes?.status < 400) {
-        return orderRes?.data?.orderId as string;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      console.log(error);
-      // throw "Error getting pay info.";
-      return false;
-    }
-  }
 
   const handlePaymentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -149,27 +88,28 @@ function CheckoutPage() {
       if (!isAuth) {
         await navigate({ to: "/signin", replace: true });
       } else {
-        const orderId = await addToOrderHistory(paymentIntentId);
-        if (!orderId) {
-          return await navigate({ to: "/checkout/incomplete", replace: true });
-        }
+        // const orderId = await addToOrderHistory(paymentIntentId);
+        // if (!orderId) {
+        //   return await navigate({ to: "/checkout/incomplete", replace: true });
+        // }
 
         const { error } = await stripe.confirmPayment({
           //`Elements` instance that was used to create the Payment Element
           elements,
           confirmParams: {
-            return_url: `http://localhost:5173/checkout/complete${`?orderId=${orderId}`}`,
+            return_url: `http://localhost:5173/checkout/complete${`?customerId=${user?.id}`}&pId=${paymentIntentId}`,
           },
         });
         if (error) {
+          console.log("error in submitting form");
           setIsFormSubmitting(false);
-          await fetch.delete(`api/orderhistory/${orderId}`);
           // This point will only be reached if there is an immediate error when
           // confirming the payment. Show error to your customer (for example, payment
           // details incomplete)
 
           setErrorMessage(error.message);
         } else {
+          console.log("submitted payment");
           // Your customer will be redirected to your `return_url`. For some payment
           // methods like iDEAL, your customer will be redirected to an intermediate
           // site first to authorize the payment, then redirected to the `return_url`.
@@ -178,7 +118,6 @@ function CheckoutPage() {
     } catch (error) {
       console.log(error);
     }
-    console.log("submitted payment");
   };
   const handleShipping = async (shipCode: number) => {
     try {
@@ -273,7 +212,7 @@ function CheckoutPage() {
       <header>
         <div className="header flex p-4 justify-between items-center bg-white dark:bg-gray-900 dark:border-b dark:border-b-gray-800 dark:text-neutral-300">
           <div className="logo flex items-center">
-            <Link to="/">
+            <Link to="/" replace={true}>
               <span className="logo text-2xl uppercase items-stretch tracking-wider">
                 Cyber Den
               </span>
@@ -298,7 +237,7 @@ function CheckoutPage() {
           </div>
         </div>
       </header>
-      <main className="p-4 max-w-[1500px] mx-auto">
+      <main className="p-4">
         {isStripeLoading || shippingQuery.isLoading ? (
           // <div className="text-center">
           //   <p className="text-lg font-bold">Loading Payment Form...</p>
@@ -315,7 +254,11 @@ function CheckoutPage() {
           >
             <div className="left lg:flex-[3]">
               <p>
-                <Link to="/cart" className="underline underline-offset-2">
+                <Link
+                  to="/cart"
+                  replace={true}
+                  className="underline underline-offset-2"
+                >
                   Back to cart
                 </Link>
               </p>
@@ -424,22 +367,25 @@ function CheckoutPage() {
                     !stripe ||
                     !paymentIntentId ||
                     !amount?.total ||
-                    isFormSubmitting
+                    isFormSubmitting ||
+                    shippingQuery.isFetching
                   }
                   className={({ isDisabled }) =>
-                    `mt-4 py-2 px-4 ${isDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-orange-400 dark:text-black"}`
+                    `mt-4 py-2 px-4 ${isDisabled ? "bg-gray-400 cursor-not-allowed text-black" : "bg-[#ff914d] dark:text-black hover:bg-[#ff914d]/90"}`
                   }
                 >
                   SUBMIT PAYMENT
                 </Button>
                 {!paymentIntentId && (
-                  <p className="text-red-600">
+                  <p className="text-[#e31a00] dark:text-[#FF1E00] mt-2 text-lg tracking-tight">
                     An error occurred while creating your transaction.
                   </p>
                 )}
                 {errorMessage && (
-                  <div>
-                    <p className="text-red-600">{errorMessage}</p>
+                  <div className="mt-2">
+                    <p className="text-[#e31a00] dark:text-[#FF1E00] text-lg tracking-tight">
+                      {errorMessage}
+                    </p>
                   </div>
                 )}
               </div>

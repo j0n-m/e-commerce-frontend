@@ -16,6 +16,7 @@ type PaginationProps = {
   };
   navigateLink?: string;
   navigateSearch?: { [index: string]: string };
+  className?: string;
 };
 type PaginationBtnProps = {
   searchDeps: {
@@ -57,6 +58,7 @@ export function PaginationBar({
   searchDeps,
   navigateSearch,
   isLargeScreenSize,
+  className,
 }: PaginationProps) {
   const firstPage = 1;
   const lastPage = totalPages;
@@ -102,14 +104,14 @@ export function PaginationBar({
   // console.log(leftSiblings, rightSiblings);
 
   return (
-    <div className="pagination-bar">
-      <div className="pagination-container flex flex-col lg:flex-row">
-        <p className="text-center pb-2 lg:flex lg:items-center lg:mr-4 lg:pb-0">
+    <div className={`pagination-bar ${className ? className : ""}`}>
+      <div className="pagination-container flex flex-col lg:flex-row border border-[#e6e6e6] dark:border-[#30313D] rounded-md">
+        <p className="text-center pb-2 px-4 lg:flex lg:items-center lg:pb-0">
           <span>
             Page {currentPage} of {totalPages}
           </span>
         </p>
-        <nav className="pagination-btns flex rounded-md shadow-around dark:shadow-none">
+        <nav className="pagination-btns flex rounded-md">
           <ul className="flex">
             <li>
               <Link

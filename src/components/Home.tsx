@@ -1,4 +1,4 @@
-import React, { Fragment, Suspense } from "react";
+import React, { Fragment } from "react";
 import {
   popularProductQueryOptions,
   dealProductsQueryOptions,
@@ -6,7 +6,6 @@ import {
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ProductResponse } from "../types/ProductType";
 import { Link } from "@tanstack/react-router";
-import LoadingComponent from "./LoadingComponent";
 
 function useDealProducts() {
   const {

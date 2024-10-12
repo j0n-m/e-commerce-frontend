@@ -3,6 +3,7 @@ import React, { forwardRef, useImperativeHandle } from "react";
 import fetch from "../utilities/fetch";
 import { useNavigate } from "@tanstack/react-router";
 import { Button, ButtonRenderProps } from "react-aria-components";
+import { queryClient } from "../App";
 
 export type SignOutBtnProps = {
   className:
@@ -28,7 +29,7 @@ const SignOutBtn = forwardRef<LogoutRef, SignOutBtnProps>(
         await fetch.post("auth/logout", {}, { withCredentials: true }),
       onSuccess: async () => {
         //as long as navigating to each route resets "auth" query, no need to manually invalidate here
-        // await queryClient.invalidateQueries({ queryKey: ["auth"] });
+        await queryClient.invalidateQueries({ queryKey: ["auth"] });
         await navigate({ to: "/", replace: true });
       },
     });

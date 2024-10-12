@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useState } from "react";
 
-type UserAuth = {
+export type UserAuth = {
   id: string;
   username: string;
   user_code: number;
