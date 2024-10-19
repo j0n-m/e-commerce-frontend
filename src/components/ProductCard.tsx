@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import noProductImage from "../assets/images/no_product_image.jpg";
 import { trimString } from "../utilities/trimString";
 import {
@@ -18,7 +18,12 @@ import {
   TooltipTrigger,
 } from "react-aria-components";
 import { Link } from "@tanstack/react-router";
-import { IconCheck, IconStar, IconStarHalf, IconX } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconStar,
+  IconStarHalfFilled,
+  IconX,
+} from "@tabler/icons-react";
 import {
   CartContext,
   CartItemsType,
@@ -26,13 +31,11 @@ import {
 } from "../context/CartContext";
 
 type ProductCardProps = {
-  orientation?: "row" | "col";
   item: ProductType2;
-  isScreenSizeLarge: boolean;
   reviewInfo?: ReviewInfoType[];
   cartList?: string[];
 };
-export const calculateStars = (rating?: number) => {
+export const calculateStars = (rating: number) => {
   if (typeof rating !== "number") return {};
   const starCount = rating - (rating % 0.5);
   let starsArr = [];
@@ -56,7 +59,7 @@ export const calculateStars = (rating?: number) => {
     const sizeInPx = 18;
     if (value === 0.5) {
       return (
-        <IconStarHalf
+        <IconStarHalfFilled
           key={i}
           color="orange"
           fill="orange"
@@ -95,16 +98,10 @@ export const calculateStars = (rating?: number) => {
   return { starCount, stars };
 };
 
-function ProductCard({
-  orientation = "row",
-  item,
-  isScreenSizeLarge,
-  reviewInfo,
-  cartList,
-}: ProductCardProps) {
+function ProductCard({ item, reviewInfo, cartList }: ProductCardProps) {
   const review = reviewInfo?.find((review) => review._id === item._id);
 
-  const { starCount, stars } = calculateStars(review?.rating_average);
+  const { starCount, stars } = calculateStars(review?.rating_average || 0);
   const { cart, setCart } = useContext(CartContext);
 
   const handleAddToCart = (
@@ -159,6 +156,7 @@ function ProductCard({
       console.error("error occured while adding items to cart.");
     }
   };
+
   const subtotal = cart.reduce(
     (prev, product) => prev + product.price * product.cart_quantity,
     0
@@ -166,25 +164,23 @@ function ProductCard({
 
   return (
     <div
-      className={`product-card dark:bg-[#212121] border border-[#e6e6e6] dark:border-[#30313D] p-2 lg:px-6 lg:pt-4 lg:pb-6 ${orientation === "col" && "h-full"} rounded-md dark:bg-dark-secondary-gray bg-white`}
+      className={`product-card dark:bg-a0sd border border-[#e6e6e6] dark:border-a2sd mb-1 lg:p-4 rounded-md w-full`}
     >
-      <div
-        className={`product-content flex ${"flex-" + orientation} gap-4 ${orientation === "col" && "h-full"}`}
-      >
-        <div className="section1 flex-[2] lg:flex-1 flex items-center justify-center max-w-[220px]">
+      <div className={`product-content flex flex-row gap-2`}>
+        <div className="section1 flex-1 lg:flex-1 flex items-center justify-center lg:mx-auto max-w-[220px]">
           <Link
             to={`/shop/product/$productId`}
             params={{ productId: item._id }}
           >
             <img
-              className="aspect-auto"
+              className="aspect-auto max-w-full"
               src={item.image_src || noProductImage}
               alt={item.image_src ? item.image_src : "No product image"}
             />
           </Link>
         </div>
         <div
-          className={`section2 flex flex-col flex-[3] lg:flex-[2] lg:flex-${orientation} lg:justify-evenly`}
+          className={`section2 flex flex-col flex-1 lg:flex-[2] lg:flex-row lg:justify-evenly`}
         >
           <div className="sub1 lg:flex flex-col lg:flex-1 lg:pt-6 lg:pb-2">
             <p>
@@ -197,10 +193,9 @@ function ProductCard({
               to={`/shop/product/$productId`}
               params={{ productId: item._id }}
             >
-              <p className="lg:font-semibold">
-                {isScreenSizeLarge
-                  ? trimString(item.name, 100)
-                  : trimString(item.name)}
+              <p className="lg:hidden">{trimString(item.name)}</p>
+              <p className="hidden lg:block lg:font-semibold">
+                {trimString(item.name, 100)}
               </p>
             </Link>
             {review && review.rating_count > 0 && (
@@ -245,17 +240,15 @@ function ProductCard({
               </TooltipTrigger>
             )}
             <p
-              className={`text-neutral-500 text-sm dark:text-neutral-300 hidden lg:block`}
+              className={`hidden lg:block text-neutral-500 text-sm dark:text-neutral-300`}
             >
               item #: {item._id}
             </p>
           </div>
 
-          <div
-            className={`sub2 lg:flex flex-col lg:flex-1 ${orientation === "row" ? "items-end" : "items-start"} gap-1 ${orientation === "col" && "justify-end"}`}
-          >
+          <div className={`sub2 lg:flex flex-col lg:flex-1 items-end gap-1`}>
             <p
-              className={`text-neutral-500 text-sm dark:text-neutral-300 lg:hidden`}
+              className={`text-neutral-500 text-sm dark:text-neutral-300 hidden md:block lg:hidden`}
             >
               item #: {item._id}
             </p>
@@ -270,10 +263,6 @@ function ProductCard({
               <div className="lg:h-[24px]"></div>
             )} */}
             <p className="font-semibold text-lg">${item.price.toFixed(2)}</p>
-            {item.discount! <= 0 && orientation === "col"
-              ? // <p className="h-[16px]"></p>
-                null
-              : null}
             {item.discount! > 0 && (
               <p className="bg-red-600 text-white w-fit text-xs px-1 rounded-sm font-semibold tracking-wider mb-1">
                 <span>Save </span>
@@ -294,7 +283,7 @@ function ProductCard({
               <DialogTrigger>
                 <Button
                   className={({ isFocusVisible, isHovered }) =>
-                    `shadow-sm text-neutral-950 px-2 py-[.15rem] rounded-md ${cartList?.includes(item._id) ? `bg-gray-200 outline outline-gray-400 ${isHovered && "bg-gray-300"} ${isFocusVisible && "bg-gray-300 ring-2 ring-blue-700 ring-offset-2"}` : `bg-orange-400 outline outline-orange-500 ${isHovered && "bg-orange-500"} ${isFocusVisible && "bg-orange-500 ring-offset-2 ring-2 ring-blue-700"}`}`
+                    `shadow-sm text-neutral-950 px-2 py-[.15rem] rounded-md ${cartList?.includes(item._id) ? `bg-gray-200 ${isHovered && "bg-gray-300"} ${isFocusVisible && "bg-gray-300 ring-2 ring-blue-700 ring-offset-2"}` : `bg-orange-400 ${isHovered && "bg-orange-500"} ${isFocusVisible && "bg-orange-500 ring-offset-2 ring-2 ring-blue-700"}`}`
                   }
                   onPress={() => handleAddToCart(1, item)}
                 >

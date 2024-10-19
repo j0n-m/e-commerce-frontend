@@ -39,11 +39,10 @@ const initializeThemeHTML = (theme: ThemeValues) => {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useState(initialTheme.theme);
   initializeThemeHTML(theme);
-
   document.body.classList.add(
-    "antialiased",
-    "dark:bg-slate-900",
-    "dark:text-neutral-100"
+    "antialiased"
+    // "dark:bg-slate-900",
+    // "dark:text-neutral-100"
   );
 
   useEffect(() => {

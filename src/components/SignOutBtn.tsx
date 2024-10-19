@@ -2,18 +2,10 @@ import { useMutation } from "@tanstack/react-query";
 import React, { forwardRef, useImperativeHandle } from "react";
 import fetch from "../utilities/fetch";
 import { useNavigate } from "@tanstack/react-router";
-import { Button, ButtonRenderProps } from "react-aria-components";
 import { queryClient } from "../App";
 
 export type SignOutBtnProps = {
-  className:
-    | string
-    | ((
-        values: ButtonRenderProps & {
-          defaultClassName: string | undefined;
-        }
-      ) => string)
-    | undefined;
+  className: string;
   text?: string;
   // refs?: React.LegacyRef<HTMLButtonElement> | undefined;
 };
@@ -42,12 +34,12 @@ const SignOutBtn = forwardRef<LogoutRef, SignOutBtnProps>(
     }));
 
     return (
-      // <button className={className} onClick={handleSignOut}>
-      //   {text}
-      // </button>
-      <Button className={className} onPress={handleSignOut}>
+      <button className={className} onClick={handleSignOut}>
         {text}
-      </Button>
+      </button>
+      // <Button className={className} onPress={handleSignOut}>
+      //   {text}
+      // </Button>
     );
   }
 );

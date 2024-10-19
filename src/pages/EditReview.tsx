@@ -368,12 +368,9 @@ function EditReview() {
                         <p className="mt-2">
                           This will permanently delete the selected review:
                         </p>
-                        <p>
-                          <span>ID: {review._id}</span>
-                        </p>
                         <p className="mt-2">Continue?</p>
                       </div>
-                      <div className="flex gap-6 mt-2">
+                      <div className="flex gap-4 mt-2">
                         <Button
                           onPress={close}
                           className={"border px-3 py-1 rounded-md"}

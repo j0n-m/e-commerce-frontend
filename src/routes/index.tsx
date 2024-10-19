@@ -8,13 +8,13 @@ import fetch from "../utilities/fetch";
 import ErrorPage from "../components/ErrorPage";
 
 export const dealProductsQueryOptions = queryOptions({
-  queryKey: ["indexUnder25Products"],
+  queryKey: ["index-deals"],
   queryFn: async () =>
     await fetch.get("/api/products?price_low=0.01&price_high=25"),
   staleTime: 1000 * 60 * 5,
 });
 export const popularProductQueryOptions = queryOptions({
-  queryKey: ["indexPopularProducts"],
+  queryKey: ["index-bestsellers"],
   queryFn: async () =>
     await fetch.get("/api/products?sort=-total_bought&limit=10"),
   staleTime: 1000 * 60 * 5,

@@ -11,6 +11,7 @@ import {
 } from "react-aria-components";
 import fetch from "../utilities/fetch";
 import { AxiosError } from "axios";
+import validDomains from "../utilities/validDomains";
 
 type IFormData = {
   first_name: string;
@@ -119,6 +120,16 @@ function SignUpForm() {
       });
       return false;
     }
+    const emailArr = email.split(".");
+    const domain = emailArr[emailArr.length - 1].toUpperCase();
+    const isValidDomain = !!validDomains.get(domain);
+    if (!isValidDomain) {
+      setErrorMessage({
+        email: `The email domain name, "${domain.toLowerCase()}", is invalid.`,
+      });
+      return false;
+    }
+
     if (username.length < 3) {
       setErrorMessage({
         username: "Username must be at least 3 characters long.",
@@ -171,7 +182,7 @@ function SignUpForm() {
         <span className="logo text-center text-3xl uppercase items-stretch tracking-wider">
           Cyber Den
         </span>
-        <h2 className="font-bold pt-2 text-2xl text-center">
+        <h2 className="font-bold pt-2 text-2xl text-start">
           Create an Account
         </h2>
         <div className="names-field lg:flex lg:gap-4 lg:items-start lg:justify-center relative">

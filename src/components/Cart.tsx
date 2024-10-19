@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CartContext, CartItemsType } from "../context/CartContext";
 import { Button } from "react-aria-components";
 import CartProductCard from "./CartProductCard";
@@ -25,10 +25,15 @@ function Cart() {
 
   const mutation = useMutation({
     mutationKey: ["checkout"],
-    mutationFn: (cart: unknown) => {
+    mutationFn: (cart: CartItemsType[]) => {
       return fetch.post(
         "api/create-payment-intent",
-        { cart: cart },
+        {
+          cart: cart,
+          userId: user?.id ?? "",
+          userFirstName: user?.first_name,
+          userLastName: user?.last_name,
+        },
         { withCredentials: true }
       );
     },
@@ -86,6 +91,7 @@ function Cart() {
   };
   const handleCheckout = async () => {
     const isAuth = await isAuthenticated();
+
     if (!user || !isAuth) {
       return await navigate({
         to: "/signin",
@@ -105,7 +111,7 @@ function Cart() {
     if (mutation.isSuccess) {
       navigate({ to: "/checkout" });
     }
-    // setIsLoading(false);
+    // setIsLoading(false);f
   }, [clientSecret]);
 
   return (
@@ -137,36 +143,38 @@ function Cart() {
           </div>
         )}
       </div>
-      <div className="payment-section border-b dark:border-[#424353] lg:border-l lg:border-b-0 flex-1 p-4 -order-1 lg:order-1">
-        <form className="p-6">
-          <h2 className="text-2xl font-bold text-center mb-4">Summary</h2>
-          <p className="text-center lg:border-b dark:border-[#424353] pb-4">
-            <span>Subtotal ({cartQuantity} items): </span>
-            <span className="subtotal font-bold">${subtotal.toFixed(2)}</span>
-          </p>
-          <div className="payment-btn flex justify-center mt-4">
-            {cart.length > 0 && (
-              <Button
-                isDisabled={mutation.isPending || mutation.isError}
-                aria-label="Go to checkout"
-                onPress={handleCheckout}
-                type="button"
-                className={({ isHovered, isFocusVisible, isDisabled }) =>
-                  `rounded-full py-2 px-10 bg-[#0070ba] text-white uppercase text-base font-bold ${isFocusVisible || isHovered ? "bg-[#0069af]" : ""} ${isDisabled && "bg-gray-500"}`
-                }
-              >
-                Secure Checkout
-              </Button>
-            )}
-          </div>
-          {responseMessage && (
-            <p className="border whitespace-pre text-lg text-red-700 flex flex-col justify-center items-center gap-1 rounded-md p-2 my-4 text-center dark:bg-dark-secondary-gray dark:text-red-600 bg-white">
-              <IconAlertCircle stroke={2} />
-              <span>{responseMessage}</span>
+      {cart.length > 0 && (
+        <div className="payment-section border-b dark:border-[#424353] lg:border-l lg:border-b-0 flex-1 p-4 -order-1 lg:order-1">
+          <form className="p-6">
+            <h2 className="text-2xl font-bold text-center mb-4">Summary</h2>
+            <p className="text-center lg:border-b dark:border-[#424353] pb-4">
+              <span>Subtotal ({cartQuantity} items): </span>
+              <span className="subtotal font-bold">${subtotal.toFixed(2)}</span>
             </p>
-          )}
-        </form>
-      </div>
+            <div className="payment-btn flex justify-center mt-4">
+              {cart.length > 0 && (
+                <Button
+                  isDisabled={mutation.isPending || mutation.isError}
+                  aria-label="Go to checkout"
+                  onPress={handleCheckout}
+                  type="button"
+                  className={({ isHovered, isFocusVisible, isDisabled }) =>
+                    `rounded-full py-2 px-6 lg:px-8 bg-[#0070ba] text-white text-base font-bold ${isFocusVisible || isHovered ? "bg-[#0069af]" : ""} ${isDisabled && "bg-gray-500"}`
+                  }
+                >
+                  Secure Checkout
+                </Button>
+              )}
+            </div>
+            {responseMessage && (
+              <p className="border whitespace-pre text-lg text-red-700 flex flex-col justify-center items-center gap-1 rounded-md p-2 my-4 text-center dark:bg-dark-secondary-gray dark:text-red-600 bg-white">
+                <IconAlertCircle stroke={2} />
+                <span>{responseMessage}</span>
+              </p>
+            )}
+          </form>
+        </div>
+      )}
     </div>
   );
 }

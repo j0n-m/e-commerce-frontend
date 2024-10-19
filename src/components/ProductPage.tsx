@@ -23,7 +23,13 @@ import {
   SelectValue,
 } from "react-aria-components";
 import { useContext, useEffect, useState } from "react";
-import { IconCheck, IconChevronDown, IconX } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconChevronDown,
+  IconPackageImport,
+  IconTruckDelivery,
+  IconX,
+} from "@tabler/icons-react";
 import {
   CartContext,
   CartItemsType,
@@ -43,7 +49,7 @@ function useProductPage({ productId }: { productId: string }) {
   const review = useSuspenseQuery(productReviewsQuery(productId));
   // console.log("data", data);
   const productData = data.product as ProductType;
-  const product = productData[0];
+  const product = productData;
   const reviews = review.data.data as SingleProductReview;
 
   return { product, reviews };
@@ -177,7 +183,7 @@ function ProductPage() {
           {/* divide-y-8 dark:divide-neutral-700 */}
           <div className="product-page">
             <div className="top-section flex flex-col lg:flex-row mt-4 lg:mx-4">
-              <section className="product-card flex flex-col p-4 lg:flex-[2]">
+              <section className="product-card info-section flex flex-col p-4 lg:flex-[2]">
                 <h1 className="product-name font-semibold pb-3 lg:text-2xl">
                   {product.name}
                 </h1>
@@ -236,7 +242,7 @@ function ProductPage() {
                   {productTableHighlights}
                 </div>
               </section>
-              <section className="product-card p-4 lg:order-[-1] lg:flex-[2] lg:max-w-[600px]">
+              <section className="product-card img-section p-4 lg:order-[-1] lg:flex-[2] lg:max-w-[600px]">
                 {/* max-w-[600px] min-w-[300px] mx-auto */}
                 <div className="image-container flex justify-center">
                   <img
@@ -254,7 +260,7 @@ function ProductPage() {
                   </h2>
                   <p className="flex-1 border-b border-gray-400"></p>
                 </div>
-                <div className="purchase-card rounded-md flex flex-col m-4 lg:m-0 p-4 dark:bg-[#212121] border border-[#e6e6e6] dark:border-[#30313D]">
+                <div className="purchase-card rounded-md flex flex-col m-4 lg:m-0 p-4 dark:bg-a1sd border border-[#e6e6e6] dark:border-a3sd">
                   <div className="purchase-card-section-header flex justify-between">
                     <p className="font-semibold">One-time purchase</p>
                     <div className="flex items-center">
@@ -269,26 +275,40 @@ function ProductPage() {
                         </span>
                       )}
                       <br />
-                      <p className="price-section text-3xl pb-1">
+                      <p className="price-section text-3xl pb-2">
                         <span>$</span>
                         {productPrice_formatted}
                       </p>
                     </div>
                   </div>
                   <div className="purchase-card-section-btns">
-                    <p className="uppercase text-blue-600 dark:text-blue-400 font-normal text-sm">
-                      * Free 30-day Returns
-                    </p>
-                    <p className="uppercase text-sm">
-                      <span className="text-blue-600 dark:text-blue-400">
-                        * Free Delivery
-                      </span>
+                    <div className="uppercase text-blue-600 dark:text-blue-400 text-sm flex items-center mb-1">
+                      <IconPackageImport
+                        stroke={1.5}
+                        className="mr-1 min-w-max"
+                      />
+                      <span className="">Free 30-day Returns</span>
+                    </div>
+                    <div className="uppercase text-sm flex items-center gap-1">
+                      <IconTruckDelivery
+                        stroke={1.5}
+                        color="#60a5fa"
+                        className="min-w-max"
+                      />
+                      <p className="">
+                        <span className="text-blue-600 dark:text-blue-400">
+                          Free Delivery
+                        </span>
 
-                      <span className=""> from United States</span>
-                    </p>
+                        <span className="lg:hidden xl:inline">
+                          {" "}
+                          from United States
+                        </span>
+                      </p>
+                    </div>
 
                     <p
-                      className={`text-2xl ${product.quantity > 0 ? "text-green-600 dark:text-[#22DD67]" : "text-neutral-500"} mb-2`}
+                      className={`text-2xl ${product.quantity > 0 ? "text-green-600 dark:text-[#22DD67]" : "text-neutral-500"} mb-2 mt-2`}
                     >
                       {product.quantity > 0 ? "In Stock" : "Out of Stock"}
                     </p>
@@ -304,9 +324,9 @@ function ProductPage() {
                     >
                       <Label>Quantity:</Label>
                       <Button
-                        className={({ isHovered, isFocusVisible }) =>
-                          `border bg-neutral-50 rounded-md text-black shadow-sm py-1 flex justify-center px-2
-                          ${isHovered || isFocusVisible ? "bg-neutral-200" : ""}
+                        className={({ isHovered, isFocusVisible, isPressed }) =>
+                          `border bg-neutral-50 dark:bg-a0d rounded-md text-black shadow-sm py-1 flex justify-center px-2
+                          ${isHovered || isFocusVisible || isPressed ? "bg-neutral-200" : ""}
                         `
                         }
                       >
@@ -323,7 +343,7 @@ function ProductPage() {
 
                       <Popover
                         className={
-                          "bg-white text-black border-2 flex flex-col w-[--trigger-width] overflow-y-auto py-1 rounded-md"
+                          "bg-white dark:bg-a0d text-black border-2 flex flex-col w-[--trigger-width] overflow-y-auto py-1 rounded-md"
                         }
                       >
                         <ListBox className={"max-h-32"}>
@@ -339,8 +359,9 @@ function ProductPage() {
                                     isHovered,
                                     isSelected,
                                     isFocusVisible,
+                                    isPressed,
                                   }) => `group px-4
-                              ${isHovered && !isSelected ? "bg-gray-200 cursor-pointer" : ""}
+                              ${(isHovered || isPressed) && !isSelected ? "bg-gray-200 cursor-pointer" : ""}
                               ${isFocusVisible && !isSelected ? "bg-gray-200" : ""}
                               ${isSelected ? "shadow-sm bg-blue-300" : ""}
                             `}
@@ -527,7 +548,7 @@ function ProductPage() {
                           params: { productId },
                           unmaskOnReload: true,
                         }}
-                        className="text-blue-600 hover:text-blue-600/70 dark:text-blue-400 dark:hover:text-blue-400/80 hover:underline"
+                        className="text-[#0253B1] hover:text-[#0253B1]/70 dark:text-[#62ABFD] dark:hover:text-[#62ABFD]/80 hover:underline"
                       >
                         <span>I want to review this product</span>
                       </Link>
@@ -542,47 +563,64 @@ function ProductPage() {
                       There are no reviews for this product.
                     </p>
                   ) : (
-                    reviews.reviews.map((r) => (
-                      <div className="review-card lg:w-[625px]" key={r._id}>
-                        <div className="reviewer flex items-center mb-1 gap-2">
-                          <div className="reviewer-icon h-[25px] w-[25px] text-center rounded-full bg-gray-300 dark:text-black inline-flex justify-center items-center">
-                            {r.reviewer_name[0].toUpperCase()}
+                    reviews.reviews.map((r, i) => {
+                      //only displays 8 reviews before showing the see all reviews link
+                      const MAX_INDEX = 7;
+                      if (i === MAX_INDEX) {
+                        //returns the see all link
+                        return (
+                          <Link key={i} to="/" className={`active:underline`}>
+                            See all reviews
+                          </Link>
+                        );
+                      }
+                      if (i >= MAX_INDEX) {
+                        //returns nothing, doesn't render any more reviews
+                        return;
+                      }
+                      return (
+                        <div className="review-card lg:w-[625px]" key={r._id}>
+                          <div className="reviewer flex items-center mb-1 gap-2">
+                            <div className="reviewer-icon h-[25px] w-[25px] text-center rounded-full bg-gray-300 dark:text-black inline-flex justify-center items-center">
+                              {r.reviewer_name[0].toUpperCase()}
+                            </div>
+                            <span>{r.reviewer_name}</span>
                           </div>
-                          <span>{r.reviewer_name}</span>
-                        </div>
-                        <Link
-                          to="/shop/review/$reviewId"
-                          params={{ reviewId: r._id }}
-                          className="hover:underline focus-visible:underline inline-block"
-                        >
-                          <div className="reviewer-rating">
-                            {calculateStars(r.rating).stars}
-                          </div>
-                          <p className="review-title font-bold mt-1">
-                            {r.review_title}
-                          </p>
-                        </Link>
-                        <p>
-                          <span className="text-sm dark:text-a1d">
-                            Reviewed on {new Date(r.review_date).toDateString()}
-                          </span>
-                        </p>
-                        {r.review_edit_date && (
-                          <p className="text-sm dark:text-a1d">
-                            <span>Edited on </span>
-                            <span>
-                              {new Date(r.review_edit_date).toDateString()}
+                          <Link
+                            to="/shop/review/$reviewId"
+                            params={{ reviewId: r._id }}
+                            className="hover:underline focus-visible:underline inline-block"
+                          >
+                            <div className="reviewer-rating">
+                              {calculateStars(r.rating).stars}
+                            </div>
+                            <p className="review-title font-bold mt-1">
+                              {r.review_title}
+                            </p>
+                          </Link>
+                          <p>
+                            <span className="text-sm dark:text-a1d">
+                              Reviewed on{" "}
+                              {new Date(r.review_date).toDateString()}
                             </span>
                           </p>
-                        )}
-                        <div className="mt-1">
-                          <ExpandableReviewDescription
-                            reviewDescription={r.review_description}
-                            trimCap={300}
-                          />
+                          {r.review_edit_date && (
+                            <p className="text-sm dark:text-a1d">
+                              <span>Edited on </span>
+                              <span>
+                                {new Date(r.review_edit_date).toDateString()}
+                              </span>
+                            </p>
+                          )}
+                          <div className="mt-1">
+                            <ExpandableReviewDescription
+                              reviewDescription={r.review_description}
+                              trimCap={300}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   )}
                 </div>
               </div>

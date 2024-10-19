@@ -7,6 +7,8 @@ import fetch from "../../../utilities/fetch";
 import { AxiosError } from "axios";
 import MissingPage from "../../../components/MissingPage";
 import ErrorPage from "../../../components/ErrorPage";
+import { ShopURLQuery } from "../category/$categoryId";
+import { productsSortByMap } from "../category/best-deals";
 
 export type ProductSearch = {
   q: string;
@@ -15,7 +17,7 @@ export type ProductSearch = {
   price_low?: number;
   price_high?: number;
   pageSize?: number;
-};
+} & ShopURLQuery;
 
 export function queryFormSearchOptions(
   search: string,
@@ -25,7 +27,7 @@ export function queryFormSearchOptions(
     queryKey: ["searchQuery", search, { ...searchDeps }],
     queryFn: async () =>
       await fetch.get(
-        `/api/products?search=${search}&deals=true&page=${searchDeps.page}${searchDeps.pageSize && `&limit=${searchDeps.pageSize}`}`
+        `/api/products?search=${search}&deals=true&sort=-total_bought&page=${searchDeps.page}${searchDeps.sortBy ? `&sortBy=${productsSortByMap.get(searchDeps.sortBy)}` : ""}${searchDeps.pageSize ? `&limit=${searchDeps.pageSize}` : ""}`
       ),
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
@@ -49,8 +51,8 @@ export const Route = createFileRoute("/shop/products/")({
   notFoundComponent: () => <MissingPage />,
 
   loaderDeps: ({
-    search: { q, page, pageSize, price_high, price_low, sort },
-  }) => ({ q, page, pageSize, price_high, price_low, sort }),
+    search: { q, page, pageSize, price_high, price_low, sort, sortBy },
+  }) => ({ q, page, pageSize, price_high, price_low, sort, sortBy }),
 
   loader: async ({ deps }) => {
     try {

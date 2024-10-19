@@ -48,7 +48,7 @@ function useProduct({
 }) {
   const data = useSuspenseQuery(singleProductQueryOption(productId)).data;
   const productData = data.product as ProductType;
-  const product = productData[0];
+  const product = productData;
 
   const lastOrderData = useSuspenseQuery(
     orderHistoryByUserQuery(userId, productId)
@@ -108,9 +108,14 @@ function CreateReview() {
       } else if (response?.status == 403) {
         setGlobalError([response.statusText]);
       } else {
-        if (response?.data && response?.data?.error) {
-          const errorArr = response?.data?.error.map((e) => e.msg);
-          setGlobalError([...errorArr]);
+        if (response?.data) {
+          const errorArr = (
+            response.data as Partial<{ error: any[] }>
+          ).error?.map((e) => e.msg);
+          setGlobalError([
+            ...(errorArr ||
+              "An internal error occurred. Please try again later."),
+          ]);
         } else {
           setGlobalError([
             "An internal error occurred. Please try again later.",

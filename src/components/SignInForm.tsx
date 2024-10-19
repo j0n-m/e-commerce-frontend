@@ -110,9 +110,9 @@ function SignInForm() {
           typeof errorMessage === "undefined" ? undefined : errorMessage
         }
       >
-        <span className="logo text-center text-3xl uppercase items-stretch tracking-wider">
+        {/* <span className="logo text-center text-3xl uppercase items-stretch tracking-wider">
           Cyber Den
-        </span>
+        </span> */}
         <h2 className="font-bold pt-2 text-2xl">Sign In</h2>
         <TextField
           name="email"

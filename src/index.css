@@ -39,6 +39,7 @@ html {
   letter-spacing: 0.5px;
   height: 100%;
   width: 100%;
+  scroll-behavior: smooth;
 }
 body {
   width: 100%;
@@ -110,10 +111,14 @@ nav {
 } */
 .logo {
   font-family: Poppins;
-  color: #ff914d;
+  color: #5085e7;
+  /* color: #ff914d; */
   font-weight: bold;
   /* -webkit-text-stroke-width: 0.7px; */
   /* -webkit-text-stroke-color: black; */
+}
+html.light .logo {
+  color: #2c6ce2;
 }
 .skipNav {
   position: absolute;
@@ -154,6 +159,12 @@ nav {
 light mode secondary text color text-[#565959]
 
 */
+.menu-items::-webkit-scrollbar {
+  display: none;
+}
+.divider {
+  height: 1px;
+}
 .shadow-card {
   box-shadow:
     0px 1px 1px rgba(0, 0, 0, 0.03),
@@ -173,6 +184,33 @@ light mode secondary text color text-[#565959]
     animation: mymodal-slide 300ms reverse ease-in;
   }
 }
+.menuPopup[data-entering] {
+  animation: slide-in-menu 300ms forwards;
+}
+.menuPopup[data-exiting] {
+  animation: slide-in-menu 300ms forwards reverse;
+}
+.select-box-overlay {
+  animation: slideaway 1s;
+}
+.select-box-overlay.show {
+  position: fixed;
+  inset: 0;
+  /* background-color: black; */
+  /* opacity: 0.6; */
+  /* animation: slideaway 1s reverse; */
+  z-index: 10000;
+}
+@keyframes slideaway {
+  from {
+    display: block;
+  }
+  to {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+}
+
 .modal-overlay {
   z-index: 20;
   background-color: rgba(0, 0, 0, 0.5);
@@ -184,12 +222,34 @@ light mode secondary text color text-[#565959]
     animation: overlay-fade 300ms reverse;
   }
 }
+.menu-overlay {
+  backdrop-filter: blur(1px);
+  background-color: rgba(0, 0, 0, 0.6);
+
+  &[data-entering] {
+    animation: overlay-blur 300ms forwards;
+  }
+  &[data-exiting] {
+    animation: overlay-blur 300ms reverse;
+  }
+}
 .menu-slide {
+  z-index: 30;
   &[data-entering] {
     animation: slide-in-menu 300ms forwards;
   }
   &[data-exiting] {
     animation: slide-in-menu 300ms reverse forwards;
+  }
+}
+@keyframes overlay-blur {
+  from {
+    background-color: rgba(0, 0, 0, 0.01);
+    backdrop-filter: blur(0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(1px);
   }
 }
 
@@ -212,11 +272,22 @@ light mode secondary text color text-[#565959]
 }
 @keyframes overlay-fade {
   from {
+    background-color: black;
     opacity: 0;
   }
 
   to {
-    opacity: 1;
+    background-color: black;
+    opacity: 0.6;
+  }
+}
+@keyframes overlay-fade2 {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.7;
   }
 }
 

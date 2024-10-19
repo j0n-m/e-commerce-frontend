@@ -63,12 +63,6 @@ function Orders() {
                           ${(order.cart_total + order.shipping.cost).toFixed(2)}
                         </p>
                       </div>
-                      <div className="card-ship-to">
-                        <p>Customer</p>
-                        <p>
-                          {user?.first_name} {user?.last_name}
-                        </p>
-                      </div>
                     </div>
                     <div className="card-inner-right hidden lg:flex">
                       <div className="card-order-num">

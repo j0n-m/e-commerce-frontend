@@ -45,7 +45,7 @@ function useScreenSize() {
   //return object from hook
   return { isMobile, isTablet, isDesktop };
 }
-function SkipLink({
+export function SkipLink({
   skipToId,
   skipToText,
 }: {
@@ -83,12 +83,8 @@ function ECommerceApp() {
   return (
     <ScreenSizeContext.Provider value={{ isMobile, isDesktop, isTablet }}>
       <div className="app-container flex flex-col relative">
-        <SkipLink skipToId="content" skipToText="Skip to content" />
         {!path[0].match(/checkout/i) && <Nav />}
-        <div
-          id="content"
-          className={`bg-white dark:bg-dark-primary-gray dark:text-a0d outlet-container flex-1 relative`}
-        >
+        <div id="content" className={`outlet-container flex-1 relative`}>
           <div
             className={`width-container max-w-[1800px] mx-auto flex flex-col`}
           >

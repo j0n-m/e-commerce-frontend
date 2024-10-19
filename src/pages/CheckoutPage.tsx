@@ -8,8 +8,6 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { PaymentContext } from "../context/PaymentSecretContext";
-import { ContactOption } from "@stripe/stripe-js";
 import fetch from "../utilities/fetch";
 import { queryClient } from "../App";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
@@ -21,7 +19,7 @@ import { AxiosError } from "axios";
 
 function CheckoutPage() {
   const { cart } = useContext(CartContext);
-  const { customer } = useContext(PaymentContext);
+  // const { customer } = useContext(PaymentContext);
   const { user } = useAuth();
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
   const [shippingCode, setShippingCode] = useState("1");
@@ -40,35 +38,33 @@ function CheckoutPage() {
   const elements = useElements();
 
   const shippingQuery = useQuery({
-    queryKey: ["payment", { shippingCode: +shippingCode }],
+    queryKey: ["payment", { shippingCode: +shippingCode, user: user?.id }],
 
     queryFn: () => {
-      console.log("initial fetch for cart totals", cart);
-      return fetch.post(
-        `http://localhost:3000/api/update-intent/${paymentIntentId}`,
-        {
-          cart: cart,
-          shippingCode: +shippingCode,
-        }
-      );
+      return fetch.post(`api/update-intent/${paymentIntentId}`, {
+        cart: cart,
+        shippingCode: +shippingCode,
+        userId: user?.id,
+      });
     },
     staleTime: 1000 * 60 * 3,
     enabled: !!paymentIntentId,
     placeholderData: keepPreviousData,
   });
+  // console.log();
 
-  const contactsList: ContactOption[] = [
-    (customer as ContactOption) ?? {
-      name: "Placeholder name",
-      address: {
-        line1: "123 Main st.",
-        city: "Kansas City",
-        state: "MO",
-        postal_code: "64110",
-        country: "US",
-      },
-    },
-  ];
+  // const contactsList: ContactOption[] = [
+  //   (customer as ContactOption) ?? {
+  //     name: "Placeholder name",
+  //     address: {
+  //       line1: "123 Main st.",
+  //       city: "Kansas City",
+  //       state: "MO",
+  //       postal_code: "64110",
+  //       country: "US",
+  //     },
+  //   },
+  // ];
 
   const cartItemsCount = cart.reduce(
     (prev, item) => prev + item.cart_quantity,
@@ -88,16 +84,13 @@ function CheckoutPage() {
       if (!isAuth) {
         await navigate({ to: "/signin", replace: true });
       } else {
-        // const orderId = await addToOrderHistory(paymentIntentId);
-        // if (!orderId) {
-        //   return await navigate({ to: "/checkout/incomplete", replace: true });
-        // }
+        //call mutate to send updated customer shipping info
 
         const { error } = await stripe.confirmPayment({
           //`Elements` instance that was used to create the Payment Element
           elements,
           confirmParams: {
-            return_url: `http://localhost:5173/checkout/complete${`?customerId=${user?.id}`}&pId=${paymentIntentId}`,
+            return_url: `${window.location.origin}/checkout/complete${`?customerId=${user?.id}`}&pId=${paymentIntentId}`,
           },
         });
         if (error) {
@@ -122,19 +115,16 @@ function CheckoutPage() {
   const handleShipping = async (shipCode: number) => {
     try {
       const updatePaymentQuery = await queryClient.fetchQuery({
-        queryKey: ["payment", { shippingCode: shipCode }],
+        queryKey: ["payment", { shippingCode: shipCode, userId: user?.id }],
 
         queryFn: () => {
-          console.log("called handleshipping query");
-          return fetch.post(
-            `http://localhost:3000/api/update-intent/${paymentIntentId}`,
-            {
-              cart: cart,
-              shippingCode: shipCode,
-            }
-          );
+          return fetch.post(`api/update-intent/${paymentIntentId}`, {
+            cart: cart,
+            shippingCode: shipCode,
+            userId: user?.id,
+          });
         },
-        staleTime: 1000 * 60 * 10,
+        staleTime: 1000 * 60 * 5,
       });
       const newAmount = updatePaymentQuery.data.amount;
       if (newAmount) {
@@ -153,6 +143,7 @@ function CheckoutPage() {
   // }, [stripe]);
 
   if (shippingQuery.isSuccess && !amount) {
+    //updates cart total after initial query
     console.log("success in initial query!");
     const newAmount = shippingQuery.data.data.amount;
     if (newAmount) {
@@ -205,6 +196,9 @@ function CheckoutPage() {
         </p>
       </section>
     );
+  }
+  if (shippingQuery.isSuccess) {
+    console.log("shippingquery", shippingQuery.data.data);
   }
 
   return (
@@ -262,25 +256,32 @@ function CheckoutPage() {
                   Back to cart
                 </Link>
               </p>
-              <h2 className="font-bold mt-4">Shipping Address</h2>
+              <h2 className="font-bold mt-4 text-lg">Shipping Address</h2>
               <AddressElement
                 className="mt-2"
                 options={{
                   mode: "shipping",
-                  allowedCountries: ["US", "CA"],
+                  allowedCountries: ["US"],
                   autocomplete: { mode: "automatic" },
-                  contacts: contactsList,
+                  contacts: shippingQuery?.data?.data?.shipping?.name
+                    ? [
+                        {
+                          address: shippingQuery?.data?.data.shipping.address,
+                          name: shippingQuery?.data?.data.shipping.name,
+                        },
+                      ]
+                    : undefined,
                 }}
               />
 
               <br />
-              <h2 className="font-bold">Payment Method</h2>
+              <h2 className="font-bold text-lg">Payment Method</h2>
               <PaymentElement
                 className="mt-2"
                 options={{ layout: { type: "tabs", defaultCollapsed: true } }}
               />
-              <div className="mt-4">
-                <h2 className="font-bold">Delivery Options</h2>
+              <div className="mt-6">
+                <h2 className="font-bold text-lg">Delivery Options</h2>
                 <RadioGroup
                   aria-label="Choose delivery option"
                   defaultValue={shippingCode}
@@ -290,7 +291,7 @@ function CheckoutPage() {
                     !amount?.total ||
                     isFormSubmitting
                   }
-                  className={`group`}
+                  className={`group mt-2`}
                   onChange={(e) => {
                     setShippingCode(e);
                     handleShipping(+e);
@@ -330,24 +331,28 @@ function CheckoutPage() {
               </div>
 
               <div className="cart-review mt-4">
-                <h2 className="font-bold">Review Items</h2>
+                <h2 className="font-bold text-lg">Review Items</h2>
                 {cart.map((item) => {
                   return (
                     <div
                       key={item._id}
-                      className="review-items-card mt-2 p-2 shadow-card border dark:border-[#3c3d4c] dark:bg-[#30313d]"
+                      className="review-items-card mt-2 p-2 shadow-card border dark:border-[#3c3d4c] dark:bg-[#30313d] rounded-lg"
                     >
                       <p>{trimString(item.name, 80)}</p>
                       <p>Qty: {item.cart_quantity}</p>
-                      <p>${(item.price * item.cart_quantity).toFixed(2)}</p>
+                      <p>
+                        ${(item.price * item.cart_quantity).toFixed(2)}
+                        {item.cart_quantity > 1 && "/each"}
+                      </p>
                     </div>
                   );
                 })}
               </div>
               <div className="mt-4">
+                <div className="lg:hidden divider dark:bg-a3sd bg-neutral-200 mb-4"></div>
                 <div className="summary lg:hidden shadow-card border dark:border-[#3c3d4c] bg-white dark:bg-[#30313d] p-4 rounded-md">
                   <h2 className="font-bold text-2xl">Order Summary</h2>
-                  <p>
+                  <p className="mt-2">
                     Subtotal: $
                     {amount?.cartTotal.toFixed(2) ?? "calculating..."}
                   </p>
@@ -371,7 +376,7 @@ function CheckoutPage() {
                     shippingQuery.isFetching
                   }
                   className={({ isDisabled }) =>
-                    `mt-4 py-2 px-4 ${isDisabled ? "bg-gray-400 cursor-not-allowed text-black" : "bg-[#ff914d] dark:text-black hover:bg-[#ff914d]/90"}`
+                    `mt-6 py-2 px-4 ${isDisabled ? "bg-gray-400 cursor-not-allowed text-black" : "bg-[#ff914d] dark:text-black hover:bg-[#ff914d]/90"}`
                   }
                 >
                   SUBMIT PAYMENT

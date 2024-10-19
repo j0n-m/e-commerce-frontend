@@ -32,7 +32,7 @@ function MyReviews() {
             <div key={review._id} className="review-card border-b p-2">
               <div className="review-heading">review ID:{review._id}</div>
               <div className="review-content">
-                <p>product: {review.product_id[0].name}</p>
+                <p>product: {review.product_id.name}</p>
               </div>
               <Link
                 className="hover:underline dark:text-green-400 text-green-700"
