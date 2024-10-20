@@ -47,6 +47,7 @@ function Nav() {
   const navigate = useNavigate();
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
   const [subMenu, setSubMenu] = useState<number | undefined>(undefined);
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
   const { user } = useAuth();
   const ulTheme = useRef<HTMLUListElement>(null);
   // const isDarkMode = Array.from(document.documentElement.classList).includes(
@@ -60,6 +61,7 @@ function Nav() {
   const navBarLinks = [
     allLinks[mappedLinks.get("bestdeals") || 0],
     allLinks[mappedLinks.get("bestsellers") || 1],
+    allLinks[mappedLinks.get("electronics") || 0],
     allLinks[mappedLinks.get("officeproducts") || 0],
     allLinks[mappedLinks.get("petsupplies") || 0],
     allLinks[mappedLinks.get("garden&outdoors") || 0],
@@ -189,7 +191,7 @@ function Nav() {
               >
                 <Button
                   className={"lg:p-1 rounded-lg dark:hover:bg-slate-700"}
-                  aria-label="Menu"
+                  aria-label="Browse Menu"
                 >
                   <IconMenu2 size={32} stroke={1} />
                 </Button>
@@ -224,7 +226,7 @@ function Nav() {
                                   )}
                                 </Header>
                               </div>
-                              {!user && (
+                              {!user ? (
                                 <div className="signin-announce">
                                   <Button
                                     onPress={() => {
@@ -235,6 +237,16 @@ function Nav() {
                                     Sign in
                                   </Button>
                                 </div>
+                              ) : (
+                                <Button
+                                  className={"flex"}
+                                  onPress={() => {
+                                    setShowAccountMenu(true);
+                                    close();
+                                  }}
+                                >
+                                  My Account
+                                </Button>
                               )}
                             </div>
                           </div>
@@ -242,7 +254,7 @@ function Nav() {
                             aria-label="Exit Menu"
                             type="button"
                             onPress={close}
-                            className={`${showHamburgerMenu ? "inline-block opacity-1" : "hidden opacity-0"} bg-transparent transition-opacity duration-300 aspect-square h-[30px] absolute top-2 right-[-50px] z-20`}
+                            className={`bg-transparent aspect-square h-[30px] absolute top-2 right-[-50px] z-20`}
                           >
                             <IconX stroke={1} className="mx-auto" size={34} />
                           </Button>
@@ -463,42 +475,6 @@ function Nav() {
                                 </ul>
                               </div>
                             </li>
-
-                            {user && (
-                              <li>
-                                {/* <Button
-                                  className={({
-                                    isHovered,
-                                    isFocusVisible,
-                                    isDisabled,
-                                    isPressed,
-                                  }) =>
-                                    `dropdown-item flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
-                                  }
-                                  onPress={() => {
-                                    close();
-                                  }}
-                                >
-                                  Sign Out
-                                </Button> */}
-                                <Button
-                                  className={({
-                                    isHovered,
-                                    isFocusVisible,
-                                    isDisabled,
-                                    isPressed,
-                                  }) =>
-                                    `dropdown-item flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
-                                  }
-                                  onPress={() => {
-                                    close();
-                                    handleSignOut();
-                                  }}
-                                >
-                                  Sign Out
-                                </Button>
-                              </li>
-                            )}
                           </ul>
                         </div>
                       )}
@@ -541,15 +517,152 @@ function Nav() {
             {user ? (
               <>
                 <div className="lg:hidden">
-                  <LinkAria
-                    className={"flex mr-2 items-center gap-1"}
-                    href="/account"
+                  <DialogTrigger
+                    isOpen={showAccountMenu}
+                    onOpenChange={setShowAccountMenu}
                   >
-                    <span className="hidden xs:block">
-                      {trimString(user.first_name, 12)}
-                    </span>
-                    <IconUserCircle stroke={1} size={34}></IconUserCircle>
-                  </LinkAria>
+                    <Button
+                      className={"flex items-center"}
+                      aria-label="My Account"
+                    >
+                      <span className="hidden xs:block">
+                        {trimString(user.first_name, 12)}
+                      </span>
+                      <IconUserCircle stroke={1} size={34} />
+                      <ModalOverlay
+                        isDismissable={true}
+                        className="menu-overlay fixed inset-0"
+                      >
+                        <Modal
+                          isDismissable={true}
+                          className={
+                            "menu-slide-right ring-0 bg-white dark:bg-a1sd border-r dark:border-r-a3sd min-h-screen absolute top-0 right-0 min-w-[75%] sm:min-w-[365px]"
+                          }
+                        >
+                          <Dialog className="">
+                            {({ close }) => (
+                              <div>
+                                <div className="dark:bg-a0sd dark:text-a0d bg-a0d">
+                                  <div className="flex justify-between px-4 py-3">
+                                    <div className="heading">
+                                      <Header
+                                        slot="title"
+                                        className="font-bold text-lg"
+                                      >
+                                        <span>My Account</span>
+                                      </Header>
+                                    </div>
+                                    <div>
+                                      <Button
+                                        className={"flex"}
+                                        aria-label="Browse Menu"
+                                        onPress={() => {
+                                          setShowHamburgerMenu(true);
+                                          close();
+                                        }}
+                                      >
+                                        {"Browse "}
+                                        <IconMenu2 stroke={1.5} />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <Button
+                                  aria-label="Exit Menu"
+                                  type="button"
+                                  onPress={close}
+                                  className={`bg-transparent aspect-square h-[30px] absolute top-2 left-[-50px] z-20`}
+                                >
+                                  <IconX
+                                    stroke={1}
+                                    className="mx-auto"
+                                    size={34}
+                                  />
+                                </Button>
+                                <ul className="account-menu-items overflow-y-scroll h-svh pb-[6rem]">
+                                  <li>
+                                    <Button
+                                      onPress={() => {
+                                        navigate({ to: "/account/profile" });
+                                        close();
+                                      }}
+                                      className={({
+                                        isHovered,
+                                        isFocusVisible,
+                                        isDisabled,
+                                        isPressed,
+                                      }) =>
+                                        `dropdown-item ring-0 outline-0 border-0 flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                      }
+                                    >
+                                      <span>Profile</span>
+                                    </Button>
+                                  </li>
+                                  <li>
+                                    <Button
+                                      onPress={() => {
+                                        navigate({
+                                          to: "/account/orders",
+                                          search: { page: 1 },
+                                        });
+                                        close();
+                                      }}
+                                      className={({
+                                        isHovered,
+                                        isFocusVisible,
+                                        isDisabled,
+                                        isPressed,
+                                      }) =>
+                                        `dropdown-item ring-0 outline-0 border-0 flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                      }
+                                    >
+                                      <span>Orders</span>
+                                    </Button>
+                                  </li>
+                                  <li>
+                                    <Button
+                                      onPress={() => {
+                                        navigate({ to: "/account/myreviews" });
+                                        close();
+                                      }}
+                                      className={({
+                                        isHovered,
+                                        isFocusVisible,
+                                        isDisabled,
+                                        isPressed,
+                                      }) =>
+                                        `dropdown-item ring-0 outline-0 border-0 flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                      }
+                                    >
+                                      <span>My Reviews</span>
+                                    </Button>
+                                  </li>
+                                  <li>
+                                    <Button
+                                      className={({
+                                        isHovered,
+                                        isFocusVisible,
+                                        isDisabled,
+                                        isPressed,
+                                      }) =>
+                                        `dropdown-item flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                      }
+                                      onPress={() => {
+                                        close();
+                                        handleSignOut();
+                                      }}
+                                    >
+                                      Sign Out
+                                    </Button>
+                                  </li>
+                                </ul>
+                              </div>
+                            )}
+                          </Dialog>
+                        </Modal>
+                      </ModalOverlay>
+                    </Button>
+                  </DialogTrigger>
                 </div>
 
                 <div className="hidden lg:block">
@@ -599,9 +712,25 @@ function Nav() {
                           className={({ isHovered, isFocusVisible }) =>
                             `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-slate-600" : ""}`
                           }
-                          href="/account"
+                          href="/account/profile"
                         >
-                          My account
+                          Profile
+                        </MenuItem>
+                        <MenuItem
+                          className={({ isHovered, isFocusVisible }) =>
+                            `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-slate-600" : ""}`
+                          }
+                          href="/account/orders"
+                        >
+                          Orders
+                        </MenuItem>
+                        <MenuItem
+                          className={({ isHovered, isFocusVisible }) =>
+                            `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-slate-600" : ""}`
+                          }
+                          href="/account/myreviews"
+                        >
+                          My Reviews
                         </MenuItem>
                         <MenuItem
                           className={({ isHovered, isFocusVisible }) =>
@@ -621,9 +750,10 @@ function Nav() {
                 <div className="lg:hidden">
                   <LinkAria
                     href="/signin"
+                    isDisabled={location.pathname === "/signin"}
                     routerOptions={{
                       search: {
-                        from: location.pathname + (location.search.from ?? ""),
+                        from: `${location.pathname + (location.search.from ?? "")}`,
                       },
                     }}
                     className={

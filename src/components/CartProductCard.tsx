@@ -10,6 +10,7 @@ import {
   NumberField,
 } from "react-aria-components";
 import { IconMinus, IconPlus, IconTrash } from "@tabler/icons-react";
+import { Link } from "@tanstack/react-router";
 
 type CartProductCardProps = {
   product: CartItemsType;
@@ -28,17 +29,28 @@ function CartProductCard({
   return (
     <div className="cart-product-card bg-white dark:bg-a1sd border border-[#e6e6e6] dark:border-[#30313D] mb-4 rounded-sm">
       <div className="product-details flex gap-4 p-1">
-        <div className="product-image">
-          <img
-            className="max-w-[150px]"
-            src={product.image_src || no_product_image}
-            alt={
-              product.image_src ? product.name : "No product image available"
-            }
-          />
+        <div className="product-image bg-white flex flex-col justify-center">
+          <Link
+            to="/shop/product/$productId"
+            params={{ productId: product._id }}
+          >
+            <img
+              className="max-w-[150px] aspect-square object-contain"
+              src={product.image_src || no_product_image}
+              alt={
+                product.image_src ? product.name : "No product image available"
+              }
+            />
+          </Link>
         </div>
         <div className="product-sub-details flex-1">
-          <p className="lg:text-lg">{trimString(product.name)}</p>
+          <Link
+            to="/shop/product/$productId"
+            params={{ productId: product._id }}
+            className="hover:underline focus-visible:underline "
+          >
+            <p className="lg:text-lg">{trimString(product.name)}</p>
+          </Link>
           {product.price < product.retail_price && (
             <p className="line-through text-base">${product.retail_price}</p>
           )}
@@ -53,6 +65,11 @@ function CartProductCard({
               </span>
             )}
           </p>
+          {product.quantity < 10 && (
+            <p className="text-orange-700 dark:text-orange-500">
+              Only {product.quantity} left in stock!
+            </p>
+          )}
         </div>
       </div>
       <div className="cart-details flex gap-3 p-1 mt-2">
@@ -72,7 +89,7 @@ function CartProductCard({
               <Button
                 slot="decrement"
                 className={({ isHovered, isFocusVisible, isPressed }) =>
-                  `py-1 px-2 rounded-l-md border-r dark:border-r-[#575757] flex justify-center items-center ${isFocusVisible || isHovered || isPressed ? "bg-[#EFEFEF] dark:bg-[#3f3f3f]" : "dark:bg-a2sd"}`
+                  `py-1 px-2 min-w-[35px] rounded-l-md border-r dark:border-r-[#575757] flex justify-center items-center ${isFocusVisible || isHovered || isPressed ? "bg-[#EFEFEF] dark:bg-[#3f3f3f]" : "dark:bg-a2sd"}`
                 }
               >
                 {productQuantity <= 1 ? (
@@ -82,7 +99,7 @@ function CartProductCard({
                 )}
               </Button>
               <Input
-                className={`w-20 text-center text-black text-lg dark:text-white dark:bg-[#121212]`}
+                className={`w-20 min-h-[32px] text-center text-black text-lg dark:text-white dark:bg-[#121212]`}
               />
               <Button
                 slot="increment"

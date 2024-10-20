@@ -69,7 +69,7 @@ function ProductPage() {
   );
 
   const productTableHighlights: JSX.Element = (
-    <table className="mt-6 text-base overflow-scroll w-max">
+    <table className="mt-6 text-base overflow-scroll">
       <tbody className="">
         {product.highlights.map((d, i) => {
           return (
@@ -201,7 +201,12 @@ function ProductPage() {
                 <div className="product-rating">
                   {reviews.records_count < 1 ? (
                     <p className="text-end">
-                      Be the first to review this product.
+                      <a
+                        href="#reviews"
+                        className="active:underline focus-visible:underline max-w-max"
+                      >
+                        <span>Be the first to review this product</span>
+                      </a>
                     </p>
                   ) : (
                     <div className="flex items-center gap-1">
@@ -242,11 +247,11 @@ function ProductPage() {
                   {productTableHighlights}
                 </div>
               </section>
-              <section className="product-card img-section p-4 lg:order-[-1] lg:flex-[2] lg:max-w-[600px]">
+              <section className="product-card img-section p-4 lg:order-[-1] lg:flex-[2] md:max-h-[600px] aspect-square mx-auto lg:max-w-[600px]">
                 {/* max-w-[600px] min-w-[300px] mx-auto */}
-                <div className="image-container flex justify-center">
+                <div className="image-container flex justify-center bg-white rounded-md">
                   <img
-                    className="aspect-square"
+                    className="aspect-square object-contain"
                     src={product?.image_src || noImage}
                     alt={product?.image_src ? product.name : "No image to show"}
                   />
@@ -460,6 +465,7 @@ function ProductPage() {
                                           <img
                                             src={product.image_src}
                                             alt={product.name}
+                                            className="object-contain"
                                             height={100}
                                           ></img>
                                         )}
@@ -559,9 +565,13 @@ function ProductPage() {
               <div className="review-right flex flex-col flex-[3] py-4 md:py-6">
                 <div className="review-cards flex flex-col gap-6 md:mx-auto">
                   {reviews.records_count < 1 ? (
-                    <p className="p-4">
-                      There are no reviews for this product.
-                    </p>
+                    <div className="lg:p-4">
+                      <p className="mt-2">
+                        <span>
+                          Be the first to review after purchasing this product.
+                        </span>
+                      </p>
+                    </div>
                   ) : (
                     reviews.reviews.map((r, i) => {
                       //only displays 8 reviews before showing the see all reviews link

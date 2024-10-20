@@ -31,7 +31,9 @@ function Orders() {
 
   return (
     <div className="p-4 max-w-[1000px] mx-auto mt-4">
-      <h1 className="text-2xl font-bold">Your Orders</h1>
+      <h1 className="font-bold text-xl pb-2">Your Orders</h1>
+      <div className="filters dark:bg-amenusd p-2 rounded-md mb-2 relative"></div>
+      <div className="divider bg-a2sd mb-2"></div>
       <div className="orders-list flex flex-col mt-4">
         {orderHistory.length > 0 ? (
           orderHistory.map((order) => {
@@ -40,7 +42,7 @@ function Orders() {
                 key={order._id}
                 className="order-card mb-4 ring-2 dark:ring-slate-800 ring-slate-200/60 rounded-md flex flex-col"
               >
-                <div className="card-heading dark:bg-slate-800 bg-slate-200/60 rounded-t-md">
+                <div className="card-heading dark:bg-a1sd bg-slate-200/60 rounded-t-md">
                   <div className="card-inner-heading p-4 flex justify-between">
                     <div className="card-inner-left flex gap-6">
                       <div className="card-ordered-at">
@@ -97,6 +99,7 @@ function Orders() {
                           </div>
                           <div className="item-card-right flex-1">
                             <p>{trimString(item.name, 55)}</p>
+                            <p>Qty: {item.cart_quantity}</p>
                           </div>
                         </div>
                       </Link>

@@ -233,6 +233,15 @@ light mode secondary text color text-[#565959]
     animation: overlay-blur 300ms reverse;
   }
 }
+.menu-slide-right {
+  z-index: 30;
+  &[data-entering] {
+    animation: slide-in-menu-right 300ms forwards;
+  }
+  &[data-exiting] {
+    animation: slide-in-menu-right 300ms reverse forwards;
+  }
+}
 .menu-slide {
   z-index: 30;
   &[data-entering] {
@@ -256,6 +265,14 @@ light mode secondary text color text-[#565959]
 @keyframes slide-in-menu {
   from {
     transform: translateX(-400%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+@keyframes slide-in-menu-right {
+  from {
+    transform: translateX(400%);
   }
   to {
     transform: translateX(0);

@@ -15,41 +15,51 @@ function ReviewDetails() {
   console.log(review);
   const { stars } = calculateStars(review.rating);
   return (
-    <main className="lg:w-[500px] lg:mx-auto p-4 flex-1">
+    <main className="p-4 flex-1">
       <div>
         <h1 className="text-2xl font-bold">Customer Review</h1>
 
-        <div className="review-card dark:bg-a1d p-4 bg-neutral-100 rounded-md mt-2">
-          <LinkAria
-            href={`/shop/product/$productId`}
-            routerOptions={{ params: { productId: review.product_id._id } }}
-            className="group"
-          >
-            <div className="flex gap-2 mb-4">
-              <img
-                src={
-                  review.product_id.image_src
-                    ? review.product_id.image_src
-                    : noproductImage
-                }
-                className="aspect-square max-h-[100px]"
-                alt={
-                  review.product_id.image_src
-                    ? review.product_id.name
-                    : "No image available"
-                }
-              />
-              <div>
-                <p className="group-data-[hovered]:underline">
-                  {trimString(review.product_id.name)}
-                </p>
-                <p className="text-a1d">
-                  ${review.product_id.price.toFixed(2)}
-                </p>
+        <div className="review-card dark:bg-a1sd p-4 bg-neutral-100 rounded-md mt-2">
+          <div className="flex gap-2 mb-4">
+            <LinkAria
+              href={`/shop/product/$productId`}
+              routerOptions={{ params: { productId: review.product_id._id } }}
+              className="group"
+            >
+              <div className="image-container bg-neutral-100 rounded-md">
+                <img
+                  src={
+                    review.product_id.image_src
+                      ? review.product_id.image_src
+                      : noproductImage
+                  }
+                  className="aspect-square max-w-[100px] object-contain"
+                  alt={
+                    review.product_id.image_src
+                      ? review.product_id.name
+                      : "No image available"
+                  }
+                />
               </div>
+            </LinkAria>
+            <div>
+              <p className="">
+                <LinkAria
+                  className={
+                    "active:hunderline hover:underline focus-visible:underline"
+                  }
+                  href="/shop/product/$productId"
+                  routerOptions={{
+                    params: { productId: review.product_id._id },
+                  }}
+                >
+                  <span>{trimString(review.product_id.name)}</span>
+                </LinkAria>
+              </p>
+              <p className="text-a1d">${review.product_id.price.toFixed(2)}</p>
             </div>
-          </LinkAria>
-          <p>By: {review.reviewer_name}</p>
+          </div>
+          <p>Reviewed by: {review.reviewer_name}</p>
           <p>Rating: {review.rating} out of 5</p>
           <div>{stars}</div>
           <p className="text-sm dark:text-a1d">

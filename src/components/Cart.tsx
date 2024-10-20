@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { CartContext, CartItemsType } from "../context/CartContext";
 import { Button } from "react-aria-components";
 import CartProductCard from "./CartProductCard";
@@ -22,6 +22,7 @@ function Cart() {
   const [responseMessage, setResponseMessage] = useState<null | string>(null);
   const { user } = useAuth();
   const location = useLocation();
+  const cartCardContainer = useRef<HTMLDivElement>(null);
 
   const mutation = useMutation({
     mutationKey: ["checkout"],
@@ -88,6 +89,14 @@ function Cart() {
 
     localStorage.setItem("cart", JSON.stringify(newCart));
     setCart(newCart);
+    if (value <= 0 && cartCardContainer?.current) {
+      setTimeout(() => {
+        cartCardContainer?.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
   };
   const handleCheckout = async () => {
     const isAuth = await isAuthenticated();
@@ -115,11 +124,14 @@ function Cart() {
   }, [clientSecret]);
 
   return (
-    <div className="page-container mx-2 my-2 flex flex-col gap-8 lg:flex-row lg:mx-4">
+    <main
+      className="page-container flex-1 flex flex-col gap-8 lg:flex-row py-4 px-2 lg:px-4"
+      ref={cartCardContainer}
+    >
       <div className="cartCard flex-[3]">
         <h1 className="text-3xl tracking-wide pb-4">Shopping Cart</h1>
         {cart.length <= 0 ? (
-          <div className="cart-nothing p-3 bg-white dark:bg-[#282828] dark:border dark:border-[#575757]">
+          <div className="cart-nothing p-3 bg-white dark:bg-a1sd dark:border dark:border-[#575757] rounded-md">
             <p className="text-2xl font-extralight">Your cart is empty.</p>
             <Link
               to="/"
@@ -175,7 +187,7 @@ function Cart() {
           </form>
         </div>
       )}
-    </div>
+    </main>
   );
 }
 

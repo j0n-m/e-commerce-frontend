@@ -28,12 +28,14 @@ function ProductSortBySelectBox<T extends object>({
     <Select
       {...props}
       className={
-        "flex items-center gap-2 group ring-0 outline-none border-none"
+        "flex items-center gap-2 group ring-0 outline-none border-none group"
       }
     >
       <Label className="dark:text-a1d">{label || "Sort By "}</Label>
       <Button
-        className={`px-2 py-2 border dark:border-1 dark:border-a2sd dark:bg-a0sd flex gap-2 rounded-lg`}
+        className={({ isPressed, isFocusVisible, isHovered }) =>
+          `px-2 py-2 border dark:border-1 dark:border-a2sd flex gap-2 rounded-lg group-data-[open]:bg-a2sd ${isPressed || isFocusVisible || isHovered ? "dark:bg-a2sd" : "dark:bg-a0sd"}`
+        }
       >
         <SelectValue />
         <IconChevronDown

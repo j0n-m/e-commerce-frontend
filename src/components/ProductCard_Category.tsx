@@ -86,14 +86,14 @@ function ProductCard_Category({
 
   return (
     <div className="product-card flex gap-3 py-2 lg:w-[calc(100%/5-10px)] xl:w-[calc(100%/6-10px)] lg:flex-col">
-      <div className="section-img">
+      <div className="section-img bg-white flex flex-col lg:max-w-full">
         <Link
           to={`/shop/product/$productId`}
           params={{ productId: product._id }}
           className="active:underline"
         >
           <img
-            className="max-w-[150px] lg:max-w-full aspect-square"
+            className="max-w-[150px] lg:max-w-full aspect-square object-contain"
             src={product.image_src || noProductImage}
             alt={
               product.image_src ? product.name : "No Product Image Available"
@@ -230,7 +230,7 @@ function ProductCard_Category({
                               <img
                                 src={product.image_src}
                                 alt={product.name}
-                                height={100}
+                                className="max-w-[200px] aspect-square object-contain"
                               ></img>
                             )}
                             <Link
