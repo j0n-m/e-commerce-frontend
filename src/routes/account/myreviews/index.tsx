@@ -8,18 +8,27 @@ import fetch from "../../../utilities/fetch";
 import { queryClient } from "../../../App";
 import { AxiosResponse } from "axios";
 import MyReviews from "../../../pages/MyReviews";
+import { ShopURLQuery } from "../../shop/category/$categoryId";
 
+const mappedSort = new Map([
+  ["newest", "-review_date"],
+  ["oldest", "review_date"],
+  ["highest_rating", "-rating"],
+  ["lowest_rating", "rating"],
+]);
 export const reviewsByCustomerQueryOption = ({
-  userId,
-  page = 1,
+  customerId,
+  deps,
 }: {
-  page?: number;
-  userId: string;
+  customerId: string;
+  deps: ShopURLQuery;
 }) => {
   return queryOptions({
-    queryKey: ["customerReviews", { userId: userId }],
+    queryKey: ["customerReviews", customerId, { ...deps }],
     queryFn: async () => {
-      return await fetch.get(`api/reviews?customer=${userId}&page=${page}`);
+      return await fetch.get(
+        `api/reviews?customer=${customerId}&page=${deps.page || 1}${deps.sort ? `&sort=${mappedSort.get(deps.sort) || "-review_date"}` : "&sort=-review_date"}`
+      );
     },
     staleTime: 1000 * 60 * 10,
     placeholderData: keepPreviousData,
@@ -32,14 +41,26 @@ export const Route = createFileRoute("/account/myreviews/")({
   ),
   notFoundComponent: () => <MissingPage />,
   pendingComponent: () => <LoadingComponent />,
-  loader: async () => {
+  validateSearch: (search: Record<string, number>): ShopURLQuery => {
+    return {
+      page: Number(search?.page || 1) || 1,
+    };
+  },
+  loaderDeps: ({ search: { page, sort, pageSize, category, sortBy } }) => ({
+    page,
+    sort,
+    pageSize,
+    category,
+    sortBy,
+  }),
+  loader: async ({ deps }) => {
     const authcache = queryClient.getQueryData(["auth"]) as AxiosResponse;
 
     try {
       if (authcache) {
         const user = authcache.data.user;
         const res = await queryClient.ensureQueryData(
-          reviewsByCustomerQueryOption({ userId: user.id })
+          reviewsByCustomerQueryOption({ customerId: user.id, deps })
         );
         return res;
       } else {

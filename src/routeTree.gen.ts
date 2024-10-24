@@ -23,6 +23,7 @@ import { Route as AccountProfileImport } from './routes/account/profile'
 import { Route as AccountOrdersImport } from './routes/account/orders'
 import { Route as ShopProductsIndexImport } from './routes/shop/products/index'
 import { Route as AccountMyreviewsIndexImport } from './routes/account/myreviews/index'
+import { Route as ShopProductsCreateImport } from './routes/shop/products_/create'
 import { Route as ShopProductProductIdImport } from './routes/shop/product/$productId'
 import { Route as ShopCategoryBestSellersImport } from './routes/shop/category/best-sellers'
 import { Route as ShopCategoryBestDealsImport } from './routes/shop/category/best-deals'
@@ -91,6 +92,11 @@ const ShopProductsIndexRoute = ShopProductsIndexImport.update({
 
 const AccountMyreviewsIndexRoute = AccountMyreviewsIndexImport.update({
   path: '/account/myreviews/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ShopProductsCreateRoute = ShopProductsCreateImport.update({
+  path: '/shop/products/create',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -237,6 +243,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopProductProductIdImport
       parentRoute: typeof rootRoute
     }
+    '/shop/products/create': {
+      id: '/shop/products/create'
+      path: '/shop/products/create'
+      fullPath: '/shop/products/create'
+      preLoaderRoute: typeof ShopProductsCreateImport
+      parentRoute: typeof rootRoute
+    }
     '/account/myreviews/': {
       id: '/account/myreviews/'
       path: '/account/myreviews'
@@ -299,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/shop/category/best-deals': typeof ShopCategoryBestDealsRoute
   '/shop/category/best-sellers': typeof ShopCategoryBestSellersRoute
   '/shop/product/$productId': typeof ShopProductProductIdRoute
+  '/shop/products/create': typeof ShopProductsCreateRoute
   '/account/myreviews': typeof AccountMyreviewsIndexRoute
   '/shop/products': typeof ShopProductsIndexRoute
   '/shop/product/$productId/create-review': typeof ShopProductProductIdCreateReviewRoute
@@ -322,6 +336,7 @@ export interface FileRoutesByTo {
   '/shop/category/best-deals': typeof ShopCategoryBestDealsRoute
   '/shop/category/best-sellers': typeof ShopCategoryBestSellersRoute
   '/shop/product/$productId': typeof ShopProductProductIdRoute
+  '/shop/products/create': typeof ShopProductsCreateRoute
   '/account/myreviews': typeof AccountMyreviewsIndexRoute
   '/shop/products': typeof ShopProductsIndexRoute
   '/shop/product/$productId/create-review': typeof ShopProductProductIdCreateReviewRoute
@@ -346,6 +361,7 @@ export interface FileRoutesById {
   '/shop/category/best-deals': typeof ShopCategoryBestDealsRoute
   '/shop/category/best-sellers': typeof ShopCategoryBestSellersRoute
   '/shop/product/$productId': typeof ShopProductProductIdRoute
+  '/shop/products/create': typeof ShopProductsCreateRoute
   '/account/myreviews/': typeof AccountMyreviewsIndexRoute
   '/shop/products/': typeof ShopProductsIndexRoute
   '/shop/product/$productId/create-review': typeof ShopProductProductIdCreateReviewRoute
@@ -371,6 +387,7 @@ export interface FileRouteTypes {
     | '/shop/category/best-deals'
     | '/shop/category/best-sellers'
     | '/shop/product/$productId'
+    | '/shop/products/create'
     | '/account/myreviews'
     | '/shop/products'
     | '/shop/product/$productId/create-review'
@@ -393,6 +410,7 @@ export interface FileRouteTypes {
     | '/shop/category/best-deals'
     | '/shop/category/best-sellers'
     | '/shop/product/$productId'
+    | '/shop/products/create'
     | '/account/myreviews'
     | '/shop/products'
     | '/shop/product/$productId/create-review'
@@ -415,6 +433,7 @@ export interface FileRouteTypes {
     | '/shop/category/best-deals'
     | '/shop/category/best-sellers'
     | '/shop/product/$productId'
+    | '/shop/products/create'
     | '/account/myreviews/'
     | '/shop/products/'
     | '/shop/product/$productId/create-review'
@@ -439,6 +458,7 @@ export interface RootRouteChildren {
   ShopCategoryBestDealsRoute: typeof ShopCategoryBestDealsRoute
   ShopCategoryBestSellersRoute: typeof ShopCategoryBestSellersRoute
   ShopProductProductIdRoute: typeof ShopProductProductIdRoute
+  ShopProductsCreateRoute: typeof ShopProductsCreateRoute
   AccountMyreviewsIndexRoute: typeof AccountMyreviewsIndexRoute
   ShopProductsIndexRoute: typeof ShopProductsIndexRoute
   ShopProductProductIdCreateReviewRoute: typeof ShopProductProductIdCreateReviewRoute
@@ -462,6 +482,7 @@ const rootRouteChildren: RootRouteChildren = {
   ShopCategoryBestDealsRoute: ShopCategoryBestDealsRoute,
   ShopCategoryBestSellersRoute: ShopCategoryBestSellersRoute,
   ShopProductProductIdRoute: ShopProductProductIdRoute,
+  ShopProductsCreateRoute: ShopProductsCreateRoute,
   AccountMyreviewsIndexRoute: AccountMyreviewsIndexRoute,
   ShopProductsIndexRoute: ShopProductsIndexRoute,
   ShopProductProductIdCreateReviewRoute: ShopProductProductIdCreateReviewRoute,
@@ -496,6 +517,7 @@ export const routeTree = rootRoute
         "/shop/category/best-deals",
         "/shop/category/best-sellers",
         "/shop/product/$productId",
+        "/shop/products/create",
         "/account/myreviews/",
         "/shop/products/",
         "/shop/product/$productId/create-review",
@@ -545,6 +567,9 @@ export const routeTree = rootRoute
     },
     "/shop/product/$productId": {
       "filePath": "shop/product/$productId.tsx"
+    },
+    "/shop/products/create": {
+      "filePath": "shop/products_/create.tsx"
     },
     "/account/myreviews/": {
       "filePath": "account/myreviews/index.tsx"

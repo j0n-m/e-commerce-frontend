@@ -16,6 +16,11 @@
   font-weight: normal;
   src: url("/src/assets/fonts/Poppins-Regular.ttf");
 }
+@font-face {
+  font-family: MumbaiSticker;
+  font-weight: normal;
+  src: url("/src/assets/fonts/TheMumbaiStickerDemo-Regular\ 2.ttf");
+}
 
 *,
 *::before,
@@ -126,6 +131,15 @@ html.light .logo {
   animation: HideSkipNavAnimation 300ms;
   animation-direction: reverse;
   animation-fill-mode: forwards;
+}
+.banner_home {
+  background: url("./assets/images/banners/fallbanner.svg");
+  background-size: cover;
+  background-position: 25% 10%;
+  background-repeat: no-repeat;
+  /* background-attachment: fixed; */
+  min-height: 35svh;
+  font-family: "Poppins", "sans-serif";
 }
 
 .skipNav:focus {

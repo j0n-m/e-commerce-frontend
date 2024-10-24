@@ -3,19 +3,10 @@ import { ShopURLQuery } from "../routes/shop/category/$categoryId";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { bestDealsQueryOption } from "../routes/shop/category/best-deals";
 import { BestSellersResponse, PaginationResponse } from "../types/ProductType";
-import {
-  Button,
-  Label,
-  ListBox,
-  ListBoxItem,
-  Popover,
-  Section,
-  Select,
-  SelectValue,
-} from "react-aria-components";
+import { ListBoxItem, Section } from "react-aria-components";
 import ProductCard_Category from "../components/ProductCard_Category";
-import { IconChevronDown } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import ProductSortBySelectBox from "../components/ProductSortBySelectBox";
 
 const useBestDeals = ({ deps }: { deps: Partial<ShopURLQuery> }) => {
   const responseData = useSuspenseQuery(bestDealsQueryOption({ deps })).data;
@@ -58,7 +49,6 @@ export const productSortByOptionValues = [
 function BestDeals() {
   const deps = useLoaderDeps({ from: "/shop/category/best-deals" });
   const { bestDeals } = useBestDeals({ deps });
-
   const [openSelectBox, setOpenSelectBox] = useState(false);
 
   const reviews = bestDeals.review_info.map((r) => ({
@@ -96,59 +86,37 @@ function BestDeals() {
     <main className="flex-1 py-4 px-2 lg:px-4">
       <h1 className="font-bold text-xl pb-2">Today's Best Deals</h1>
       <div className="filters dark:bg-amenusd p-2 rounded-md mb-2 relative">
-        <Select
+        <ProductSortBySelectBox
+          items={productSortByOptionValues}
+          label="Sort By"
           isOpen={openSelectBox}
           onOpenChange={setOpenSelectBox}
           selectedKey={sortByMap.get(sortByName || "") || "1"}
-          className={
-            "flex items-center gap-2 group ring-0 outline-none border-none"
-          }
         >
-          <Label className="dark:text-a1d">Sort By </Label>
-          <Button
-            className={`px-2 py-2 border dark:border-1 dark:border-a2sd bg-a0sd flex gap-2 rounded-lg`}
-          >
-            <SelectValue />
-            <IconChevronDown
-              stroke={1}
-              className={`group-data-[open]:rotate-180 transition-transform duration-300`}
-            />
-          </Button>
-          <Popover
-            className={
-              "bg-white border dark:border-a3sd border-neutral-400 shadow-lg dark:bg-a3sd dark:text-a0d flex flex-col min-h-[15.5rem] overflow-y-auto rounded-md"
-            }
-          >
-            <ListBox
-              className={"max-h-32 z-20"}
-              items={productSortByOptionValues}
-            >
-              <Section className="flex flex-col">
-                {productSortByOptionValues.map((option) => {
-                  return (
-                    <ListBoxItem
-                      id={option.id}
-                      textValue={option.name}
-                      className={({
-                        isPressed,
-                        isSelected,
-                        isHovered,
-                        isFocusVisible,
-                      }) =>
-                        `py-3 px-6 ring-0 outline-none border-none ${isSelected ? "dark:bg-a2sd" : isPressed || isHovered || isFocusVisible ? "dark:bg-[#4d4d4d]" : ""}`
-                      }
-                      key={option.id}
-                      href={option.href}
-                      routerOptions={option.deps}
-                    >
-                      {option.name}
-                    </ListBoxItem>
-                  );
-                })}
-              </Section>
-            </ListBox>
-          </Popover>
-        </Select>
+          <Section className="flex flex-col">
+            {productSortByOptionValues.map((option) => {
+              return (
+                <ListBoxItem
+                  id={option.id}
+                  textValue={option.name}
+                  className={({
+                    isPressed,
+                    isSelected,
+                    isHovered,
+                    isFocusVisible,
+                  }) =>
+                    `py-3 px-6 ring-0 outline-none border-none ${isSelected ? "dark:bg-a2sd" : isPressed || isHovered || isFocusVisible ? "dark:bg-[#4d4d4d]" : ""}`
+                  }
+                  key={option.id}
+                  href={option.href}
+                  routerOptions={option.deps}
+                >
+                  {option.name}
+                </ListBoxItem>
+              );
+            })}
+          </Section>
+        </ProductSortBySelectBox>
         {/* <ListBoxItem
                 id={1}
                 href="/shop/category/best-deals"

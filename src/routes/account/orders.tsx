@@ -10,15 +10,24 @@ import MissingPage from "../../components/MissingPage";
 import LoadingComponent from "../../components/LoadingComponent";
 import { ShopURLQuery } from "../shop/category/$categoryId";
 
-export const orderHistoryQueryOptions = (
-  customerId: string,
-  page: number = 1
-) => {
+const mappedSort = new Map([
+  ["newest", "-order_date"],
+  ["oldest", "order_date"],
+  ["highest_price", "-cart_total"],
+  ["lowest_price", "cart_total"],
+]);
+export const orderHistoryQueryOptions = ({
+  customerId,
+  deps,
+}: {
+  customerId: string;
+  deps: ShopURLQuery;
+}) => {
   return queryOptions({
-    queryKey: ["orderhistory", { page: page }],
+    queryKey: ["orderhistory", deps],
     queryFn: async () => {
       return await fetch.get(
-        `api/orderhistory/customer/${customerId}?page=${page}&sort=-order_date`,
+        `api/orderhistory/customer/${customerId}?page=${deps.page || 1}${deps.sort ? `&sort=${mappedSort.get(deps.sort)}` : "&sort=-order_date"}`,
         {
           withCredentials: true,
         }
@@ -37,11 +46,15 @@ export const Route = createFileRoute("/account/orders")({
   pendingComponent: () => <LoadingComponent />,
   validateSearch: (search: Record<string, number>): ShopURLQuery => {
     return {
-      page: Number(search?.page ?? 1),
+      page: Number(search?.page || 1) || 1,
     };
   },
-  loaderDeps: ({ search: { page } }) => ({
+  loaderDeps: ({ search: { page, sort, pageSize, category, sortBy } }) => ({
     page,
+    sort,
+    pageSize,
+    category,
+    sortBy,
   }),
   loader: async ({ deps }) => {
     try {
@@ -50,7 +63,7 @@ export const Route = createFileRoute("/account/orders")({
       const userId = auth.data.user.id as string;
 
       return queryClient.ensureQueryData(
-        orderHistoryQueryOptions(userId, deps.page)
+        orderHistoryQueryOptions({ customerId: userId, deps })
       );
       // console.log(orderData);
     } catch (error) {

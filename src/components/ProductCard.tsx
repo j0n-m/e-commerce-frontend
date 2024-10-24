@@ -167,13 +167,13 @@ function ProductCard({ item, reviewInfo, cartList }: ProductCardProps) {
       className={`product-card dark:bg-a0sd border border-[#e6e6e6] dark:border-a2sd mb-1 lg:p-4 rounded-md w-full`}
     >
       <div className={`product-content flex flex-row gap-2`}>
-        <div className="section1 flex-1 lg:flex-1 flex items-center justify-center lg:mx-auto max-w-[220px]">
+        <div className="section1 flex-1 lg:flex-1 flex items-center justify-center lg:mx-auto max-w-[220px] bg-white">
           <Link
             to={`/shop/product/$productId`}
             params={{ productId: item._id }}
           >
             <img
-              className="aspect-auto max-w-full"
+              className="aspect-square max-w-full object-contain"
               src={item.image_src || noProductImage}
               alt={item.image_src ? item.image_src : "No product image"}
             />

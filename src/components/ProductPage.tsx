@@ -183,10 +183,20 @@ function ProductPage() {
           {/* divide-y-8 dark:divide-neutral-700 */}
           <div className="product-page">
             <div className="top-section flex flex-col lg:flex-row mt-4 lg:mx-4">
-              <section className="product-card info-section flex flex-col p-4 lg:flex-[2]">
+              <section className="product-card info-section flex flex-col p-4 lg:flex-[2] relative">
                 <h1 className="product-name font-semibold pb-3 lg:text-2xl">
                   {product.name}
                 </h1>
+                {user?.is_admin && (
+                  <p className="absolute right-4 top-0 max-w-max ml-auto text-a1d hover:underline active:underline">
+                    <Link
+                      to="/shop/product/$productId/edit"
+                      params={{ productId }}
+                    >
+                      Edit this page
+                    </Link>
+                  </p>
+                )}
 
                 <p>
                   <Link
@@ -312,193 +322,195 @@ function ProductPage() {
                       </p>
                     </div>
 
-                    <p
-                      className={`text-2xl ${product.quantity > 0 ? "text-green-600 dark:text-[#22DD67]" : "text-neutral-500"} mb-2 mt-2`}
-                    >
-                      {product.quantity > 0 ? "In Stock" : "Out of Stock"}
+                    <p className={`text-2xl mb-2 mt-2`}>
+                      {product.quantity > 0 ? (
+                        <span className="text-green-600 dark:text-[#22DD67]">
+                          In Stock
+                        </span>
+                      ) : (
+                        <span className="text-red-500">Out of Stock</span>
+                      )}
                     </p>
-                    {product.quantity < 10 && (
+                    {product.quantity < 10 && product.quantity > 0 ? (
                       <p className="text-orange-700 dark:text-orange-500">
                         Only {product.quantity} left in stock!
                       </p>
-                    )}
-                    <Select
-                      className={"flex flex-col mb-3 group"}
-                      selectedKey={quantity}
-                      onSelectionChange={(e) => setQuantity(Number(e))}
-                    >
-                      <Label>Quantity:</Label>
-                      <Button
-                        className={({ isHovered, isFocusVisible, isPressed }) =>
-                          `border bg-neutral-50 dark:bg-a0d rounded-md text-black shadow-sm py-1 flex justify-center px-2
+                    ) : null}
+                    {product.quantity > 0 && (
+                      <>
+                        <Select
+                          className={"flex flex-col mb-3 group"}
+                          selectedKey={quantity}
+                          onSelectionChange={(e) => setQuantity(Number(e))}
+                        >
+                          <Label>Quantity:</Label>
+                          <Button
+                            className={({
+                              isHovered,
+                              isFocusVisible,
+                              isPressed,
+                            }) =>
+                              `border bg-neutral-50 dark:bg-a0d rounded-md text-black shadow-sm py-1 flex justify-center px-2
                           ${isHovered || isFocusVisible || isPressed ? "bg-neutral-200" : ""}
                         `
-                        }
-                      >
-                        <SelectValue className={"flex-1"} />
-                        <span aria-hidden="true">
-                          <IconChevronDown
-                            className={
-                              "group-data-[open]:rotate-180 transition-all duration-300"
                             }
-                            stroke={1.25}
-                          />
-                        </span>
-                      </Button>
+                          >
+                            <SelectValue className={"flex-1"} />
+                            <span aria-hidden="true">
+                              <IconChevronDown
+                                className={
+                                  "group-data-[open]:rotate-180 transition-all duration-300"
+                                }
+                                stroke={1.25}
+                              />
+                            </span>
+                          </Button>
 
-                      <Popover
-                        className={
-                          "bg-white dark:bg-a0d text-black border-2 flex flex-col w-[--trigger-width] overflow-y-auto py-1 rounded-md"
-                        }
-                      >
-                        <ListBox className={"max-h-32"}>
-                          <Section className="">
-                            {/* <Header>Quantity</Header> */}
-                            {quantityList.map((num, i) =>
-                              product.quantity >= num ? (
-                                <ListBoxItem
-                                  key={i}
-                                  id={num}
-                                  textValue={num.toString()}
-                                  className={({
-                                    isHovered,
-                                    isSelected,
-                                    isFocusVisible,
-                                    isPressed,
-                                  }) => `group px-4
+                          <Popover
+                            className={
+                              "bg-white dark:bg-a0d text-black border-2 flex flex-col w-[--trigger-width] overflow-y-auto py-1 rounded-md"
+                            }
+                          >
+                            <ListBox className={"max-h-32"}>
+                              <Section className="">
+                                {/* <Header>Quantity</Header> */}
+                                {quantityList.map((num, i) =>
+                                  product.quantity >= num ? (
+                                    <ListBoxItem
+                                      key={i}
+                                      id={num}
+                                      textValue={num.toString()}
+                                      className={({
+                                        isHovered,
+                                        isSelected,
+                                        isFocusVisible,
+                                        isPressed,
+                                      }) => `group px-4
                               ${(isHovered || isPressed) && !isSelected ? "bg-gray-200 cursor-pointer" : ""}
                               ${isFocusVisible && !isSelected ? "bg-gray-200" : ""}
                               ${isSelected ? "shadow-sm bg-blue-300" : ""}
                             `}
-                                >
-                                  {({ isSelected }) => (
-                                    <span className="flex items-center justify-between">
-                                      {num}
-                                      {isSelected && (
-                                        <IconCheck
-                                          stroke={2}
-                                          height={20}
-                                          width={20}
-                                        />
-                                      )}
-                                    </span>
-                                  )}
-                                </ListBoxItem>
-                              ) : null
-                            )}
-                          </Section>
-                        </ListBox>
-                      </Popover>
-                    </Select>
-                    <div className="inputs flex flex-col gap-4">
-                      {product.quantity > 0 && (
-                        <select
-                          name="quantity"
-                          id="quantity"
-                          className="border-2 max-w-52 text-black"
-                          hidden={true}
-                        >
-                          <optgroup
-                            className="text-neutral-400 font-normal text-sm tracking-widest"
-                            label="Quantity"
-                          >
-                            <option value="1">1</option>
-                          </optgroup>
-                        </select>
-                      )}
-                      {product.quantity > 0 && (
-                        <DialogTrigger>
-                          <Button
-                            type="button"
-                            className={({ isFocusVisible, isHovered }) =>
-                              `shadow-sm text-neutral-950 px-2 py-[.15rem] rounded-md ${cartList?.includes(product._id) ? `bg-gray-200 outline outline-gray-400 ${isHovered && "bg-gray-300"} ${isFocusVisible && "bg-gray-300 ring-2 ring-blue-700 ring-offset-2"}` : `bg-orange-400 outline outline-orange-400 ${isHovered && "bg-orange-500"} ${isFocusVisible && "bg-orange-500 ring-offset-2 ring-2 ring-blue-700"}`}`
-                            }
-                            onPress={() => handleAddToCart(quantity, product)}
-                          >
-                            {cartList?.includes(product._id) ? (
-                              <span className="flex items-center justify-center">
-                                <IconCheck size={16} className="mr-1" />
-                                Item is in cart
-                              </span>
-                            ) : (
-                              "Add to Cart"
-                            )}
-                          </Button>
-                          <ModalOverlay
-                            isDismissable={true}
-                            className={
-                              "fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm"
-                            }
-                          >
-                            <Modal
-                              isDismissable={true}
-                              className={
-                                "addToCart-modal fixed top-0 right-0 bottom-0 max-w-[250px] bg-[rgba(0,0,0,0.8)] p-2 dark:bg-gray-800 bg-white rounded-md z-40"
-                              }
-                            >
-                              <Dialog className="p-4 rounded-md">
-                                {({ close }) => (
-                                  <div>
-                                    <div className="flex justify-end items-center">
-                                      <Button
-                                        className={`data-[hovered]:text-gray-400`}
-                                        onPress={() => close()}
-                                      >
-                                        <span>
-                                          <IconX></IconX>
-                                        </span>
-                                      </Button>
-                                    </div>
-                                    <Heading
-                                      slot="title"
-                                      className="text-xl font-bold py-2 text-center"
                                     >
-                                      Added to Cart
-                                    </Heading>
-                                    <p className="text-center font-bold text-red-500 border-b pb-2">
-                                      Subtotal: $
-                                      <span>{subtotal.toFixed(2)}</span>
-                                    </p>
-                                    <div className="cart-body">
-                                      <div className="cart-product-details py-2">
-                                        {product.image_src && (
-                                          <img
-                                            src={product.image_src}
-                                            alt={product.name}
-                                            className="object-contain"
-                                            height={100}
-                                          ></img>
-                                        )}
-                                        <Link
-                                          to="/shop/product/$productId"
-                                          params={{ productId: product._id }}
-                                          tabIndex={0}
-                                        >
-                                          <p>{trimString(product.name)}</p>
-                                        </Link>
-                                        <p>${product.price.toFixed(2)}</p>
-                                      </div>
-                                      <div className="cart-btns flex flex-col gap-2 py-2">
-                                        <Link to={"/cart"} tabIndex={0}>
-                                          <p className="text-center bg-orange-400 text-black rounded-full font-normal p-1 h-[30px] flex items-center justify-center hover:bg-orange-300">
-                                            <span>Go to Cart</span>
-                                          </p>
-                                        </Link>
-                                        <Button onPress={() => close()}>
-                                          <p className="text-center bg-orange-400 text-black rounded-full p-1 font-normal h-[30px] flex items-center justify-center hover:bg-orange-300">
-                                            <span>Continue Shopping</span>
-                                          </p>
-                                        </Button>
-                                      </div>
-                                    </div>
-                                  </div>
+                                      {({ isSelected }) => (
+                                        <span className="flex items-center justify-between">
+                                          {num}
+                                          {isSelected && (
+                                            <IconCheck
+                                              stroke={2}
+                                              height={20}
+                                              width={20}
+                                            />
+                                          )}
+                                        </span>
+                                      )}
+                                    </ListBoxItem>
+                                  ) : null
                                 )}
-                              </Dialog>
-                            </Modal>
-                          </ModalOverlay>
-                        </DialogTrigger>
-                      )}
-                    </div>
+                              </Section>
+                            </ListBox>
+                          </Popover>
+                        </Select>
+
+                        <div className="add-to-cart-btn flex flex-col gap-4">
+                          {product.quantity > 0 && (
+                            <DialogTrigger>
+                              <Button
+                                type="button"
+                                className={({ isFocusVisible, isHovered }) =>
+                                  `shadow-sm text-neutral-950 px-2 py-[.15rem] rounded-md ${cartList?.includes(product._id) ? `bg-gray-200 outline outline-gray-400 ${isHovered && "bg-gray-300"} ${isFocusVisible && "bg-gray-300 ring-2 ring-blue-700 ring-offset-2"}` : `bg-orange-400 outline outline-orange-400 ${isHovered && "bg-orange-500"} ${isFocusVisible && "bg-orange-500 ring-offset-2 ring-2 ring-blue-700"}`}`
+                                }
+                                onPress={() =>
+                                  handleAddToCart(quantity, product)
+                                }
+                              >
+                                {cartList?.includes(product._id) ? (
+                                  <span className="flex items-center justify-center">
+                                    <IconCheck size={16} className="mr-1" />
+                                    Item is in cart
+                                  </span>
+                                ) : (
+                                  "Add to Cart"
+                                )}
+                              </Button>
+                              <ModalOverlay
+                                isDismissable={true}
+                                className={
+                                  "fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm"
+                                }
+                              >
+                                <Modal
+                                  isDismissable={true}
+                                  className={
+                                    "addToCart-modal fixed top-0 right-0 bottom-0 max-w-[250px] bg-[rgba(0,0,0,0.8)] p-2 dark:bg-gray-800 bg-white rounded-md z-40"
+                                  }
+                                >
+                                  <Dialog className="p-4 rounded-md">
+                                    {({ close }) => (
+                                      <div>
+                                        <div className="flex justify-end items-center">
+                                          <Button
+                                            className={`data-[hovered]:text-gray-400`}
+                                            onPress={() => close()}
+                                          >
+                                            <span>
+                                              <IconX></IconX>
+                                            </span>
+                                          </Button>
+                                        </div>
+                                        <Heading
+                                          slot="title"
+                                          className="text-xl font-bold py-2 text-center"
+                                        >
+                                          Added to Cart
+                                        </Heading>
+                                        <p className="text-center font-bold text-red-500 border-b pb-2">
+                                          Subtotal: $
+                                          <span>{subtotal.toFixed(2)}</span>
+                                        </p>
+                                        <div className="cart-body">
+                                          <div className="cart-product-details py-2">
+                                            {product.image_src && (
+                                              <img
+                                                src={product.image_src}
+                                                alt={product.name}
+                                                className="object-contain"
+                                                height={100}
+                                              ></img>
+                                            )}
+                                            <Link
+                                              to="/shop/product/$productId"
+                                              params={{
+                                                productId: product._id,
+                                              }}
+                                              tabIndex={0}
+                                            >
+                                              <p>{trimString(product.name)}</p>
+                                            </Link>
+                                            <p>${product.price.toFixed(2)}</p>
+                                          </div>
+                                          <div className="cart-btns flex flex-col gap-2 py-2">
+                                            <Link to={"/cart"} tabIndex={0}>
+                                              <p className="text-center bg-orange-400 text-black rounded-full font-normal p-1 h-[30px] flex items-center justify-center hover:bg-orange-300">
+                                                <span>Go to Cart</span>
+                                              </p>
+                                            </Link>
+                                            <Button onPress={() => close()}>
+                                              <p className="text-center bg-orange-400 text-black rounded-full p-1 font-normal h-[30px] flex items-center justify-center hover:bg-orange-300">
+                                                <span>Continue Shopping</span>
+                                              </p>
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </Dialog>
+                                </Modal>
+                              </ModalOverlay>
+                            </DialogTrigger>
+                          )}
+                        </div>
+                      </>
+                    )}
                     <div className="soldby-section mt-4">
                       <p>
                         <span className="dark:text-neutral-300">Sold By: </span>

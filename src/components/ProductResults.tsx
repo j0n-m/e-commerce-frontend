@@ -9,7 +9,8 @@ import { PaginationBar } from "./PaginationBar";
 import { ScreenSizeContext } from "../context/ScreenSizeContext";
 import { trimString } from "../utilities/trimString";
 import ProductSortBySelectBox from "./ProductSortBySelectBox";
-import { ListBoxItem, Section } from "react-aria-components";
+import { Section } from "react-aria-components";
+import SortBoxListItem from "./SortBoxListItem";
 
 function useSearchProducts(query: string, searchDeps: ProductSearch) {
   const {
@@ -98,10 +99,9 @@ function ProductResults() {
     <>
       <main className="page-container flex-1 py-4 px-2 lg:px-4">
         {/* <h1 className="font-bold mb-6 pl-2">Search: "{searchDeps.q}"</h1> */}
-        <h1 className="text-xl font-bold mt-2 text-a1d">
-          <span className="italic">
-            Search: "{trimString(searchDeps.q, 20)}"
-          </span>
+        <h1 className="font-bold text-xl lg:text-2xl py-3 lg:py-5">
+          <span>Search: </span>
+          <span className="italic">"{trimString(searchDeps.q, 20)}"</span>
         </h1>
         {products_data.records_count > 0 && (
           <div className="filters mt-2 dark:bg-amenusd p-2 rounded-md mb-2 relative">
@@ -115,23 +115,16 @@ function ProductResults() {
               <Section className="flex flex-col">
                 {productSortByOptionValues.map((option) => {
                   return (
-                    <ListBoxItem
-                      id={option.id}
-                      textValue={option.name}
-                      className={({
-                        isPressed,
-                        isSelected,
-                        isHovered,
-                        isFocusVisible,
-                      }) =>
-                        `py-3 px-6 ring-0 outline-none border-none ${isSelected ? "dark:bg-a2sd" : isPressed || isHovered || isFocusVisible ? "dark:bg-[#4d4d4d]" : ""}`
-                      }
+                    <SortBoxListItem
+                      text={option.name}
                       key={option.id}
-                      href={option.href}
-                      routerOptions={option.deps}
-                    >
-                      {option.name}
-                    </ListBoxItem>
+                      props={{
+                        textValue: option.name,
+                        id: option.id,
+                        href: option.href,
+                        routerOptions: option.deps,
+                      }}
+                    />
                   );
                 })}
               </Section>

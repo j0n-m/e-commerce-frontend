@@ -34,7 +34,7 @@ function ProductSortBySelectBox<T extends object>({
       <Label className="dark:text-a1d">{label || "Sort By "}</Label>
       <Button
         className={({ isPressed, isFocusVisible, isHovered }) =>
-          `px-2 py-2 border dark:border-1 dark:border-a2sd flex gap-2 rounded-lg group-data-[open]:bg-a2sd ${isPressed || isFocusVisible || isHovered ? "dark:bg-a2sd" : "dark:bg-a0sd"}`
+          `px-2 py-2 border dark:border-1 dark:border-a2sd flex gap-2 rounded-lg dark:group-data-[open]:bg-a2sd ${isPressed || isFocusVisible || isHovered ? "dark:bg-a2sd" : "dark:bg-a0sd"}`
         }
       >
         <SelectValue />

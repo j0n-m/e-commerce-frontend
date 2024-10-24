@@ -35,6 +35,7 @@ import { trimString } from "../utilities/trimString";
 import { SkipLink } from "./ECommerceApp";
 import { allLinks, mappedLinks } from "../utilities/NavLinks";
 import useSignOut from "../hooks/useSignOut";
+import upperFirstLetters from "../utilities/upperFirstLetters";
 
 function Nav() {
   const { cart } = useContext(CartContext);
@@ -49,6 +50,7 @@ function Nav() {
   const [subMenu, setSubMenu] = useState<number | undefined>(undefined);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const { user } = useAuth();
+  const ulNavList = useRef<HTMLUListElement>(null);
   const ulTheme = useRef<HTMLUListElement>(null);
   // const isDarkMode = Array.from(document.documentElement.classList).includes(
   //   "dark"
@@ -178,6 +180,7 @@ function Nav() {
       setSubMenu(undefined);
     }
   }, [showHamburgerMenu, localStorageTheme]);
+
   return (
     <>
       <nav className="px-4 pt-2 md:pt-3 lg:px-6 dark:text-a0d dark:bg-slate-900 border-b dark:border-none">
@@ -220,7 +223,10 @@ function Nav() {
                                     <>
                                       <span className="font-normal">, </span>
                                       <span className="font-normal">
-                                        {user.first_name}
+                                        {trimString(
+                                          upperFirstLetters(user.first_name),
+                                          11
+                                        )}
                                       </span>
                                     </>
                                   )}
@@ -239,7 +245,7 @@ function Nav() {
                                 </div>
                               ) : (
                                 <Button
-                                  className={"flex"}
+                                  className={"flex lg:hidden"}
                                   onPress={() => {
                                     setShowAccountMenu(true);
                                     close();
@@ -526,7 +532,7 @@ function Nav() {
                       aria-label="My Account"
                     >
                       <span className="hidden xs:block">
-                        {trimString(user.first_name, 12)}
+                        {trimString(upperFirstLetters(user.first_name), 12)}
                       </span>
                       <IconUserCircle stroke={1} size={34} />
                       <ModalOverlay
@@ -622,7 +628,10 @@ function Nav() {
                                   <li>
                                     <Button
                                       onPress={() => {
-                                        navigate({ to: "/account/myreviews" });
+                                        navigate({
+                                          to: "/account/myreviews",
+                                          search: { page: 1 },
+                                        });
                                         close();
                                       }}
                                       className={({
@@ -676,7 +685,8 @@ function Nav() {
                       {({ isPressed }) => (
                         <>
                           <span className="welcome text-sm text-center text-a1d">
-                            Welcome {trimString(user.first_name, 9)}
+                            Welcome,{" "}
+                            {trimString(upperFirstLetters(user.first_name), 9)}
                           </span>
                           <p className="flex items-center justify-center text-center w-full">
                             <span className="text-center">Account</span>
@@ -704,7 +714,7 @@ function Nav() {
 
                     <Popover
                       className={
-                        "bg-white text-black dark:bg-slate-800 dark:text-a0d -mt-1 border dark:border-slate-600 rounded-lg py-2 px-1"
+                        "bg-white outline-none ring-0 text-black dark:bg-slate-800 dark:text-a0d -mt-1 border dark:border-slate-600 rounded-lg py-2 px-1"
                       }
                     >
                       <Menu className="flex flex-col z-50" aria-label="links">
@@ -721,6 +731,7 @@ function Nav() {
                             `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-slate-600" : ""}`
                           }
                           href="/account/orders"
+                          routerOptions={{ search: { page: 1 } }}
                         >
                           Orders
                         </MenuItem>
@@ -729,6 +740,7 @@ function Nav() {
                             `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-slate-600" : ""}`
                           }
                           href="/account/myreviews"
+                          routerOptions={{ search: { page: 1 } }}
                         >
                           My Reviews
                         </MenuItem>
@@ -806,7 +818,10 @@ function Nav() {
         </ul>
         <div className="md:hidden">{searchBar()}</div>
 
-        <ul className="nav-category-links overflow-x-scroll py-1 flex text-nowrap bg-scroll gap-4 px-1 pb-1 mt-2 justify-around">
+        <ul
+          className="nav-category-links overflow-x-scroll py-1 flex text-nowrap gap-4 px-1 pb-1 mt-2 justify-around"
+          ref={ulNavList}
+        >
           {navBarLinks.map((link, index) => {
             return (
               <li key={link.id || index} className="flex">

@@ -9,14 +9,13 @@ import ErrorPage from "../components/ErrorPage";
 
 export const dealProductsQueryOptions = queryOptions({
   queryKey: ["index-deals"],
-  queryFn: async () =>
-    await fetch.get("/api/products?price_low=0.01&price_high=25"),
+  queryFn: async () => await fetch.get("/api/products?deals=true&limit=5"),
   staleTime: 1000 * 60 * 5,
 });
 export const popularProductQueryOptions = queryOptions({
   queryKey: ["index-bestsellers"],
   queryFn: async () =>
-    await fetch.get("/api/products?sort=-total_bought&limit=10"),
+    await fetch.get("/api/products?sort=-total_bought&limit=5"),
   staleTime: 1000 * 60 * 5,
 });
 
@@ -26,7 +25,7 @@ export const Route = createFileRoute("/")({
   notFoundComponent: () => <MissingPage />,
   loader: async () => {
     await queryClient.ensureQueryData(dealProductsQueryOptions);
-    await queryClient.ensureQueryData(popularProductQueryOptions);
+    return queryClient.ensureQueryData(popularProductQueryOptions);
   },
   errorComponent: ({ error, reset }) => (
     <ErrorPage error={error} reset={reset} />

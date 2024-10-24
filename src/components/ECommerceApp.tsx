@@ -56,7 +56,7 @@ export function SkipLink({
     <>
       <a
         href={`#${skipToId}`}
-        className="bg-black text-white ring-2 p-2 skipNav"
+        className="bg-black text-white ring-2 p-2 skipNav opacity-0 focus-visible:opacity-100"
       >
         {skipToText}
       </a>
@@ -69,16 +69,6 @@ function ECommerceApp() {
   const route = useLocation();
   const path = route.pathname.replace("/", "").split("/");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // const { user, setUser } = useAuth();
-
-  // if (getUserAuth.data?.data?.isAuth && !user) {
-  //   setUser(getUserAuth.data?.data?.user);
-  // }
-  // if (!getUserAuth.data?.data?.isAuth && user) {
-  //   setUser(null);
-  // }
-  // console.log(getUserAuth.data?.data);
-  // console.log("user", user);
 
   return (
     <ScreenSizeContext.Provider value={{ isMobile, isDesktop, isTablet }}>

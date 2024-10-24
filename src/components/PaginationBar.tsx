@@ -104,7 +104,7 @@ export function PaginationBar({
   // console.log(leftSiblings, rightSiblings);
 
   return (
-    <div className={`pagination-bar ${className ? className : ""}`}>
+    <div className={`pagination-bar my-4 ${className ? className : ""}`}>
       <div className="pagination-container flex flex-col lg:flex-row border border-[#e6e6e6] dark:border-[#30313D] rounded-md">
         <p className="text-center pb-2 px-4 lg:flex lg:items-center lg:pb-0">
           <span>

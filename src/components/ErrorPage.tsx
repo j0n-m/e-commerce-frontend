@@ -13,7 +13,6 @@ function ErrorPage({
   const errorObj = Object.assign({}, error) as AxiosError;
   const queryErrorResetBoundary = useQueryErrorResetBoundary();
   const isResponseError = !!errorObj?.response;
-  console.log(isResponseError, errorObj);
 
   useEffect(() => {
     // Reset the query error boundary

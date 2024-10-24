@@ -32,7 +32,7 @@ export type ProductType2 = {
 };
 
 export type Category = {
-  alias: string;
+  alias?: string;
   _id: string;
   name: string;
 };

@@ -75,7 +75,11 @@ function EditReview() {
       await queryClient.invalidateQueries({
         queryKey: ["category"],
       });
-      await navigate({ to: "/account/myreviews", replace: true });
+      await navigate({
+        to: "/account/myreviews",
+        search: { page: 1 },
+        replace: true,
+      });
     },
     onError: async (error) => {
       setGlobalError([

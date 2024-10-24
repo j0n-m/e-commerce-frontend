@@ -9,9 +9,10 @@ import { ProductResponse } from "../types/ProductType";
 import { PaginationBar } from "./PaginationBar";
 import { ScreenSizeContext } from "../context/ScreenSizeContext";
 import ProductCard_Category from "./ProductCard_Category";
-import { ListBoxItem, Section } from "react-aria-components";
+import { Section } from "react-aria-components";
 import ProductSortBySelectBox from "./ProductSortBySelectBox";
 import { mappedIds } from "../utilities/NavLinks";
+import SortBoxListItem from "./SortBoxListItem";
 const route = getRouteApi("/shop/category/$categoryId");
 
 export const productSortByOptionValues = [
@@ -100,7 +101,9 @@ function ProductsByCategory() {
   return (
     <>
       <main className="flex-1 py-4 px-2 lg:px-4">
-        <h1 className="font-bold text-xl pb-2">{categoryName}</h1>
+        <h1 className="font-bold text-xl lg:text-2xl py-3 lg:py-5">
+          {categoryName}
+        </h1>
         <div className="filters dark:bg-amenusd p-2 rounded-md mb-2 relative">
           <ProductSortBySelectBox
             isOpen={showSortBySelectBox}
@@ -112,23 +115,16 @@ function ProductsByCategory() {
             <Section className="flex flex-col">
               {productSortByOptionValues.map((option) => {
                 return (
-                  <ListBoxItem
-                    id={option.id}
-                    textValue={option.name}
-                    className={({
-                      isPressed,
-                      isSelected,
-                      isHovered,
-                      isFocusVisible,
-                    }) =>
-                      `py-3 px-6 ring-0 outline-none border-none ${isSelected ? "dark:bg-a2sd" : isPressed || isHovered || isFocusVisible ? "dark:bg-[#4d4d4d]" : ""}`
-                    }
+                  <SortBoxListItem
+                    text={option.name}
                     key={option.id}
-                    href={option.href}
-                    routerOptions={option.deps}
-                  >
-                    {option.name}
-                  </ListBoxItem>
+                    props={{
+                      textValue: option.name,
+                      id: option.id,
+                      href: option.href,
+                      routerOptions: option.deps,
+                    }}
+                  />
                 );
               })}
             </Section>
