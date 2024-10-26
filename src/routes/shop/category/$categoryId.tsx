@@ -45,6 +45,7 @@ export type ShopURLQuery = {
 
 export const Route = createFileRoute("/shop/category/$categoryId")({
   component: () => <ProductsByCategory />,
+  // component: () => <LoadingComponent />,
   pendingComponent: () => <LoadingComponent />,
   validateSearch: (search: Record<string, unknown>): ShopURLQuery => ({
     page: Number(search?.page || 1) || 1,

@@ -52,7 +52,9 @@ function CartProductCard({
             <p className="lg:text-lg">{trimString(product.name)}</p>
           </Link>
           {product.price < product.retail_price && (
-            <p className="line-through text-base">${product.retail_price}</p>
+            <p className="line-through text-base dark:text-a1d text-a1">
+              ${product.retail_price}
+            </p>
           )}
           <p className="text-lg font-bold">
             $<span className="">{product.price}</span>
@@ -110,7 +112,7 @@ function CartProductCard({
                   isDisabled,
                   isPressed,
                 }) =>
-                  `py-1 px-2 rounded-r-md flex justify-center items-center border-l dark:border-l-[#575757] ${isFocusVisible || isHovered || isPressed ? "bg-[#EFEFEF] dark:bg-[#3f3f3f]" : isDisabled ? "dark:text-a2d dark:bg-amenusd" : "dark:bg-a2sd"}`
+                  `py-1 px-2 rounded-r-md flex justify-center items-center border-l dark:border-l-[#575757] ${isFocusVisible || isHovered || isPressed ? "bg-[#EFEFEF] dark:bg-[#3f3f3f]" : isDisabled ? "dark:text-a2d dark:bg-amenusd bg-a2s text-a2/60" : "dark:bg-a2sd"}`
                 }
               >
                 <IconPlus size={16} stroke={2}></IconPlus>

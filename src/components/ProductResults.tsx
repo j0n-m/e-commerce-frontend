@@ -16,7 +16,7 @@ function useSearchProducts(query: string, searchDeps: ProductSearch) {
   const {
     data: { data: products_data },
   } = useSuspenseQuery(queryFormSearchOptions(query, searchDeps));
-  // console.log("data returned:", products_data);
+  // ("data returned:", products_data);
 
   return products_data as ProductResponse;
 }
@@ -131,7 +131,7 @@ function ProductResults() {
             </ProductSortBySelectBox>
           </div>
         )}
-        <div className="divider bg-a3sd mb-2"></div>
+        <div className="divider dark:bg-a2sd bg-a2s mb-2"></div>
         <div className="products flex flex-col lg:mt-4">
           {products_data.products.map((product, i) => (
             <ProductCard

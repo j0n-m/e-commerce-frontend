@@ -1,32 +1,19 @@
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 import { ReactNode } from "react";
+import { ShopURLQuery } from "../routes/shop/category/$categoryId";
 
 type PaginationProps = {
   totalPages: number;
   currentPage: number;
   isLargeScreenSize: boolean;
-  searchDeps: {
-    page: number;
-    sort?: string | undefined;
-    price_low?: number | undefined;
-    price_high?: number | undefined;
-    pageSize?: number | undefined;
-    category?: string | undefined;
-  };
+  searchDeps: ShopURLQuery;
   navigateLink?: string;
   navigateSearch?: { [index: string]: string };
   className?: string;
 };
 type PaginationBtnProps = {
-  searchDeps: {
-    page: number;
-    sort?: string | undefined;
-    price_low?: number | undefined;
-    price_high?: number | undefined;
-    pageSize?: number | undefined;
-    category?: string | undefined;
-  };
+  searchDeps: ShopURLQuery;
   isDisabled?: boolean;
   navigateLink?: string;
   children?: ReactNode;
@@ -101,31 +88,31 @@ export function PaginationBar({
   if (rightSiblings.length > 0 && rightSiblings[0] + 1 < lastPage) {
     rightSiblings.push(-1);
   }
-  // console.log(leftSiblings, rightSiblings);
+  // (leftSiblings, rightSiblings);
 
   return (
     <div className={`pagination-bar my-4 ${className ? className : ""}`}>
-      <div className="pagination-container flex flex-col lg:flex-row border border-[#e6e6e6] dark:border-[#30313D] rounded-md">
-        <p className="text-center pb-2 px-4 lg:flex lg:items-center lg:pb-0">
-          <span>
+      <div className="pagination-container flex flex-col items-center lg:flex-row border border-[#e6e6e6] dark:border-[#30313D] rounded-md">
+        <p className="text-center px-4 flex items-center lg:pb-0">
+          <span className="">
             Page {currentPage} of {totalPages}
           </span>
         </p>
-        <nav className="pagination-btns flex rounded-md">
+        <nav className="pagination-btns flex rounded-md border-t lg:border-t-0">
           <ul className="flex">
             <li>
               <Link
                 disabled={currentPage <= firstPage}
                 rel="prev"
-                className={`min-w-[90px] h-[40px] flex justify-center border-r dark:border-r-[#2e2e2e] ${currentPage <= firstPage ? "text-neutral-500 bg-neutral-300 dark:bg-gray-900" : "hover:bg-neutral-100 focus:bg-neutral-100 dark:hover:dark:bg-[#2e2e2e] dark:focus:dark:bg-[#2e2e2e] focus:outline-offset-[-1px]"}`}
+                className={`min-w-[90px] h-[40px] flex justify-center dark:border-r-[#2e2e2e] border-r-[0.5px] ${currentPage <= firstPage ? "bg-neutral-300 text-neutral-500 dark:bg-gray-900" : "hover:bg-a1s focus:bg-a1s dark:hover:dark:bg-a3sd dark:focus:dark:bg-[#2e2e2e] focus:outline-offset-[-1px]"}`}
                 to={navigateLink}
                 search={
                   navigateSearch || { ...searchDeps, page: currentPage - 1 }
                 }
               >
-                <span className="flex w-full items-center">
+                <span className="flex w-full items-center justify-center">
                   <IconChevronLeft height={24} width={18} />
-                  Previous
+                  Prev
                 </span>
               </Link>
             </li>
@@ -134,7 +121,7 @@ export function PaginationBar({
                 <PaginationBtn
                   isDisabled={currentPage === firstPage}
                   searchDeps={{ ...searchDeps, page: firstPage }}
-                  className={`inline-flex min-w-[24px] h-[40px] px-4 items-center justify-center ${currentPage === firstPage ? "font-bold outline outline-1 -outline-offset-[1.5px] rounded-sm" : "hover:bg-neutral-300 dark:hover:bg-gray-600"}`}
+                  className={`inline-flex min-w-[24px] h-[40px] px-4 items-center justify-center ${currentPage === firstPage ? "font-bold rounded-sm" : "hover:bg-a1s dark:hover:bg-gray-600"}`}
                 >
                   {firstPage.toString()}
                 </PaginationBtn>
@@ -157,18 +144,18 @@ export function PaginationBar({
                 <li key={index}>
                   <PaginationBtn
                     searchDeps={{ ...searchDeps, page: +value }}
-                    className={`pagination-btn inline-flex min-w-[24px] h-[40px] px-4 items-center justify-center ${currentPage === +value ? "font-bold outline outline-1 -outline-offset-[1.5px] rounded-sm" : "hover:bg-neutral-300 dark:hover:bg-gray-600"}`}
+                    className={`pagination-btn inline-flex min-w-[24px] h-[40px] px-4 items-center justify-center ${currentPage === +value ? "font-bold -outline-offset-[1.5px] rounded-sm" : "hover:bg-a1s dark:hover:bg-gray-600"}`}
                   >
                     {value.toString()}
                   </PaginationBtn>
                 </li>
               );
             })}
-            {currentPage !== firstPage && currentPage !== lastPage ? (
+            {currentPage !== firstPage ? (
               <li>
                 <PaginationBtn
                   isDisabled={true}
-                  className={`pagination-btn inline-flex min-w-[24px] h-[40px] px-4 items-center justify-center ${currentPage === searchDeps.page ? "font-bold outline outline-1 -outline-offset-[1.5px] rounded-sm" : "hover:bg-neutral-300"}`}
+                  className={`pagination-btn inline-flex min-w-[24px] h-[40px] px-4 items-center justify-center ${currentPage === searchDeps.page ? "font-bold -outline-offset-[1.5px] rounded-sm" : "hover:bg-a1s"}`}
                   searchDeps={searchDeps}
                 >
                   {currentPage.toString()}
@@ -191,7 +178,7 @@ export function PaginationBar({
               return (
                 <li key={index}>
                   <PaginationBtn
-                    className={`pagination-btn inline-flex min-w-[24px] h-[40px] px-4 items-center justify-center ${currentPage === value ? "font-bold outline outline-1 -outline-offset-[1.5px] rounded-sm" : "hover:bg-neutral-300 dark:hover:bg-gray-600"}`}
+                    className={`pagination-btn inline-flex min-w-[24px] h-[40px] px-4 items-center justify-center ${currentPage === value ? "font-bold -outline-offset-[1.5px] rounded-sm" : "hover:bg-a1s dark:hover:bg-gray-600"}`}
                     searchDeps={{ ...searchDeps, page: +value }}
                   >
                     {value.toString()}
@@ -200,11 +187,11 @@ export function PaginationBar({
               );
             })}
 
-            {lastPage > firstPage && currentPage <= lastPage ? (
+            {isLargeScreenSize && currentPage !== lastPage ? (
               <li>
                 <PaginationBtn
                   isDisabled={currentPage === lastPage}
-                  className={`inline-flex min-w-[24px] h-[40px] px-4 items-center justify-center ${currentPage === lastPage ? "font-bold outline outline-1 -outline-offset-[1.5px] rounded-sm" : "hover:bg-neutral-300 dark:hover:bg-gray-600"}`}
+                  className={`inline-flex min-w-[24px] h-[40px] px-4 items-center justify-center ${currentPage === lastPage ? "font-bold -outline-offset-[1.5px] rounded-sm" : "hover:bg-a1s dark:hover:bg-gray-600"}`}
                   searchDeps={{ ...searchDeps, page: lastPage }}
                 >
                   {lastPage.toString()}
@@ -215,7 +202,7 @@ export function PaginationBar({
             <li>
               <Link
                 disabled={currentPage >= lastPage}
-                className={`min-w-[90px] h-[40px] flex justify-center border-l-[rgba(0,0,0,0.5)] border-l-[0.5px] ${currentPage >= lastPage ? "text-neutral-500 bg-neutral-300 dark:bg-gray-900" : "hover:bg-neutral-100 focus:bg-neutral-100 focus:outline-offset-[-1px]"}`}
+                className={`min-w-[90px] h-[40px] flex justify-center border-l-neutral-200 dark:border-l-amenusd border-l-[0.5px] ${currentPage >= lastPage ? "text-neutral-500 bg-neutral-300 dark:bg-gray-900" : "hover:bg-neutral-100 focus:bg-neutral-100 dark:hover:bg-a3sd dark:focus:bg-a3sd focus:outline-offset-[-1px]"}`}
                 to={navigateLink}
                 rel="next"
                 search={

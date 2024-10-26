@@ -1,4 +1,3 @@
-import "./App.css";
 import { CartProvider } from "./context/CartContext";
 import ECommerceApp from "./components/ECommerceApp";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

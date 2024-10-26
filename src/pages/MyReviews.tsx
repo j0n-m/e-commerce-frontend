@@ -66,7 +66,7 @@ function MyReviews() {
     deps,
   });
   const [showSortBySelectBox, setShowSortBySelectBox] = useState(false);
-  // console.log(customerReviews);
+  // (customerReviews);
   const reviewsSortMap = new Map([
     ["newest", "1"],
     ["oldest", "2"],
@@ -120,7 +120,7 @@ function MyReviews() {
               </ProductSortBySelectBox>
             </div>
           )}
-          <div className="divider bg-a2sd mb-2"></div>
+          <div className="divider dark:bg-a2sd bg-a2s mb-2"></div>
           <div className="customer-reviews">
             {customerReviews.length > 0 ? (
               customerReviews.map((review) => (
@@ -135,9 +135,9 @@ function MyReviews() {
                     </p>
                     <p>Rating: {review.rating}/5</p>
                   </div>
-                  <div className="bg-a2sd px-2 py-1 text-sm">
+                  <div className="dark:bg-a2sd bg-a1s px-2 py-1 text-sm">
                     <Link
-                      className="hover:underline dark:text-green-400 text-green-700"
+                      className="hover:underline dark:text-green-400 text-green-600"
                       to={`/shop/review/${review._id}`}
                     >
                       View details

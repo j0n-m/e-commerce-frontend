@@ -148,7 +148,7 @@ function EditReview() {
         return false;
       }
       if (!productId || !reviewerName || !reviewer) {
-        console.log(reviewerName, reviewer);
+        reviewerName, reviewer;
         setGlobalError([
           "The form encountered an error while filling the form. Please try again later.",
         ]);
@@ -172,12 +172,12 @@ function EditReview() {
     };
 
     if (!isFormValid()) {
-      console.log("form not valid");
+      ("form not valid");
       return;
     }
     const validAuth = await checkAuth();
     if (validAuth) {
-      console.log("good to go");
+      ("good to go");
     }
   };
 

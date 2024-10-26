@@ -120,7 +120,7 @@ function EditProduct() {
       });
     },
     onError: (error) => {
-      console.log(error);
+      error;
       const res = error as AxiosError;
       setFormReadyToSubmit(false);
       setGlobalError(res.response?.data?.errors || [{ msg: [res.message] }]);
@@ -333,7 +333,7 @@ function EditProduct() {
           onSubmit={handleFormSubmit}
           className="mt-2 flex flex-col gap-4"
           validationErrors={error}
-          onInvalid={() => console.log("invalid form")}
+          onInvalid={() => "invalid form"}
         >
           <TextField
             name="id"

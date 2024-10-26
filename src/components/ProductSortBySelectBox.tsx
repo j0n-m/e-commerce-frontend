@@ -34,7 +34,7 @@ function ProductSortBySelectBox<T extends object>({
       <Label className="dark:text-a1d">{label || "Sort By "}</Label>
       <Button
         className={({ isPressed, isFocusVisible, isHovered }) =>
-          `px-2 py-2 border dark:border-1 dark:border-a2sd flex gap-2 rounded-lg dark:group-data-[open]:bg-a2sd ${isPressed || isFocusVisible || isHovered ? "dark:bg-a2sd" : "dark:bg-a0sd"}`
+          `px-2 py-2 border dark:border-1 dark:border-a2sd flex gap-2 rounded-lg dark:group-data-[open]:bg-a2sd ${isPressed || isFocusVisible || isHovered ? "dark:bg-a2sd bg-a1s" : "dark:bg-a0sd"}`
         }
       >
         <SelectValue />
@@ -45,7 +45,7 @@ function ProductSortBySelectBox<T extends object>({
       </Button>
 
       <Popover
-        className={`bg-white border dark:border-a3sd border-neutral-400 shadow-lg dark:bg-a3sd dark:text-a0d flex flex-col max-h-max overflow-y-auto rounded-md`}
+        className={`bg-white border dark:border-a3sd border-a3s shadow-xl dark:bg-a3sd dark:text-a0d flex flex-col max-h-max overflow-y-auto rounded-md`}
       >
         <ListBox className={"z-20"} items={items}>
           {children}

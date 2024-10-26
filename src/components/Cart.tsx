@@ -56,7 +56,6 @@ function Cart() {
       //   "customer",
       //   JSON.stringify(response.data["customer"])
       // );
-      console.log("response data", response.data);
     },
     onError: () => {
       setResponseMessage(
@@ -111,7 +110,7 @@ function Cart() {
       if (!check.success) {
         window.location.reload(); //cart context will delete for no conforming to schema
       } else {
-        console.log(check);
+        check;
         mutation.mutate(cart);
       }
     }
@@ -131,10 +130,10 @@ function Cart() {
       <div className="cartCard flex-[3]">
         <h1 className="text-3xl tracking-wide pb-4">Shopping Cart</h1>
         {cart.length <= 0 ? (
-          <div className="cart-nothing p-3 bg-white dark:bg-a1sd dark:border dark:border-[#575757] rounded-md">
+          <div className="cart-nothing p-3 bg-white dark:bg-a1sd border dark:border-[#575757] rounded-md">
             <p className="text-2xl font-extralight">Your cart is empty.</p>
             <Link
-              to="/"
+              to="/shop/category/best-deals"
               className="text-blue-600 dark:text-blue-400 hover:underline"
             >
               Shop today's deals
@@ -156,14 +155,14 @@ function Cart() {
         )}
       </div>
       {cart.length > 0 && (
-        <div className="payment-section border-b dark:border-[#424353] lg:border-l lg:border-b-0 flex-1 p-4 -order-1 lg:order-1">
+        <div className="payment-section border-b dark:border-[#424353] lg:border-l lg:border-b-0 lg:flex-1 p-4 -order-1 lg:order-1">
           <form className="p-6">
             <h2 className="text-2xl font-bold text-center mb-4">Summary</h2>
             <p className="text-center lg:border-b dark:border-[#424353] pb-4">
               <span>Subtotal ({cartQuantity} items): </span>
               <span className="subtotal font-bold">${subtotal.toFixed(2)}</span>
             </p>
-            <div className="payment-btn flex justify-center mt-4">
+            <div className="payment-btn flex justify-center lg:mt-4">
               {cart.length > 0 && (
                 <Button
                   isDisabled={mutation.isPending || mutation.isError}
@@ -171,7 +170,7 @@ function Cart() {
                   onPress={handleCheckout}
                   type="button"
                   className={({ isHovered, isFocusVisible, isDisabled }) =>
-                    `rounded-full py-2 px-6 lg:px-8 bg-[#0070ba] text-white text-base font-bold ${isFocusVisible || isHovered ? "bg-[#0069af]" : ""} ${isDisabled && "bg-gray-500"}`
+                    `rounded-full py-2 px-6 bg-[#0070ba] text-white text-base font-bold ${isFocusVisible || isHovered ? "bg-[#0069af]" : ""} ${isDisabled && "bg-gray-500"}`
                   }
                 >
                   Secure Checkout

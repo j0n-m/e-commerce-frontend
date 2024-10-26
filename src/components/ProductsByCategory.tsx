@@ -57,7 +57,7 @@ function useProductsFromCategory(categoryId: string, searchDeps: ShopURLQuery) {
   const {
     data: { data: product_data },
   } = useSuspenseQuery(productsByCategoryOption(categoryId, searchDeps));
-  // console.log(product_data);
+  // (product_data);
   return product_data as ProductResponse;
 }
 
@@ -130,7 +130,7 @@ function ProductsByCategory() {
             </Section>
           </ProductSortBySelectBox>
         </div>
-        <div className="divider bg-a2sd mb-2"></div>
+        <div className="divider dark:bg-a2sd bg-a2s mb-2"></div>
         <div className="products flex flex-col lg:flex-row lg:flex-wrap lg:gap-3">
           {products_data.products.map((product) => (
             <ProductCard_Category

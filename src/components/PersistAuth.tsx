@@ -23,11 +23,10 @@ function PersistAuth() {
       const userData = getUserAuth.data.data.user;
       const isAuth = getUserAuth.data.data.isAuth as boolean;
       if (isAuth && !user) {
-        console.log("persist auth: adding user to context b/c isAuth is true");
+        ("persist auth: adding user to context b/c isAuth is true");
         setUser(userData);
       }
       if (!isAuth && user) {
-        console.log("persist auth: reseting user to null", isAuth);
         setUser(null);
       }
     }

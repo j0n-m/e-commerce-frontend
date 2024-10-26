@@ -1,12 +1,14 @@
 import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { Link, useNavigate } from "@tanstack/react-router";
-import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { Link as LinkAria } from "react-aria-components";
+import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import fetch from "../utilities/fetch";
 import useAuth from "../hooks/useAuth";
 import checkAndParseCart from "../utilities/checkAndParseCart";
 import { queryClient } from "../App";
+import { useMutation } from "@tanstack/react-query";
 const stripePublishKey =
   "pk_test_51Q0TEsP2PfjUIESRgbKfEbmEtiIKYbJKRmaNsi27hTUCBNXiCUuy6PvIYsohIzECYR4rWEnrp6luTapCDrxY2Lq200hpM9dWSq";
 const stripePromise = loadStripe(stripePublishKey);
@@ -53,6 +55,7 @@ function CheckoutComplete() {
 function Complete() {
   const stripe = useStripe();
   const [message, setMessage] = useState<string | undefined>(undefined);
+  const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
   const { cart, setCart } = useContext(CartContext);
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
@@ -67,6 +70,31 @@ function Complete() {
     "pId"
   );
 
+  const orderhistoryMutate = useMutation({
+    mutationFn: async () =>
+      await fetch.post(
+        "api/orderhistory",
+        {
+          paymentIntentId,
+          customerId,
+          cart,
+        },
+        { withCredentials: true }
+      ),
+    onSuccess: async () => {
+      await queryClient
+        .invalidateQueries({ queryKey: ["orderhistory"] })
+        .catch((e) => console.error(e));
+      await queryClient
+        .invalidateQueries({ queryKey: ["product"] })
+        .catch((e) => console.error(e));
+      setCart([]);
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
   useEffect(() => {
     if (stripe && user) {
       // Retrieve the "payment_intent_client_secret" query parameter appended to
@@ -76,7 +104,7 @@ function Complete() {
       stripe
         .retrievePaymentIntent(clientSecret!)
         .then(({ paymentIntent }) => {
-          // console.log(paymentIntent.)
+          // (paymentIntent.)
           // Inspect the PaymentIntent `status` to indicate the status of the payment
           // to your customer.
           //
@@ -87,27 +115,7 @@ function Complete() {
 
           switch (paymentIntent!.status) {
             case "succeeded": {
-              fetch
-                .post(
-                  "api/orderhistory",
-                  {
-                    paymentIntentId,
-                    customerId,
-                    cart,
-                  },
-                  { withCredentials: true }
-                )
-                .then(() => {
-                  console.log("sent order history payload");
-                  queryClient
-                    .invalidateQueries({ queryKey: ["orderhistory"] })
-                    .catch((e) => console.error(e));
-                  queryClient
-                    .invalidateQueries({ queryKey: ["product"] })
-                    .catch((e) => console.error(e));
-                  setCart([]);
-                })
-                .catch((e) => console.error(e));
+              orderhistoryMutate.mutate();
 
               if (localStorage.getItem("cart")) {
                 localStorage.removeItem("cart");
@@ -115,6 +123,7 @@ function Complete() {
 
               // setCart([]);
               setMessage("Success! Payment received.");
+              setIsPaymentSuccess(true);
               break;
             }
 
@@ -140,29 +149,12 @@ function Complete() {
         });
     }
 
-    // if (!isLoading && !user) {
-    //   if (orderId) {
-    //     fetch
-    //       .delete(`api/orderhistory/${orderId}`)
-    //       .then()
-    //       .catch((e) => console.log(e));
-    //   }
-    //   setMessage(
-    //     "Payment canceled. You must be signed in to complete your order."
-    //   );
-    //   if (orderId) {
-    //     fetch
-    //       .delete(`api/orderhistory/${orderId}`)
-    //       .then()
-    //       .catch((e) => console.log(e));
-    //   }
-    // }
     if (isLoading) {
       setIsLoading(false);
     }
   }, [stripe, user, isLoading]);
 
-  if (isLoading) {
+  if (isLoading || !message) {
     return (
       <div className="max-w-[1500px] mx-auto p-4">
         <p className="text-center text-lg font-bold">
@@ -173,19 +165,26 @@ function Complete() {
     );
   }
   return (
-    <div className="max-w-[1500px] mx-auto p-4">
-      <h2 className="text-center text-2xl font-bold">{message}</h2>
-      <br />
-      <p className="text-center text-lg">
-        <Link
-          className="text-blue-700 dark:text-blue-400"
-          to="/"
-          replace={true}
-        >
-          Click here to return to home.
-        </Link>
-      </p>
-    </div>
+    <>
+      <div className="p-4">
+        <div className="border dark:border-a3sd border-a1s rounded-lg p-5">
+          <h1 className="text-center text-2xl font-bold">
+            {isPaymentSuccess ? "Order Complete" : "Payment Error"}
+          </h1>
+          <p className="text-center text-lg">{message}</p>
+          <br />
+          <p className="text-center text-lg">
+            <LinkAria
+              className="bg-blue-600 dark:bg-blue-500 text-a0d py-2 px-4 rounded-full"
+              href="/"
+              routerOptions={{ replace: true }}
+            >
+              Back to home
+            </LinkAria>
+          </p>
+        </div>
+      </div>
+    </>
   );
 }
 

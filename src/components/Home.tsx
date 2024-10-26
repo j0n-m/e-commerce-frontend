@@ -29,7 +29,7 @@ function DisplayCard({ product }: DisplayCardProps) {
   return (
     <div
       key={product._id}
-      className="product-card dark:bg-a1sd rounded-lg flex flex-col gap-3 px-2 py-3 lg:p-5 w-[calc(100%/1)] xs:w-[calc(100%/2-4px)] md:w-[calc(100%/3-6px)] lg:w-[calc(100%/4-10px)] xl:w-[calc(100%/5-10px)]"
+      className="product-card dark:bg-a1sd bg-a1s rounded-lg flex flex-col gap-3 px-2 py-3 lg:p-5 w-[calc(100%/1)] xs:w-[calc(100%/2-4px)] md:w-[calc(100%/3-6px)] lg:w-[calc(100%/4-10px)] xl:w-[calc(100%/5-10px)]"
     >
       <div className="section-content flex-1 flex flex-col">
         <div className="title flex-1">
@@ -83,10 +83,10 @@ function Home() {
   const productPopular = usePopularProducts();
 
   return (
-    <main className="page-container flex-1 pb-40 px-2 lg:px-4">
+    <main className="page-container flex-1 pb-40 px-2 pt-1 lg:px-4">
       <div className="banner-container w-full mb-2">
         <div className="">
-          <div className="banner_home select-none relative flex flex-col justify-center items-center py-4">
+          <div className="banner_home rounded-md select-none relative flex flex-col justify-center items-center py-4">
             <h3 className="text-orange-700 text-[50px] lg:text-[60px] lg:mt-8 font-[MumbaiSticker]">
               Autumn
             </h3>

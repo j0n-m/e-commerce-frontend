@@ -40,7 +40,6 @@ const CartContext = createContext(initialCart);
 
 export function CartProvider({ children }: CartProviderProps) {
   const [cart, setCart] = useState<CartItemsType[]>(initialCart.cart);
-  // console.log("in provider", cart);
   useEffect(() => {
     if (localStorage.getItem("cart")) {
       const lsCart: CartItemsType[] = JSON.parse(

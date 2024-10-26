@@ -126,7 +126,7 @@ function CreateReview() {
     onSuccess: async (data) => {
       const response = data;
       const reviewId = response.data.id as string;
-      console.log("success", response);
+      "success", response;
       await queryClient.invalidateQueries({
         queryKey: ["reviews"],
       });
@@ -159,7 +159,7 @@ function CreateReview() {
       return true;
     };
     if (!isFormValid()) {
-      console.log("form not valid");
+      ("form not valid");
       return;
     }
     createReview.mutate();

@@ -42,7 +42,8 @@ function Nav() {
   const { setTheme } = useContext(ThemeContext);
   const { handleSignOut } = useSignOut();
   // const searchFormSubmit = useRef<HTMLFormElement | null>(null);
-  const searchInputElement = useRef<HTMLInputElement | null>(null);
+  const searchInputElementLg = useRef<HTMLInputElement | null>(null);
+  const searchInputElementSm = useRef<HTMLInputElement | null>(null);
   const [searchInput, setSearchInput] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
@@ -81,65 +82,13 @@ function Nav() {
     0
   );
 
-  const searchBar = () => {
-    return (
-      <div className="search-bar">
-        <Form
-          onSubmit={handleSearchFormSubmit}
-          className={`flex mt-2 md:mt-0 ring-1 mx-auto lg:max-w-[800px] dark:ring-slate-800 rounded-lg relative`}
-        >
-          <Input
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            placeholder="Search Products or Categories"
-            className={
-              "flex-1 h-[40px] md:h-[36px] lg:min-h-[40px] rounded-lg dark:bg-slate-800 py-2 pl-3 pr-20"
-            }
-          ></Input>
-          <Button
-            type="submit"
-            className={({ isHovered, isFocusVisible }) =>
-              `absolute top-0 bottom-0 right-0 px-2 rounded-r-lg ${isHovered || isFocusVisible ? "dark:bg-slate-500" : "dark:bg-slate-700"}`
-            }
-          >
-            <IconSearch stroke={1.5}></IconSearch>
-          </Button>
-          {searchInput.length > 0 && (
-            <Button
-              className={({
-                isHovered,
-                isFocusVisible,
-              }) => `absolute right-11 top-1 bottom-1 w-[30] aspect-square rounded-full flex items-center justify-center dark:text-black
-                      ${isHovered || isFocusVisible ? "bg-slate-200 dark:bg-slate-600" : ""}
-                    `}
-              onPress={handleDeleteSearchInput}
-              type="button"
-            >
-              <IconX
-                className="dark:text-white"
-                height={28}
-                width={28}
-                stroke={1.25}
-              />
-            </Button>
-          )}
-        </Form>
-      </div>
-    );
-  };
-
   const handleDeleteSearchInput = () => {
+    searchInputElementLg?.current?.focus();
+    searchInputElementSm?.current?.focus();
     setSearchInput("");
-    if (searchInputElement?.current) {
-      searchInputElement.current.focus();
-    }
   };
   const handleSearchFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("search query:", searchInput);
     if (searchInput.length === 0) {
       return window.location.reload();
     }
@@ -161,13 +110,10 @@ function Nav() {
   //     signout2.current.handleSignOut();
   //   }
   // };
-  const searchQuery = new URLSearchParams(window.location.search).get("q");
+  // const searchQuery = new URLSearchParams(window.location.search).get("q");
 
   useEffect(() => {
     const lsValue = localStorage.getItem("theme");
-    if (!searchInput && searchQuery) {
-      setSearchInput(searchQuery);
-    }
 
     if (
       (lsValue !== localStorageTheme && lsValue === "auto") ||
@@ -193,7 +139,9 @@ function Nav() {
                 onOpenChange={setShowHamburgerMenu}
               >
                 <Button
-                  className={"lg:p-1 rounded-lg dark:hover:bg-slate-700"}
+                  className={({ isHovered, isFocusVisible, isPressed }) =>
+                    `lg:p-1 rounded-lg ${isHovered || isPressed || isFocusVisible ? "dark:bg-slate-700 bg-a1s" : ""}`
+                  }
                   aria-label="Browse Menu"
                 >
                   <IconMenu2 size={32} stroke={1} />
@@ -211,7 +159,7 @@ function Nav() {
                     <Dialog className="">
                       {({ close }) => (
                         <div>
-                          <div className="dark:bg-a0sd dark:text-a0d bg-a0d">
+                          <div className="dark:bg-a0sd dark:border-none dark:text-a0d bg-a0s text-a0 border-b border-b-a2s">
                             <div className="flex justify-between px-4 py-3">
                               <div className="greeting">
                                 <Header
@@ -239,6 +187,13 @@ function Nav() {
                                       navigate({ to: "/signin" });
                                       close();
                                     }}
+                                    className={({
+                                      isHovered,
+                                      isFocusVisible,
+                                      isPressed,
+                                    }) =>
+                                      `${isHovered || isFocusVisible || isPressed ? "text-a0/70 dark:text-a0d" : ""}`
+                                    }
                                   >
                                     Sign in
                                   </Button>
@@ -260,9 +215,13 @@ function Nav() {
                             aria-label="Exit Menu"
                             type="button"
                             onPress={close}
-                            className={`bg-transparent aspect-square h-[30px] absolute top-2 right-[-50px] z-20`}
+                            className={`aspect-square h-[30px] absolute top-2 right-[-50px] z-20`}
                           >
-                            <IconX stroke={1} className="mx-auto" size={34} />
+                            <IconX
+                              stroke={1}
+                              className="mx-auto text-a0d"
+                              size={34}
+                            />
                           </Button>
                           <ul className="menu-items overflow-y-scroll h-svh pb-[6rem]">
                             <h2 className="px-6 py-2 font-bold text-xl">
@@ -287,7 +246,7 @@ function Nav() {
                                       isDisabled,
                                       isPressed,
                                     }) =>
-                                      `w-full text-start px-6 py-3 min-w-[120px] ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a3sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                      `trending-link w-full text-start px-6 py-3 min-w-[120px] ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a3sd bg-a1s outline-0" : isDisabled ? "dark:bg-a3sd bg-a2s text-a2 dark:text-a1d" : ""}`
                                     }
                                   >
                                     {link.label}
@@ -296,7 +255,7 @@ function Nav() {
                               );
                             })}
 
-                            <div className="divider bg-a3sd"></div>
+                            <div className="divider dark:bg-a3sd bg-a2s"></div>
                             <h2 className="px-6 py-3 font-bold text-lg">
                               Shop By Category
                             </h2>
@@ -312,7 +271,7 @@ function Nav() {
                                   isDisabled,
                                   isPressed,
                                 }) =>
-                                  `dropdown-item ring-0 outline-0 border-0 flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                  `dropdown-item ring-0 outline-0 border-0 flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a3sd bg-a1s outline-0" : isDisabled ? "dark:bg-a3sd bg-a2s text-a2 dark:text-a1d" : ""}`
                                 }
                               >
                                 <span>All Categories</span>
@@ -328,7 +287,7 @@ function Nav() {
                                     : "grid-rows-[0fr] opacity-0 py-0 aria-hidden"
                                 }`}
                               >
-                                <ul className="dropdown-categories overflow-hidden bg-a3sd">
+                                <ul className="dropdown-categories overflow-hidden dark:bg-a3sd bg-a0s">
                                   {allLinks.map((linkObj) => {
                                     if (!linkObj.id) {
                                       return;
@@ -344,7 +303,7 @@ function Nav() {
                                             isDisabled,
                                             isPressed,
                                           }) =>
-                                            `w-full text-start px-10 py-3 min-w-[120px] ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                            `drop-down-item w-full text-start px-10 py-3 min-w-[120px] ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-a1s outline-0" : isDisabled ? "dark:bg-a3sd bg-a2s text-a2 dark:text-a1d" : ""}`
                                           }
                                           onPress={() => {
                                             navigate({
@@ -363,7 +322,7 @@ function Nav() {
                                 </ul>
                               </div>
                             </li>
-                            <div className="divider bg-a3sd"></div>
+                            <div className="divider dark:bg-a3sd bg-a2s"></div>
 
                             <li className="">
                               <Button
@@ -386,7 +345,7 @@ function Nav() {
                                   isDisabled,
                                   isPressed,
                                 }) =>
-                                  `dropdown-item flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                  `dropdown-item flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a3sd bg-a1s outline-0" : isDisabled ? "dark:bg-a3sd bg-a2s text-a2 dark:text-a1d" : ""}`
                                 }
                               >
                                 <span>Theme</span>
@@ -403,7 +362,7 @@ function Nav() {
                                 }`}
                               >
                                 <ul
-                                  className="overflow-hidden bg-a3sd"
+                                  className="overflow-hidden dark:bg-a3sd bg-a0s"
                                   ref={ulTheme}
                                 >
                                   <li>
@@ -415,7 +374,7 @@ function Nav() {
                                         isDisabled,
                                         isPressed,
                                       }) =>
-                                        `w-full flex text-start items-center gap-1 px-10 py-2 min-w-[120px] ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd/50 bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                        `w-full flex text-start items-center gap-1 px-10 py-2 min-w-[120px] ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd/50 bg-a1s outline-0" : isDisabled ? "dark:bg-a3sd bg-a2s text-a2 dark:text-a1d" : ""}`
                                       }
                                       isDisabled={localStorageTheme === "auto"}
                                       onPress={() => handleThemeChange("auto")}
@@ -424,7 +383,7 @@ function Nav() {
                                       <span className="">OS Default</span>
                                       {localStorageTheme === "auto" && (
                                         <IconCheck
-                                          className="ml-auto text-a0d"
+                                          className="ml-auto dark:text-a0d text-a0"
                                           size={20}
                                         />
                                       )}
@@ -439,7 +398,7 @@ function Nav() {
                                         isDisabled,
                                         isPressed,
                                       }) =>
-                                        `w-full flex items-center gap-1 text-start px-10 py-2 min-w-[120px] ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd/50 bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                        `w-full flex items-center gap-1 text-start px-10 py-2 min-w-[120px] ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd/50 bg-a1s outline-0" : isDisabled ? "dark:bg-a3sd bg-a2s text-a2 dark:text-a1d" : ""}`
                                       }
                                       isDisabled={localStorageTheme === "light"}
                                       onPress={() => handleThemeChange("light")}
@@ -448,7 +407,7 @@ function Nav() {
                                       <span>Light</span>
                                       {localStorageTheme === "light" && (
                                         <IconCheck
-                                          className="ml-auto text-a0d"
+                                          className="ml-auto dark:text-a0d text-a0"
                                           size={20}
                                         />
                                       )}
@@ -463,7 +422,7 @@ function Nav() {
                                         isDisabled,
                                         isPressed,
                                       }) =>
-                                        `w-full flex items-center gap-1 text-start px-10 py-2 min-w-[120px] ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd/50 bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                        `w-full flex items-center gap-1 text-start px-10 py-2 min-w-[120px] ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd/50 bg-a1s outline-0" : isDisabled ? "dark:bg-a3sd bg-a2s text-a2 dark:text-a1d" : ""}`
                                       }
                                       isDisabled={localStorageTheme === "dark"}
                                       onPress={() => handleThemeChange("dark")}
@@ -472,7 +431,7 @@ function Nav() {
                                       <span>Dark</span>
                                       {localStorageTheme === "dark" && (
                                         <IconCheck
-                                          className="ml-auto text-a0d"
+                                          className="ml-auto dark:text-a0d text-a0"
                                           size={20}
                                         />
                                       )}
@@ -501,7 +460,54 @@ function Nav() {
               </Link>
             </div>
           </li>
-          <li className="hidden flex-1 md:block px-6">{searchBar()}</li>
+          <li className="hidden flex-1 md:block px-6">
+            <div className="search-bar">
+              <Form
+                onSubmit={handleSearchFormSubmit}
+                className={`flex mt-2 md:mt-0 ring-1 ring-a2s mx-auto lg:max-w-[800px] dark:ring-slate-800 rounded-lg relative`}
+              >
+                <Input
+                  ref={searchInputElementLg}
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  // autoComplete="off"
+                  // autoCorrect="off"
+                  // autoCapitalize="off"
+                  placeholder="Search Products or Categories"
+                  className={
+                    "flex-1 h-[40px] md:h-[36px] lg:min-h-[40px] rounded-lg dark:bg-slate-800 py-2 pl-3 pr-20"
+                  }
+                ></Input>
+                <Button
+                  type="submit"
+                  className={({ isHovered, isFocusVisible }) =>
+                    `absolute top-0 bottom-0 right-0 px-2 rounded-r-lg ${isHovered || isFocusVisible ? "dark:bg-slate-500" : "dark:bg-slate-700"}`
+                  }
+                >
+                  <IconSearch stroke={1.5}></IconSearch>
+                </Button>
+                {searchInput.length > 0 && (
+                  <Button
+                    className={({
+                      isHovered,
+                      isFocusVisible,
+                    }) => `absolute right-11 top-1 bottom-1 w-[30] aspect-square rounded-full flex items-center justify-center dark:text-black
+                      ${isHovered || isFocusVisible ? "bg-slate-200 dark:bg-slate-600" : ""}
+                    `}
+                    onPress={handleDeleteSearchInput}
+                    type="button"
+                  >
+                    <IconX
+                      className="dark:text-white"
+                      height={28}
+                      width={28}
+                      stroke={1.25}
+                    />
+                  </Button>
+                )}
+              </Form>
+            </div>
+          </li>
           {/* <li className="hidden lg:flex lg:mr-3">
             <Switch
               onChange={(isSelected) =>
@@ -528,7 +534,9 @@ function Nav() {
                     onOpenChange={setShowAccountMenu}
                   >
                     <Button
-                      className={"flex items-center"}
+                      className={({ isHovered, isFocusVisible, isPressed }) =>
+                        `flex items-center rounded-lg p-1 ${isHovered || isFocusVisible || isPressed ? "bg-a1s dark:bg-slate-700" : ""}`
+                      }
                       aria-label="My Account"
                     >
                       <span className="hidden xs:block">
@@ -548,7 +556,7 @@ function Nav() {
                           <Dialog className="">
                             {({ close }) => (
                               <div>
-                                <div className="dark:bg-a0sd dark:text-a0d bg-a0d">
+                                <div className="dark:bg-a0sd dark:text-a0d bg-a0s dark:border-none border-b border-b-a2s">
                                   <div className="flex justify-between px-4 py-3">
                                     <div className="heading">
                                       <Header
@@ -581,7 +589,7 @@ function Nav() {
                                 >
                                   <IconX
                                     stroke={1}
-                                    className="mx-auto"
+                                    className="mx-auto text-a0d"
                                     size={34}
                                   />
                                 </Button>
@@ -598,7 +606,7 @@ function Nav() {
                                         isDisabled,
                                         isPressed,
                                       }) =>
-                                        `dropdown-item ring-0 outline-0 border-0 flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                        `dropdown-item ring-0 outline-0 border-0 flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-a1s outline-0" : isDisabled ? "dark:bg-a3sd bg-a2s text-a2d dark:text-a1d" : ""}`
                                       }
                                     >
                                       <span>Profile</span>
@@ -619,7 +627,7 @@ function Nav() {
                                         isDisabled,
                                         isPressed,
                                       }) =>
-                                        `dropdown-item ring-0 outline-0 border-0 flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                        `dropdown-item ring-0 outline-0 border-0 flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-a1s outline-0" : isDisabled ? "dark:bg-a3sd bg-a2s text-a2d dark:text-a1d" : ""}`
                                       }
                                     >
                                       <span>Orders</span>
@@ -640,7 +648,7 @@ function Nav() {
                                         isDisabled,
                                         isPressed,
                                       }) =>
-                                        `dropdown-item ring-0 outline-0 border-0 flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                        `dropdown-item ring-0 outline-0 border-0 flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-a1s outline-0" : isDisabled ? "dark:bg-a3sd bg-a2s text-a2d dark:text-a1d" : ""}`
                                       }
                                     >
                                       <span>My Reviews</span>
@@ -654,7 +662,7 @@ function Nav() {
                                         isDisabled,
                                         isPressed,
                                       }) =>
-                                        `dropdown-item flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-neutral-200 outline-0" : isDisabled ? "dark:bg-a3sd bg-neutral-300 text-a2d dark:text-a1d" : ""}`
+                                        `dropdown-item flex justify-between w-full px-6 py-3 ${isHovered || isFocusVisible || isPressed ? "cursor-pointer dark:bg-a2sd bg-a1s outline-0" : isDisabled ? "dark:bg-a3sd bg-a2s text-a2d dark:text-a1d" : ""}`
                                       }
                                       onPress={() => {
                                         close();
@@ -679,12 +687,12 @@ function Nav() {
                     <Button
                       // href="/account/profile"
                       className={({ isHovered, isFocusVisible }) =>
-                        `p-2 inline-flex flex-col rounded-lg mr-2 ${isHovered || isFocusVisible ? "cursor-pointer bg-slate-700" : ""}`
+                        `p-2 inline-flex flex-col rounded-lg mr-2 ${isHovered || isFocusVisible ? "cursor-pointer bg-a1s dark:bg-slate-700" : ""}`
                       }
                     >
                       {({ isPressed }) => (
                         <>
-                          <span className="welcome text-sm text-center text-a1d">
+                          <span className="welcome text-sm text-center text-a1 dark:text-a1d">
                             Welcome,{" "}
                             {trimString(upperFirstLetters(user.first_name), 9)}
                           </span>
@@ -714,13 +722,13 @@ function Nav() {
 
                     <Popover
                       className={
-                        "bg-white outline-none ring-0 text-black dark:bg-slate-800 dark:text-a0d -mt-1 border dark:border-slate-600 rounded-lg py-2 px-1"
+                        "bg-a0s outline-none shadow-xl ring-0 dark:bg-slate-800 dark:text-a0d -mt-1 border border-a3s dark:border-slate-600 rounded-lg py-2 px-1"
                       }
                     >
                       <Menu className="flex flex-col z-50" aria-label="links">
                         <MenuItem
                           className={({ isHovered, isFocusVisible }) =>
-                            `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-slate-600" : ""}`
+                            `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-a1s dark:bg-slate-600" : ""}`
                           }
                           href="/account/profile"
                         >
@@ -728,7 +736,7 @@ function Nav() {
                         </MenuItem>
                         <MenuItem
                           className={({ isHovered, isFocusVisible }) =>
-                            `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-slate-600" : ""}`
+                            `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-a1s dark:bg-slate-600" : ""}`
                           }
                           href="/account/orders"
                           routerOptions={{ search: { page: 1 } }}
@@ -737,7 +745,7 @@ function Nav() {
                         </MenuItem>
                         <MenuItem
                           className={({ isHovered, isFocusVisible }) =>
-                            `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-slate-600" : ""}`
+                            `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-a1s dark:bg-slate-600" : ""}`
                           }
                           href="/account/myreviews"
                           routerOptions={{ search: { page: 1 } }}
@@ -746,7 +754,7 @@ function Nav() {
                         </MenuItem>
                         <MenuItem
                           className={({ isHovered, isFocusVisible }) =>
-                            `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-slate-600" : ""}`
+                            `flex flex-1 p-2 min-w-[120px] rounded-lg ${isHovered || isFocusVisible ? "cursor-pointer bg-a1s dark:bg-slate-600" : ""}`
                           }
                           onAction={handleSignOut}
                         >
@@ -769,7 +777,7 @@ function Nav() {
                       },
                     }}
                     className={
-                      "border border-a0d py-[2px] px-2 rounded-md mr-2 hidden xs:block"
+                      "border border-a2s py-[2px] px-2 rounded-md mr-2 hidden xs:block"
                     }
                   >
                     Sign In
@@ -778,7 +786,7 @@ function Nav() {
                 <div className="hidden lg:block">
                   <LinkAria
                     className={({ isHovered, isFocusVisible }) =>
-                      `p-2 inline-flex flex-col rounded-lg mr-2 ${isHovered || isFocusVisible ? "cursor-pointer bg-slate-700" : ""}`
+                      `p-2 inline-flex outline-none flex-col rounded-lg mr-2 ${isHovered || isFocusVisible ? "cursor-pointer bg-a1s dark:bg-slate-700" : ""}`
                     }
                     href="/signin"
                     routerOptions={{
@@ -787,7 +795,7 @@ function Nav() {
                       },
                     }}
                   >
-                    <span className="welcome text-sm text-center text-a1d">
+                    <span className="welcome text-sm text-center text-a1 dark:text-a1d">
                       Welcome
                     </span>
 
@@ -802,12 +810,12 @@ function Nav() {
               <LinkAria
                 aria-label="Go to cart"
                 className={({ isHovered, isFocusVisible, isPressed }) =>
-                  `nav-cart flex-1 p-1 lg:p-3 rounded-lg relative flex justify-center items-center ${isHovered || isFocusVisible || isPressed ? "dark:bg-slate-700 outline-0 border-0 ring-0" : ""}`
+                  `nav-cart flex-1 p-1 lg:p-3 rounded-lg relative flex justify-center items-center ${isHovered || isFocusVisible || isPressed ? "bg-a1s dark:bg-slate-700 outline-0 border-0 ring-0" : ""}`
                 }
                 href="/cart"
               >
                 {cartQuantity > 0 && (
-                  <p className="nav-cartItems-number absolute min-w-[20px] min-h-[20px] text-center p-[2px] aspect-square flex items-center justify-center rounded-full bottom-0 right-0 lg:bottom-1 lg:right-1 font-bold text-[.9rem] border border-[#575757] dark:bg-[#282828] bg-white">
+                  <p className="nav-cartItems-number absolute min-w-[20px] min-h-[20px] text-center p-[2px] aspect-square flex items-center justify-center rounded-full bottom-0 right-0 lg:bottom-1 lg:right-1 font-bold text-[.9rem] dark:border dark:border-[#575757] dark:bg-[#282828]">
                     <span className="text-[#ff914d]">{cartQuantity}</span>
                   </p>
                 )}
@@ -816,7 +824,54 @@ function Nav() {
             </div>
           </li>
         </ul>
-        <div className="md:hidden">{searchBar()}</div>
+        <div className="md:hidden">
+          <div className="search-bar">
+            <Form
+              onSubmit={handleSearchFormSubmit}
+              className={`flex mt-2 md:mt-0 ring-1 ring-a2s mx-auto lg:max-w-[800px] dark:ring-slate-800 rounded-lg relative`}
+            >
+              <Input
+                value={searchInput}
+                ref={searchInputElementSm}
+                onChange={(e) => setSearchInput(e.target.value)}
+                // autoComplete="off"
+                // autoCorrect="off"
+                // autoCapitalize="off"
+                placeholder="Search Products or Categories"
+                className={
+                  "flex-1 h-[40px] md:h-[36px] lg:min-h-[40px] rounded-lg dark:bg-slate-800 py-2 pl-3 pr-20"
+                }
+              ></Input>
+              <Button
+                type="submit"
+                className={({ isHovered, isFocusVisible }) =>
+                  `absolute top-0 bottom-0 right-0 px-2 rounded-r-lg ${isHovered || isFocusVisible ? "dark:bg-slate-500" : "dark:bg-slate-700"}`
+                }
+              >
+                <IconSearch stroke={1.5}></IconSearch>
+              </Button>
+              {searchInput.length > 0 && (
+                <Button
+                  className={({
+                    isHovered,
+                    isFocusVisible,
+                  }) => `absolute right-11 top-1 bottom-1 w-[30] aspect-square rounded-full flex items-center justify-center dark:text-black
+                      ${isHovered || isFocusVisible ? "bg-slate-200 dark:bg-slate-600" : ""}
+                    `}
+                  onPress={handleDeleteSearchInput}
+                  type="button"
+                >
+                  <IconX
+                    className="dark:text-white"
+                    height={28}
+                    width={28}
+                    stroke={1.25}
+                  />
+                </Button>
+              )}
+            </Form>
+          </div>
+        </div>
 
         <ul
           className="nav-category-links overflow-x-scroll py-1 flex text-nowrap gap-4 px-1 pb-1 mt-2 justify-around"

@@ -83,7 +83,7 @@ function Profile() {
       const errorData = response?.response?.data;
       const message = (errorData as ErrorData).error[0]?.msg || error.message;
       setErrors({ name: message });
-      console.log(message);
+      message;
     },
   });
   const usernameMutate = useMutation({
@@ -146,7 +146,7 @@ function Profile() {
 
   const handleNameFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("test");
+    ("test");
     const name = newName.trim().split(" ");
 
     const [first, ...last] = name;
@@ -161,7 +161,7 @@ function Profile() {
       setShowNameEdit(false);
       return;
     }
-    // console.log(combinedName, oldName);
+    // (combinedName, oldName);
     nameMutate.mutate({ first_name: firstName, last_name: lastName });
   };
 

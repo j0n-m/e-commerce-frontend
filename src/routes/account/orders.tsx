@@ -65,7 +65,6 @@ export const Route = createFileRoute("/account/orders")({
       return queryClient.ensureQueryData(
         orderHistoryQueryOptions({ customerId: userId, deps })
       );
-      // console.log(orderData);
     } catch (error) {
       if ((error as AxiosError)?.response?.status == 404) {
         throw notFound();

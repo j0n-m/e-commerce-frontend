@@ -117,7 +117,7 @@ function Orders() {
               </ProductSortBySelectBox>
             </div>
           )}
-          <div className="divider bg-a2sd mb-2"></div>
+          <div className="divider dark:bg-a2sd bg-a2s mb-2"></div>
           <div className="orders-list flex flex-col mt-4">
             {orderHistory.length > 0 ? (
               orderHistory.map((order) => {

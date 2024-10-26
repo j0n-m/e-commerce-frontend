@@ -3,10 +3,11 @@ import { ShopURLQuery } from "../routes/shop/category/$categoryId";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { bestDealsQueryOption } from "../routes/shop/category/best-deals";
 import { BestSellersResponse, PaginationResponse } from "../types/ProductType";
-import { ListBoxItem, Section } from "react-aria-components";
+import { Section } from "react-aria-components";
 import ProductCard_Category from "../components/ProductCard_Category";
 import { useEffect, useState } from "react";
 import ProductSortBySelectBox from "../components/ProductSortBySelectBox";
+import SortBoxListItem from "../components/SortBoxListItem";
 
 const useBestDeals = ({ deps }: { deps: Partial<ShopURLQuery> }) => {
   const responseData = useSuspenseQuery(bestDealsQueryOption({ deps })).data;
@@ -96,23 +97,16 @@ function BestDeals() {
           <Section className="flex flex-col">
             {productSortByOptionValues.map((option) => {
               return (
-                <ListBoxItem
-                  id={option.id}
-                  textValue={option.name}
-                  className={({
-                    isPressed,
-                    isSelected,
-                    isHovered,
-                    isFocusVisible,
-                  }) =>
-                    `py-3 px-6 ring-0 outline-none border-none ${isSelected ? "dark:bg-a2sd" : isPressed || isHovered || isFocusVisible ? "dark:bg-[#4d4d4d]" : ""}`
-                  }
+                <SortBoxListItem
+                  text={option.name}
                   key={option.id}
-                  href={option.href}
-                  routerOptions={option.deps}
-                >
-                  {option.name}
-                </ListBoxItem>
+                  props={{
+                    textValue: option.name,
+                    id: option.id,
+                    href: option.href,
+                    routerOptions: option.deps,
+                  }}
+                />
               );
             })}
           </Section>
@@ -150,7 +144,7 @@ function BestDeals() {
                 Most Reviews
               </ListBoxItem> */}
       </div>
-      <div className="divider bg-a3sd mb-2"></div>
+      <div className="divider dark:bg-a2sd bg-a2s mb-2"></div>
       <div className="products flex flex-col lg:flex-row lg:flex-wrap lg:gap-3">
         {bestDeals.records_count > 0 ? (
           bestDeals.products.map((product) => {

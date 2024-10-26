@@ -40,8 +40,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useState(initialTheme.theme);
   initializeThemeHTML(theme);
   document.body.classList.add(
-    "antialiased"
-    // "dark:bg-slate-900",
+    "antialiased",
+    "outline-none"
     // "dark:text-neutral-100"
   );
 
@@ -76,7 +76,6 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
         localStorage.setItem("theme", storedTheme);
       }
     }
-    console.log("theme", theme);
 
     return () => {
       window

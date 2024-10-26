@@ -94,7 +94,7 @@ function SignInForm() {
       const run = async () => {
         setPassword("");
         // await queryClient.invalidateQueries({ queryKey: ["auth"] });
-        console.log("Successful sign in");
+        ("Successful sign in");
 
         await navigate({ to: locationFrom ?? "/", replace: true });
       };
@@ -138,6 +138,7 @@ function SignInForm() {
           className={"flex flex-col gap-1"}
           type="password"
           isRequired
+          autoComplete="true"
         >
           <Label>Password</Label>
           <Input

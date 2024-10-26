@@ -2,7 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import Home from "../components/Home";
 import { queryOptions } from "@tanstack/react-query";
 import { queryClient } from "../App";
-import LoadingComponent from "../components/LoadingComponent";
+import LoadingComponent, {
+  LoadingComponent_Home,
+} from "../components/LoadingComponent";
 import MissingPage from "../components/MissingPage";
 import fetch from "../utilities/fetch";
 import ErrorPage from "../components/ErrorPage";
@@ -24,7 +26,9 @@ export const popularProductQueryOptions = queryOptions({
 
 export const Route = createFileRoute("/")({
   component: () => <Home />,
-  pendingComponent: () => <LoadingComponent />,
+  pendingComponent: () => (
+    <LoadingComponent children={<LoadingComponent_Home />} />
+  ),
   notFoundComponent: () => <MissingPage />,
   loader: async () => {
     await queryClient.ensureQueryData(dealProductsQueryOptions);

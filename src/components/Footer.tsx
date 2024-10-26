@@ -4,7 +4,6 @@ import {
   IconBrandTiktok,
   IconBrandX,
 } from "@tabler/icons-react";
-import React from "react";
 
 function Footer() {
   return (

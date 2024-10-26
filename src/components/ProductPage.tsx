@@ -47,7 +47,7 @@ const route = getRouteApi("/shop/product/$productId");
 function useProductPage({ productId }: { productId: string }) {
   const { data } = useSuspenseQuery(singleProductQueryOption(productId));
   const review = useSuspenseQuery(productReviewsQuery(productId));
-  // console.log("data", data);
+  // ("data", data);
   const productData = data.product as ProductType;
   const product = productData;
   const reviews = review.data.data as SingleProductReview;
@@ -246,7 +246,7 @@ function ProductPage() {
                     </span>
                   </p>
                   {product.retail_price > product.price && (
-                    <p className="text-sm text-neutral-500 dark:text-neutral-300 mt-2">
+                    <p className="text-sm dark:text-a1d text-a1 mt-2">
                       <span>List Price: </span>
                       <span className="list-price line-through">
                         ${product.retail_price}
@@ -304,22 +304,11 @@ function ProductPage() {
                       />
                       <span className="">Free 30-day Returns</span>
                     </div>
-                    <div className="uppercase text-sm flex items-center gap-1">
-                      <IconTruckDelivery
-                        stroke={1.5}
-                        color="#60a5fa"
-                        className="min-w-max"
-                      />
-                      <p className="">
-                        <span className="text-blue-600 dark:text-blue-400">
-                          Free Delivery
-                        </span>
+                    <div className="uppercase text-sm flex items-center gap-1 text-blue-600 dark:text-blue-400">
+                      <IconTruckDelivery stroke={1.5} className="min-w-max" />
+                      <span className="">Free Delivery</span>
 
-                        <span className="lg:hidden xl:inline">
-                          {" "}
-                          from United States
-                        </span>
-                      </p>
+                      <span className="lg:hidden"> from United States</span>
                     </div>
 
                     <p className={`text-2xl mb-2 mt-2`}>

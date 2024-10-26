@@ -52,9 +52,7 @@ function SignUpForm() {
         { withCredentials: true }
       );
     },
-    onSuccess: async (data) => {
-      console.log("success response", data);
-    },
+    onSuccess: async () => {},
     onError: (error) => {
       //sets form errors returned by server
       const errorObj = (error as AxiosError)?.response;
@@ -62,7 +60,6 @@ function SignUpForm() {
         error?: string;
         single_error: { [index: string]: string };
       };
-      console.log("bad response", errorObj);
       if (errorObj?.status === 400 && errorData?.single_error) {
         setErrorMessage(errorData.single_error);
       }
@@ -144,13 +141,13 @@ function SignUpForm() {
     const isValidForm = validateForm();
 
     if (!isValidForm) {
-      console.log("Invalid form");
+      ("Invalid form");
       setPassword("");
       setConfirmPassword("");
       return;
     }
-    // console.log("is form valid?", isValidForm);
-    console.log("form is complete");
+    // ("is form valid?", isValidForm);
+    ("form is complete");
     signUpMutate.mutate();
   };
   if (signUpMutate.isSuccess) {

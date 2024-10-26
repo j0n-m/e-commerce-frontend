@@ -39,7 +39,7 @@ function useScreenSize() {
     };
 
     window.addEventListener("resize", cbResize);
-    console.log("set new screen size.");
+    ("set new screen size.");
     return () => window.removeEventListener("resize", cbResize);
   }, [isMobile, isTablet, isDesktop]);
   //return object from hook

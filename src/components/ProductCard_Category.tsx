@@ -163,7 +163,7 @@ function ProductCard_Category({
           <p>
             <span className="text-xl font-bold">${product.price}</span>
             {product.price < product.retail_price && (
-              <span className="ml-3 line-through text-a1d">
+              <span className="ml-3 line-through text-a1 dark:text-a1d">
                 ${product.retail_price.toFixed(2)}
               </span>
             )}

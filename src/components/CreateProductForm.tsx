@@ -108,7 +108,7 @@ function CreateProductForm() {
       });
     },
     onError: (error) => {
-      console.log(error);
+      error;
       const res = error as AxiosError;
       setFormReadyToSubmit(false);
       setGlobalError(

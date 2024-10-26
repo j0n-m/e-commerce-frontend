@@ -51,7 +51,7 @@ function CheckoutPage() {
     enabled: !!paymentIntentId,
     placeholderData: keepPreviousData,
   });
-  // console.log();
+  // ();
 
   // const contactsList: ContactOption[] = [
   //   (customer as ContactOption) ?? {
@@ -74,7 +74,7 @@ function CheckoutPage() {
   const handlePaymentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsFormSubmitting(true);
-    console.log("trying to submit payment");
+    ("trying to submit payment");
     if (!stripe || !elements) {
       // Stripe.js hasn't yet loaded.
       return;
@@ -94,7 +94,7 @@ function CheckoutPage() {
           },
         });
         if (error) {
-          console.log("error in submitting form");
+          ("error in submitting form");
           setIsFormSubmitting(false);
           // This point will only be reached if there is an immediate error when
           // confirming the payment. Show error to your customer (for example, payment
@@ -102,14 +102,14 @@ function CheckoutPage() {
 
           setErrorMessage(error.message);
         } else {
-          console.log("submitted payment");
+          ("submitted payment");
           // Your customer will be redirected to your `return_url`. For some payment
           // methods like iDEAL, your customer will be redirected to an intermediate
           // site first to authorize the payment, then redirected to the `return_url`.
         }
       }
     } catch (error) {
-      console.log(error);
+      error;
     }
   };
   const handleShipping = async (shipCode: number) => {
@@ -128,7 +128,6 @@ function CheckoutPage() {
       });
       const newAmount = updatePaymentQuery.data.amount;
       if (newAmount) {
-        console.log("handleshipping setAmount", newAmount);
         setAmount(newAmount);
       }
     } catch (error) {
@@ -137,14 +136,14 @@ function CheckoutPage() {
   };
   // useEffect(() => {
   //   if (stripe && clientSecret) {
-  //     console.log("handling shipping on mounnt");
+  //     ("handling shipping on mounnt");
   //     handleShipping(1);
   //   }
   // }, [stripe]);
 
   if (shippingQuery.isSuccess && !amount) {
     //updates cart total after initial query
-    console.log("success in initial query!");
+    ("success in initial query!");
     const newAmount = shippingQuery.data.data.amount;
     if (newAmount) {
       setAmount(newAmount);
@@ -177,13 +176,13 @@ function CheckoutPage() {
   }, [stripe, isStripeLoading, user]);
 
   // if (isStripeLoading) {
-  //   console.log("loading stripe...");
+  //   ("loading stripe...");
   // }
   // if (shippingQuery.isLoading) {
   //   return <p>Loading</p>;
   // }
   if (shippingQuery.isError) {
-    console.log(shippingQuery.error);
+    shippingQuery.error;
     return (
       <section className="text-center mt-4">
         <h2 className="text-xl font-bold">
@@ -196,9 +195,6 @@ function CheckoutPage() {
         </p>
       </section>
     );
-  }
-  if (shippingQuery.isSuccess) {
-    console.log("shippingquery", shippingQuery.data.data);
   }
 
   return (
@@ -376,10 +372,10 @@ function CheckoutPage() {
                     shippingQuery.isFetching
                   }
                   className={({ isDisabled }) =>
-                    `mt-6 py-2 px-4 ${isDisabled ? "bg-gray-400 cursor-not-allowed text-black" : "bg-[#ff914d] dark:text-black hover:bg-[#ff914d]/90"}`
+                    `mt-6 py-2 px-4 rounded-lg ${isDisabled ? "bg-gray-400 cursor-not-allowed text-black" : "bg-[#ff914d] dark:text-black hover:bg-[#ff914d]/90"}`
                   }
                 >
-                  SUBMIT PAYMENT
+                  Submit Payment
                 </Button>
                 {!paymentIntentId && (
                   <p className="text-[#e31a00] dark:text-[#FF1E00] mt-2 text-lg tracking-tight">

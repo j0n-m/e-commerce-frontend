@@ -16,7 +16,7 @@ function VerifyCheckoutPage() {
 
   //redirect back to /cart if attempting to go to this path without a client secret
   if (!clientSecret) {
-    console.log("no client secret, redirection back to /cart");
+    ("no client secret, redirection back to /cart");
     return <Navigate to="/cart" replace={true}></Navigate>;
   }
   // Client secret is guarenteed at this point.

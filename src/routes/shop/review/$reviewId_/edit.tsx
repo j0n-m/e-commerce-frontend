@@ -66,8 +66,6 @@ export const Route = createFileRoute("/shop/review/$reviewId/edit")({
     } catch (error) {
       if ((error as Partial<{ statusCode: number }>).statusCode === 307) {
         throw error;
-      } else {
-        console.log(error);
       }
     }
   },

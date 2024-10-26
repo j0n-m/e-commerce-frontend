@@ -12,7 +12,7 @@ function ReviewDetails() {
   const { user } = useAuth();
   const { reviewId } = route.useParams();
   const review = useReview({ reviewId });
-  console.log(review);
+  review;
   const { stars } = calculateStars(review.rating);
   return (
     <main className="p-4 flex-1">
