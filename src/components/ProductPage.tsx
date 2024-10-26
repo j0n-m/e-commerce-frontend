@@ -257,7 +257,7 @@ function ProductPage() {
                   {productTableHighlights}
                 </div>
               </section>
-              <section className="product-card img-section p-4 lg:order-[-1] lg:flex-[2] md:max-h-[600px] aspect-square mx-auto lg:max-w-[600px]">
+              <section className="product-card img-section p-4 lg:order-[-1] lg:flex-[2] max-w-[550px] aspect-square mx-auto">
                 {/* max-w-[600px] min-w-[300px] mx-auto */}
                 <div className="image-container flex justify-center bg-white rounded-md">
                   <img
@@ -268,14 +268,14 @@ function ProductPage() {
                 </div>
               </section>
 
-              <section className="product-card flex flex-col lg:flex-1">
+              <section className="product-card flex flex-col lg:flex-1 lg:items-center">
                 <div className="purchase-method flex lg:hidden">
                   <h2 className="px-4 pt-2 text-xl border-gray-400 border-t border-r border-b-transparent rounded-tr-md">
                     Delivery
                   </h2>
                   <p className="flex-1 border-b border-gray-400"></p>
                 </div>
-                <div className="purchase-card rounded-md flex flex-col m-4 lg:m-0 p-4 dark:bg-a1sd border border-[#e6e6e6] dark:border-a3sd">
+                <div className="purchase-card rounded-md flex flex-col m-4 lg:m-0 p-4 dark:bg-a1sd border border-[#e6e6e6] dark:border-a3sd lg:max-w-[300px]">
                   <div className="purchase-card-section-header flex justify-between">
                     <p className="font-semibold">One-time purchase</p>
                     <div className="flex items-center">

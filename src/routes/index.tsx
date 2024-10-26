@@ -9,7 +9,10 @@ import ErrorPage from "../components/ErrorPage";
 
 export const dealProductsQueryOptions = queryOptions({
   queryKey: ["index-deals"],
-  queryFn: async () => await fetch.get("/api/products?deals=true&limit=5"),
+  queryFn: async () =>
+    await fetch.get(
+      "api/products?deals=true&discount_low=0.1&discount_high=0.5&limit=5"
+    ),
   staleTime: 1000 * 60 * 5,
 });
 export const popularProductQueryOptions = queryOptions({

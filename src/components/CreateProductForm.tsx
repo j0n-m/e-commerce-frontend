@@ -35,7 +35,6 @@ import fetch from "../utilities/fetch";
 import { queryClient } from "../App";
 import { AxiosError, AxiosResponse } from "axios";
 import useAuth from "../hooks/useAuth";
-import LoadingComponent from "./LoadingComponent";
 
 function useCategories() {
   const response = useSuspenseQuery(allCategoriesOption()).data;
@@ -102,7 +101,9 @@ function CreateProductForm() {
         queryKey: ["category"],
       });
       await navigate({
-        to: "/",
+        to: "/shop/category/$categoryId",
+        params: { categoryId: categories[0]._id },
+        search: { page: 1 },
         replace: true,
       });
     },
@@ -112,7 +113,9 @@ function CreateProductForm() {
       setFormReadyToSubmit(false);
       setGlobalError(
         res.response?.data?.errors || [
-            { msg: `Error: ${res.status}, ${res.response?.data}` },
+            {
+              msg: `Error: ${res.status}, ${res.response?.data?.error[0]?.msg}`,
+            },
           ] || [{ msg: [`Error: ${res.message}`] }]
       );
       if (res.status === 401 || res.status === 403) {
@@ -141,6 +144,8 @@ function CreateProductForm() {
       ...highlights,
       { heading: newHighlightsHeading, overview: newHighlightsOverview },
     ];
+    setNewHighlightsHeading("");
+    setNewHighlightsOverview("");
     setHighlights(newHighlights);
   };
 
@@ -795,7 +800,7 @@ function CreateProductForm() {
             onChange={setQuantity}
             minValue={0}
             isRequired={true}
-            maxValue={10000}
+            maxValue={250}
             step={1}
           >
             <Label>
@@ -836,7 +841,7 @@ function CreateProductForm() {
             value={totalBought}
             onChange={setTotalBought}
             minValue={0}
-            maxValue={10000}
+            maxValue={1000000}
             isRequired={true}
             validate={(num) =>
               Number(num) < 0 ? "Value must be 0 or a positive number." : ""

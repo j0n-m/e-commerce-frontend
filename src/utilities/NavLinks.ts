@@ -60,6 +60,13 @@ const allLinks: AllLinksType[] = [
     id: "668d7ce06408ff45e381f149",
   },
   {
+    id: "671a9c6496c6fd62be5909b3",
+    label: "Photography",
+    params: { categoryId: "671a9c6496c6fd62be5909b3" },
+    search: { page: 1, category: "Photography" },
+    link: "/shop/category/$categoryId",
+  },
+  {
     label: "Toys & Games",
     link: "/shop/category/$categoryId",
     params: { categoryId: "668d7ce16408ff45e381f153" },

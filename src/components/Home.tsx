@@ -66,7 +66,7 @@ function DisplayCard({ product }: DisplayCardProps) {
             </div>
           )}
           <img
-            className="max-w-[200px] rounded-md lg:max-w-full aspect-square object-contain"
+            className="w-[calc(100%)] max-w-[200px] aspect-square rounded-md object-contain"
             src={product.image_src || noProductImage}
             alt={
               product.image_src ? product.name : "No Product Image Available"
@@ -84,7 +84,7 @@ function Home() {
 
   return (
     <main className="page-container flex-1 pb-40 px-2 lg:px-4">
-      {/* <div className="banner-container w-full mb-2">
+      <div className="banner-container w-full mb-2">
         <div className="">
           <div className="banner_home select-none relative flex flex-col justify-center items-center py-4">
             <h3 className="text-orange-700 text-[50px] lg:text-[60px] lg:mt-8 font-[MumbaiSticker]">
@@ -106,7 +106,7 @@ function Home() {
             </Link>
           </div>
         </div>
-      </div> */}
+      </div>
       <div className="product-deals-container">
         <Link to="/shop/category/best-deals" className="lg:hidden">
           <h2 className="font-bold text-xl lg:text-2xl py-3 lg:py-5 flex items-center justify-between lg:block">

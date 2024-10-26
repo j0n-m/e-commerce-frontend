@@ -750,7 +750,7 @@ function EditProduct() {
               onChange={setQuantity}
               minValue={0}
               isRequired={true}
-              maxValue={10000}
+              maxValue={250}
               step={1}
             >
               <Label>
@@ -791,7 +791,7 @@ function EditProduct() {
               value={totalBought}
               onChange={setTotalBought}
               minValue={0}
-              maxValue={10000}
+              maxValue={1000000}
               isRequired={true}
               validate={(num) => (Number(num) <= 0 ? "Invalid number" : "")}
               step={1}

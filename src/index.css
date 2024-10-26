@@ -116,14 +116,16 @@ nav {
 } */
 .logo {
   font-family: Poppins;
-  color: #5085e7;
+  /* color: #5085e7; */
+  color: #f1f1f1;
   /* color: #ff914d; */
   font-weight: bold;
   /* -webkit-text-stroke-width: 0.7px; */
   /* -webkit-text-stroke-color: black; */
 }
 html.light .logo {
-  color: #2c6ce2;
+  /* color: #2c6ce2; */
+  color: #0f0f0f;
 }
 .skipNav {
   position: absolute;

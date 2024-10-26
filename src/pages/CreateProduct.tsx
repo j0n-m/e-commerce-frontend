@@ -1,4 +1,3 @@
-import { useState } from "react";
 import CreateProductForm from "../components/CreateProductForm";
 
 function CreateProduct() {

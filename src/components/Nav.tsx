@@ -494,7 +494,7 @@ function Nav() {
             <div className="nav-left flex items-center">
               <Link to={"/"}>
                 <div className="logo-container">
-                  <span className="logo text-xl rounded-lg px-2 uppercase items-stretch tracking-wider">
+                  <span className="logo text-xl dark:text-a0d rounded-lg px-2 uppercase items-stretch tracking-wider">
                     Cyber Den
                   </span>
                 </div>
