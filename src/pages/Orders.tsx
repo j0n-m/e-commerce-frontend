@@ -12,6 +12,7 @@ import { ShopURLQuery } from "../routes/shop/category/$categoryId";
 import ProductSortBySelectBox from "../components/ProductSortBySelectBox";
 import { Section } from "react-aria-components";
 import SortBoxListItem from "../components/SortBoxListItem";
+import { Helmet } from "react-helmet-async";
 
 const route = getRouteApi("/account/orders");
 function useOrderHistory({
@@ -58,7 +59,7 @@ const orderHistorySortItems = [
 function Orders() {
   const { user } = useAuth();
   const deps = route.useLoaderDeps();
-  const { isTablet } = useContext(ScreenSizeContext);
+  const { isDesktop } = useContext(ScreenSizeContext);
   const [showSortBySelectBox, setShowSortBySelectBox] = useState(false);
   const { orderHistory, orderHistoryResponse } = useOrderHistory({
     customerId: user?.id || "",
@@ -84,6 +85,9 @@ function Orders() {
 
   return (
     <>
+      <Helmet>
+        <title>Cyber Den: Past Orders</title>
+      </Helmet>
       <div className="flex-1 p-4 mt-4">
         <div className="lg:max-w-[1000px] lg:mx-auto">
           <h1 className="font-bold text-xl lg:text-2xl py-3 lg:py-5">
@@ -220,7 +224,7 @@ function Orders() {
         totalPages={orderHistoryResponse.total_pages}
         currentPage={deps.page}
         searchDeps={deps}
-        isLargeScreenSize={isTablet}
+        isLargeScreenSize={isDesktop}
       />
     </>
   );

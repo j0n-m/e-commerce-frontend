@@ -37,6 +37,7 @@ import useAuth from "../hooks/useAuth";
 import { queryClient } from "../App";
 import { AxiosError, AxiosResponse } from "axios";
 import fetch from "../utilities/fetch";
+import { Helmet } from "react-helmet-async";
 
 const route = getRouteApi("/shop/product/$productId/edit");
 function useProductCategories() {
@@ -144,6 +145,8 @@ function EditProduct() {
       ...highlights,
       { heading: newHighlightsHeading, overview: newHighlightsOverview },
     ];
+    setNewHighlightsHeading("");
+    setNewHighlightsOverview("");
     setHighlights(newHighlights);
   };
 
@@ -304,13 +307,13 @@ function EditProduct() {
           </div>
           <div className="btns dark:bg-amenusd p-3 flex gap-4">
             <Button
-              className={`border dark:border-a3sd p-2 rounded-sm`}
+              className={`border rounded-md dark:border-a3sd p-2`}
               onPress={() => setFormReadyToSubmit(false)}
             >
               Back to edit form
             </Button>
             <Button
-              className={`dark:bg-blue-500 p-2 rounded-sm`}
+              className={`bg-blue-500 p-2 rounded-md dark:text-a0d text-white`}
               onPress={() => saveFormMutate.mutate()}
               isDisabled={saveFormMutate.isPending}
             >
@@ -323,9 +326,12 @@ function EditProduct() {
   }
   return (
     <main className="flex-1 py-4 px-2 lg:px-4">
+      <Helmet>
+        <title>Cyber Den: Edit product: {product.name}</title>
+      </Helmet>
       <div className="content max-w-[600px] mx-auto">
         <h1 className="font-bold text-xl">Edit Product</h1>
-        <p className="text-sm text-a1d">
+        <p className="text-sm dark:text-a1d text-a1">
           <span className="text-red-500">*</span> denotes required fields.
         </p>
         <div className="divider dark:bg-a3sd h-[1px] mt-2 mb-2"></div>
@@ -343,7 +349,11 @@ function EditProduct() {
             className={"flex flex-col gap-1"}
           >
             <Label>Product ID</Label>
-            <Input className={"dark:bg-a1sd p-2 rounded-lg dark:text-a1d"} />
+            <Input
+              className={
+                "dark:bg-a1sd p-2 rounded-lg dark:text-a1d outline outline-1 outline-a2s dark:outline-none text-a1 bg-a1s"
+              }
+            />
             <FieldError className={"text-red-500"} />
           </TextField>
           <TextField
@@ -358,7 +368,11 @@ function EditProduct() {
             <Label>
               <span className="text-red-500">*</span>Product Name
             </Label>
-            <Input className={"dark:bg-a1sd dark:text-a0d p-2 rounded-lg"} />
+            <Input
+              className={
+                "dark:bg-a1sd dark:text-a0d outline outline-a2s dark:outline-none p-2 rounded-lg"
+              }
+            />
             <FieldError className={"text-red-500"} />
           </TextField>
           <div>
@@ -373,15 +387,13 @@ function EditProduct() {
                 className={"flex gap-2 flex-wrap"}
                 items={categories}
                 renderEmptyState={() => (
-                  <p className="font-bold text-red-600">
-                    This product has no category.
-                  </p>
+                  <p className="text-red-600">This product has no category.</p>
                 )}
               >
                 {(items) => (
                   <Tag
                     className={
-                      "px-2 py-1 flex items-center justify-center outline dark:outline-a3sd"
+                      "px-2 py-1 flex items-center justify-center outline outline-1 outline-a3s dark:outline-a3sd rounded-md"
                     }
                     textValue={items.name}
                     id={items._id}
@@ -415,7 +427,7 @@ function EditProduct() {
                   selectedKeys={selectedCategory}
                   onSelectionChange={setSelectedCategory}
                   className={
-                    "outline dark:outline-a3sd p-1 max-h-[10rem] overflow-y-scroll"
+                    "outline outline-1 rounded-lg dark:outline-a3sd outline-a3s p-1 max-h-[14rem] overflow-y-scroll"
                   }
                 >
                   {(items) => (
@@ -432,7 +444,7 @@ function EditProduct() {
                       }) => (
                         <>
                           <div
-                            className={`flex px-2 py-1 justify-between items-center ${isSelected ? "dark:bg-a3sd" : isHovered || isFocusVisible ? "dark:bg-a2sd cursor-pointer" : isDisabled ? "dark:text-a2d" : ""}`}
+                            className={`flex px-2 py-1 justify-between items-center ${isSelected ? "dark:bg-a3sd bg-a1s/90" : isHovered || isFocusVisible ? "dark:bg-a2sd bg-a1s cursor-pointer" : isDisabled ? "dark:text-a2d text-a1/70 bg-a2s dark:bg-amenusd" : ""}`}
                           >
                             <span>{items.name}</span>
                             {isSelected && (
@@ -446,8 +458,13 @@ function EditProduct() {
                 </ListBox>
                 <Button
                   type="button"
-                  className={({ isFocusVisible, isHovered, isPressed }) =>
-                    `outline dark:outline-a3sd p-1 data-[disabled]:text-a2d rounded-lg ${isFocusVisible || isHovered || isPressed ? "dark:bg-a3sd" : ""}`
+                  className={({
+                    isFocusVisible,
+                    isHovered,
+                    isPressed,
+                    isDisabled,
+                  }) =>
+                    `outline outline-a2s dark:outline-a3sd p-1 rounded-lg ${isFocusVisible || isHovered || isPressed ? "dark:bg-a3sd" : isDisabled ? "dark:text-a2d text-a1/60 bg-a2s dark:bg-a2sd" : ""}`
                   }
                   onPress={handleAddNewCategory}
                   isDisabled={Array.from(selectedCategory).length < 1}
@@ -465,7 +482,11 @@ function EditProduct() {
             className={"flex flex-col gap-1"}
           >
             <Label>Product Image</Label>
-            <Input className={"dark:bg-a1sd dark:text-a0d p-2 rounded-lg"} />
+            <Input
+              className={
+                "dark:bg-a1sd dark:text-a0d p-2 rounded-lg outline outline-a2s dark:outline-none"
+              }
+            />
             <FieldError className={"text-red-500"} />
           </TextField>
           <TextField
@@ -480,7 +501,11 @@ function EditProduct() {
             <Label>
               <span className="text-red-500">*</span>Product Brand
             </Label>
-            <Input className={"dark:bg-a1sd dark:text-a0d p-2 rounded-lg"} />
+            <Input
+              className={
+                "dark:bg-a1sd dark:text-a0d p-2 rounded-lg outline outline-a2s dark:outline-none"
+              }
+            />
             <FieldError className={"text-red-500"} />
           </TextField>
           <div>
@@ -493,15 +518,13 @@ function EditProduct() {
                 className={"flex gap-2 flex-wrap"}
                 items={tagList}
                 renderEmptyState={() => (
-                  <p className="font-bold text-red-600">
-                    This product has no tags.
-                  </p>
+                  <p className="text-red-600">This product has no tags.</p>
                 )}
               >
                 {(items) => (
                   <Tag
                     className={
-                      "px-2 py-1 flex items-center justify-center outline dark:outline-a3sd"
+                      "px-2 py-1 flex items-center justify-center outline outline-1 outline-a3s dark:outline-a3sd rounded-md"
                     }
                     textValue={items.label}
                     id={items.id}
@@ -536,7 +559,9 @@ function EditProduct() {
                     handleNewTag();
                   }
                 }}
-                className={"dark:bg-a1sd dark:text-a0d p-2 rounded-lg"}
+                className={
+                  "dark:bg-a1sd dark:text-a0d p-2 rounded-lg outline outline-a2s dark:outline-none"
+                }
               />
               <Button
                 type="button"
@@ -547,7 +572,7 @@ function EditProduct() {
                   isPressed,
                   isDisabled,
                 }) =>
-                  `outline dark:outline-a3sd p-1 rounded-lg ${isFocusVisible || isHovered || isPressed ? "dark:bg-a3sd" : isDisabled ? "dark:text-a2d" : ""}`
+                  `outline dark:outline-a3sd outline-a2s p-1 rounded-lg ${isFocusVisible || isHovered || isPressed ? "dark:bg-a3sd" : isDisabled ? "dark:text-a2d text-a1/60 bg-a1s dark:bg-a0sd" : ""}`
                 }
                 onPress={handleNewTag}
               >
@@ -655,7 +680,9 @@ function EditProduct() {
               rows={5}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className={"dark:bg-a1sd dark:text-a0d p-2 rounded-lg"}
+              className={
+                "dark:bg-a1sd dark:text-a0d p-2 rounded-lg outline outline-a2s dark:outline-none"
+              }
             />
           </TextField>
           <TextField className={"flex flex-col gap-1"}>
@@ -713,13 +740,13 @@ function EditProduct() {
                 onChange={(e) => setNewHighlightsHeading(e.target.value)}
                 value={newHighlightsHeading}
                 className={({ isDisabled }) =>
-                  `dark:bg-a1sd dark:text-a0d h-[38px] px-2 rounded-lg `
+                  `dark:bg-a1sd dark:text-a0d h-[38px] px-2 rounded-lg outline outline-a2s dark:outline-none`
                 }
               ></Input>
               <Label>Overview</Label>
               <Input
                 className={({ isDisabled }) =>
-                  `dark:bg-a1sd h-[38px] px-2 dark:text-a0d`
+                  `dark:bg-a1sd h-[38px] px-2 dark:text-a0d rounded-lg outline outline-a2s dark:outline-none`
                 }
                 value={newHighlightsOverview}
                 onChange={(e) => setNewHighlightsOverview(e.target.value)}
@@ -731,13 +758,13 @@ function EditProduct() {
                   isPressed,
                   isDisabled,
                 }) =>
-                  `outline dark:outline-a3sd max-w-max py-1 px-2 rounded-lg ${isFocusVisible || isHovered || isPressed ? "dark:bg-a3sd" : isDisabled ? "dark:text-a2d" : ""}`
+                  `outline dark:outline-a3sd outline-a2s max-w-max py-1 px-2 rounded-lg ${isFocusVisible || isHovered || isPressed ? "dark:bg-a3sd" : isDisabled ? "dark:text-a2d bg-a1s text-a1/60 dark:bg-a0sd" : ""}`
                 }
                 isDisabled={
                   newHighlightsHeading.length < 1 ||
                   newHighlightsOverview.length < 1
                 }
-                onPress={() => handleHighlightNewRow()}
+                onPress={handleHighlightNewRow}
               >
                 Add highlight
               </Button>
@@ -846,7 +873,7 @@ function EditProduct() {
               type="submit"
               autoFocus={false}
               className={({ isDisabled }) =>
-                `py-2 px-3 rounded-md ${isDisabled ? "bg-neutral-300" : "bg-blue-500"}`
+                `py-2 px-3 rounded-md dark:text-a0d text-white ${isDisabled ? "bg-neutral-300" : "bg-blue-500"}`
               }
             >
               Review Changes

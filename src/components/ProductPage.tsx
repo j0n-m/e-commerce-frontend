@@ -41,6 +41,7 @@ import { calculateStars } from "./ProductCard";
 import ExpandableReviewDescription from "./ExpandableReviewDescription";
 import useAuth from "../hooks/useAuth";
 import { queryClient } from "../App";
+import { Helmet } from "react-helmet-async";
 
 const route = getRouteApi("/shop/product/$productId");
 
@@ -69,7 +70,7 @@ function ProductPage() {
   );
 
   const productTableHighlights: JSX.Element = (
-    <table className="mt-6 text-base overflow-scroll">
+    <table className="mt-6 text-base overflow-scroll lg:w-[70%]">
       <tbody className="">
         {product.highlights.map((d, i) => {
           return (
@@ -159,6 +160,7 @@ function ProductPage() {
       const hasReviewed = reviews.reviews
         .map((review) => review.reviewer as unknown as string)
         .some((customerId) => customerId === userId);
+
       const canReview = !hasReviewed && hasPurchasedProduct;
       if (canReview && !userCanReview) {
         setUserCanReview(true);
@@ -176,11 +178,15 @@ function ProductPage() {
       setCanReviewVariables(user.id);
     }
   }, [user, userCanReview, reviews]);
+
   return (
     <div className="wrapper">
       {product ? (
         <>
-          {/* divide-y-8 dark:divide-neutral-700 */}
+          <Helmet>
+            <title>Cyber Den - {product.name}</title>
+          </Helmet>
+
           <div className="product-page">
             <div className="top-section flex flex-col lg:flex-row mt-4 lg:mx-4">
               <section className="product-card info-section flex flex-col p-4 lg:flex-[2] relative">
@@ -188,7 +194,7 @@ function ProductPage() {
                   {product.name}
                 </h1>
                 {user?.is_admin && (
-                  <p className="absolute right-4 top-0 max-w-max ml-auto text-a1d hover:underline active:underline">
+                  <p className="absolute right-4 top-0 max-w-max ml-auto dark:text-a1d text-a1 hover:underline active:underline">
                     <Link
                       to="/shop/product/$productId/edit"
                       params={{ productId }}
@@ -261,7 +267,7 @@ function ProductPage() {
                 {/* max-w-[600px] min-w-[300px] mx-auto */}
                 <div className="image-container flex justify-center bg-white rounded-md">
                   <img
-                    className="aspect-square object-contain"
+                    className="aspect-square object-contain rounded-md"
                     src={product?.image_src || noImage}
                     alt={product?.image_src ? product.name : "No image to show"}
                   />

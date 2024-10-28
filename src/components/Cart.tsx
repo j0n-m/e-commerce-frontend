@@ -10,6 +10,7 @@ import { IconAlertCircle } from "@tabler/icons-react";
 import useAuth from "../hooks/useAuth";
 import isAuthenticated from "../utilities/isAuthenticated";
 import checkAndParseCart from "../utilities/checkAndParseCart";
+import { Helmet } from "react-helmet-async";
 
 function Cart() {
   const { cart, setCart } = useContext(CartContext);
@@ -127,6 +128,9 @@ function Cart() {
       className="page-container flex-1 flex flex-col gap-8 lg:flex-row py-4 px-2 lg:px-4"
       ref={cartCardContainer}
     >
+      <Helmet>
+        <title>Cyber Den: Shopping Cart</title>
+      </Helmet>
       <div className="cartCard flex-[3]">
         <h1 className="text-3xl tracking-wide pb-4">Shopping Cart</h1>
         {cart.length <= 0 ? (

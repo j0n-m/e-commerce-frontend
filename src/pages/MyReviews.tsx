@@ -13,6 +13,7 @@ import { PaginationBar } from "../components/PaginationBar";
 import { PaginationResponse } from "../types/ProductType";
 import { ScreenSizeContext } from "../context/ScreenSizeContext";
 import SortBoxListItem from "../components/SortBoxListItem";
+import { Helmet } from "react-helmet-async";
 
 const reviewsSortItems = [
   {
@@ -88,6 +89,9 @@ function MyReviews() {
   return (
     <>
       <main className="flex-1 py-4 px-2 lg:px-4">
+        <Helmet>
+          <title>Cyber Den: My Reviews</title>
+        </Helmet>
         <div className="lg:max-w-[1000px] lg:mx-auto">
           <h1 className="font-bold text-xl lg:text-2xl py-3 lg:py-5">
             My Reviews

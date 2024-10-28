@@ -8,6 +8,7 @@ import { Link } from "@tanstack/react-router";
 import noProductImage from "../assets/images/no_product_image.jpg";
 import { trimString } from "../utilities/trimString";
 import { IconChevronRight } from "@tabler/icons-react";
+import { Helmet } from "react-helmet-async";
 
 function useDealProducts() {
   const {
@@ -84,6 +85,13 @@ function Home() {
 
   return (
     <main className="page-container flex-1 pb-40 px-2 pt-1 lg:px-4">
+      <Helmet>
+        <link
+          rel="preload"
+          href="./src/assets/images/banners/fallbanner.svg"
+          as="image"
+        ></link>
+      </Helmet>
       <div className="banner-container w-full mb-2">
         <div className="">
           <div className="banner_home rounded-md select-none relative flex flex-col justify-center items-center py-4">

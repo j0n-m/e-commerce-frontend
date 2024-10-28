@@ -11,6 +11,7 @@ import { trimString } from "../utilities/trimString";
 import ProductSortBySelectBox from "./ProductSortBySelectBox";
 import { Section } from "react-aria-components";
 import SortBoxListItem from "./SortBoxListItem";
+import { Helmet } from "react-helmet-async";
 
 function useSearchProducts(query: string, searchDeps: ProductSearch) {
   const {
@@ -98,6 +99,9 @@ function ProductResults() {
   return (
     <>
       <main className="page-container flex-1 py-4 px-2 lg:px-4">
+        <Helmet>
+          <title>Cyber Den: {searchDeps?.q}</title>
+        </Helmet>
         {/* <h1 className="font-bold mb-6 pl-2">Search: "{searchDeps.q}"</h1> */}
         <h1 className="font-bold text-xl lg:text-2xl py-3 lg:py-5">
           <span>Search: </span>

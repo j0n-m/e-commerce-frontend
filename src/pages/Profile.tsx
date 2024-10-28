@@ -19,6 +19,7 @@ import { useMutation } from "@tanstack/react-query";
 import fetch from "../utilities/fetch";
 import upperFirstLetters from "../utilities/upperFirstLetters";
 import { Alert } from "@mui/material";
+import { Helmet } from "react-helmet-async";
 
 type ErrorData = {
   error: Error[];
@@ -447,6 +448,9 @@ function Profile() {
 
   return (
     <main className="flex-1 py-4 px-2 lg:px-4">
+      <Helmet>
+        <title>Cyber Den: Profile</title>
+      </Helmet>
       <Snackbar
         open={showSnackBar}
         onClose={handleCloseSnackBar}

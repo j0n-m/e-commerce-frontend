@@ -9,6 +9,7 @@ import ProductSortBySelectBox from "../components/ProductSortBySelectBox";
 import { productSortByOptionValues as sortByValues } from "./BestDeals";
 import { useEffect, useState } from "react";
 import SortBoxListItem from "../components/SortBoxListItem";
+import { Helmet } from "react-helmet-async";
 
 const filtered = sortByValues.filter((obj) => obj.href === ".");
 const productSortByOptionValues = [
@@ -70,6 +71,9 @@ function BestSellers() {
   }, [showSortBySelect]);
   return (
     <main className="flex-1 py-4 px-2 lg:px-4">
+      <Helmet>
+        <title>Cyber Den Best Sellers</title>
+      </Helmet>
       <h1 className="font-bold text-xl pb-2">Best Sellers</h1>
       <div className="filters dark:bg-amenusd p-2 rounded-md mb-2 relative">
         <ProductSortBySelectBox
@@ -98,7 +102,7 @@ function BestSellers() {
         </ProductSortBySelectBox>
       </div>
       <div className="divider dark:bg-a2sd bg-a2s mb-2"></div>
-      <div className="products flex flex-col lg:flex-row lg:flex-wrap lg:gap-3">
+      <div className="products flex flex-col lg:flex-row lg:flex-wrap lg:gap-x-3 lg:gap-y-6">
         {bestSellers.records_count > 0 ? (
           bestSellers.products.map((product) => (
             <ProductCard_Category

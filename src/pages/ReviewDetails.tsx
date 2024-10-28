@@ -1,4 +1,3 @@
-import React from "react";
 import { useReview } from "./EditReview";
 import { getRouteApi, Link } from "@tanstack/react-router";
 import { Link as LinkAria } from "react-aria-components";
@@ -12,7 +11,6 @@ function ReviewDetails() {
   const { user } = useAuth();
   const { reviewId } = route.useParams();
   const review = useReview({ reviewId });
-  review;
   const { stars } = calculateStars(review.rating);
   return (
     <main className="p-4 flex-1">
@@ -56,7 +54,9 @@ function ReviewDetails() {
                   <span>{trimString(review.product_id.name)}</span>
                 </LinkAria>
               </p>
-              <p className="text-a1d">${review.product_id.price.toFixed(2)}</p>
+              <p className="dark:text-a1d text-a1">
+                ${review.product_id.price.toFixed(2)}
+              </p>
             </div>
           </div>
           <p>Reviewed by: {review.reviewer_name}</p>

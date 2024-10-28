@@ -16,6 +16,7 @@ import isAuthenticated from "../utilities/isAuthenticated";
 import { Link, useNavigate } from "@tanstack/react-router";
 import useAuth from "../hooks/useAuth";
 import { AxiosError } from "axios";
+import { Helmet } from "react-helmet-async";
 
 function CheckoutPage() {
   const { cart } = useContext(CartContext);
@@ -74,7 +75,6 @@ function CheckoutPage() {
   const handlePaymentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsFormSubmitting(true);
-    ("trying to submit payment");
     if (!stripe || !elements) {
       // Stripe.js hasn't yet loaded.
       return;
@@ -94,7 +94,6 @@ function CheckoutPage() {
           },
         });
         if (error) {
-          ("error in submitting form");
           setIsFormSubmitting(false);
           // This point will only be reached if there is an immediate error when
           // confirming the payment. Show error to your customer (for example, payment
@@ -102,14 +101,13 @@ function CheckoutPage() {
 
           setErrorMessage(error.message);
         } else {
-          ("submitted payment");
           // Your customer will be redirected to your `return_url`. For some payment
           // methods like iDEAL, your customer will be redirected to an intermediate
           // site first to authorize the payment, then redirected to the `return_url`.
         }
       }
     } catch (error) {
-      error;
+      console.error(error);
     }
   };
   const handleShipping = async (shipCode: number) => {
@@ -143,7 +141,6 @@ function CheckoutPage() {
 
   if (shippingQuery.isSuccess && !amount) {
     //updates cart total after initial query
-    ("success in initial query!");
     const newAmount = shippingQuery.data.data.amount;
     if (newAmount) {
       setAmount(newAmount);
@@ -175,12 +172,6 @@ function CheckoutPage() {
     }
   }, [stripe, isStripeLoading, user]);
 
-  // if (isStripeLoading) {
-  //   ("loading stripe...");
-  // }
-  // if (shippingQuery.isLoading) {
-  //   return <p>Loading</p>;
-  // }
   if (shippingQuery.isError) {
     shippingQuery.error;
     return (
@@ -199,6 +190,9 @@ function CheckoutPage() {
 
   return (
     <>
+      <Helmet>
+        <title>Cyber Den Checkout</title>
+      </Helmet>
       <header>
         <div className="header flex p-4 justify-between items-center bg-white dark:bg-gray-900 dark:border-b dark:border-b-gray-800 dark:text-neutral-300">
           <div className="logo flex items-center">

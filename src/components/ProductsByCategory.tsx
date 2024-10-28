@@ -13,6 +13,7 @@ import { Section } from "react-aria-components";
 import ProductSortBySelectBox from "./ProductSortBySelectBox";
 import { mappedIds } from "../utilities/NavLinks";
 import SortBoxListItem from "./SortBoxListItem";
+import { Helmet } from "react-helmet-async";
 const route = getRouteApi("/shop/category/$categoryId");
 
 export const productSortByOptionValues = [
@@ -100,6 +101,9 @@ function ProductsByCategory() {
 
   return (
     <>
+      <Helmet>
+        <title>Cyber Den: {categoryName}</title>
+      </Helmet>
       <main className="flex-1 py-4 px-2 lg:px-4">
         <h1 className="font-bold text-xl lg:text-2xl py-3 lg:py-5">
           {categoryName}
@@ -131,7 +135,7 @@ function ProductsByCategory() {
           </ProductSortBySelectBox>
         </div>
         <div className="divider dark:bg-a2sd bg-a2s mb-2"></div>
-        <div className="products flex flex-col lg:flex-row lg:flex-wrap lg:gap-3">
+        <div className="products flex flex-col lg:flex-row lg:flex-wrap lg:gap-x-3 lg:gap-y-6">
           {products_data.products.map((product) => (
             <ProductCard_Category
               key={product._id}

@@ -5,6 +5,11 @@ import useAuth from "../hooks/useAuth";
 import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import fetch from "../utilities/fetch";
+import {
+  RegExpMatcher,
+  englishDataset,
+  englishRecommendedTransformers,
+} from "obscenity";
 import { AxiosError, AxiosResponse } from "axios";
 import { queryClient } from "../App";
 import {
@@ -14,9 +19,14 @@ import {
 import { ProductType } from "../types/ProductType";
 import noProductImage from "../assets/images/no_product_image.jpg";
 import { trimString } from "../utilities/trimString";
+import isAuthenticated from "../utilities/isAuthenticated";
 
 const route = getRouteApi("/shop/product/$productId/create-review");
 
+const matcher = new RegExpMatcher({
+  ...englishDataset.build(),
+  ...englishRecommendedTransformers,
+});
 const FormSuccess = () => {
   return (
     <main className="flex-1" autoFocus={true}>
@@ -126,7 +136,6 @@ function CreateReview() {
     onSuccess: async (data) => {
       const response = data;
       const reviewId = response.data.id as string;
-      "success", response;
       await queryClient.invalidateQueries({
         queryKey: ["reviews"],
       });
@@ -141,9 +150,33 @@ function CreateReview() {
     },
   });
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const isFormValid = () => {
+      const profanityMatches = matcher.getAllMatches(reviewDesc, true);
+      const profanityMatches_title = matcher.getAllMatches(reviewTitle, true);
+      if (profanityMatches.length) {
+        for (const match of profanityMatches) {
+          const { phraseMetadata } =
+            englishDataset.getPayloadWithPhraseMetadata(match);
+
+          setValidationError({
+            review_description: `Match for word ${phraseMetadata?.originalWord} is not allowed.`,
+          });
+        }
+        return false;
+      }
+      if (profanityMatches_title.length) {
+        for (const match of profanityMatches_title) {
+          const { phraseMetadata } =
+            englishDataset.getPayloadWithPhraseMetadata(match);
+
+          setValidationError({
+            review_title: `Match for word ${phraseMetadata?.originalWord} is not allowed.`,
+          });
+        }
+        return false;
+      }
       if (rating === undefined || !ratingValues.includes(rating)) {
         setValidationError({
           ratings: "Please select a rating for this product.",
@@ -158,11 +191,26 @@ function CreateReview() {
       }
       return true;
     };
+    const checkAuth = async () => {
+      const isAuth = await isAuthenticated();
+      if (!isAuth) {
+        await navigate({
+          to: "/signin",
+          replace: true,
+          search: { from: window.location.pathname },
+        });
+        return false;
+      } else {
+        return true;
+      }
+    };
     if (!isFormValid()) {
-      ("form not valid");
       return;
     }
-    createReview.mutate();
+    const validAuth = await checkAuth();
+    if (validAuth) {
+      createReview.mutate();
+    }
   };
 
   useEffect(() => {

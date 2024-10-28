@@ -12,6 +12,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { PaymentProvider } from "./context/PaymentSecretContext";
 import { AuthProvider } from "./context/AuthContext";
 import { RouterProvider } from "react-aria-components";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 declare module "react-aria-components" {
   interface RouterConfig {
@@ -30,16 +31,21 @@ function App() {
         useHref={(to) => router.buildLocation({ to }).href}
       >
         <QueryClientProvider client={queryClient}>
-          <CartProvider>
-            <ThemeProvider>
-              <PaymentProvider>
-                <AuthProvider>
-                  <ScrollRestoration />
-                  <ECommerceApp />
-                </AuthProvider>
-              </PaymentProvider>
-            </ThemeProvider>
-          </CartProvider>
+          <HelmetProvider>
+            <Helmet>
+              <title>Cyber Den E-commerce Store</title>
+            </Helmet>
+            <CartProvider>
+              <ThemeProvider>
+                <PaymentProvider>
+                  <AuthProvider>
+                    <ScrollRestoration />
+                    <ECommerceApp />
+                  </AuthProvider>
+                </PaymentProvider>
+              </ThemeProvider>
+            </CartProvider>
+          </HelmetProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </RouterProvider>

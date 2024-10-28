@@ -3,6 +3,11 @@ import { singleReviewQueryOption } from "../routes/shop/review/$reviewId_/edit";
 import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
+  RegExpMatcher,
+  englishDataset,
+  englishRecommendedTransformers,
+} from "obscenity";
+import {
   ratingValues,
   RatingValues,
   ReviewRatingBtns,
@@ -36,6 +41,10 @@ export function useReview({ reviewId }: { reviewId: string }) {
   const review = reviewData.review as ReviewType;
   return review;
 }
+const matcher = new RegExpMatcher({
+  ...englishDataset.build(),
+  ...englishRecommendedTransformers,
+});
 function EditReview() {
   const { user } = useAuth();
   const { reviewId } = route.useParams();
@@ -136,11 +145,54 @@ function EditReview() {
   const handleSaveReview = () => {
     saveReviewMutation.mutate();
   };
+  const handleReviewDesc = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const profanityMatches = matcher.getAllMatches(e.target.value, true);
+    if (validationError?.review_description) {
+      setValidationError(undefined);
+    }
+    if (profanityMatches.length) {
+      for (const match of profanityMatches) {
+        const { phraseMetadata } =
+          englishDataset.getPayloadWithPhraseMetadata(match);
+        console.log(
+          `Match for word ${phraseMetadata?.originalWord} is not allowed.`
+        );
+        setValidationError({
+          review_description: `Match for word ${phraseMetadata?.originalWord} is not allowed.`,
+        });
+      }
+    }
+    setReviewDesc(e.target.value);
+  };
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const isFormValid = () => {
+      const profanityMatches = matcher.getAllMatches(reviewDesc, true);
+      const profanityMatches_title = matcher.getAllMatches(reviewTitle, true);
+      if (profanityMatches.length) {
+        for (const match of profanityMatches) {
+          const { phraseMetadata } =
+            englishDataset.getPayloadWithPhraseMetadata(match);
+
+          setValidationError({
+            review_description: `Match for word ${phraseMetadata?.originalWord} is not allowed.`,
+          });
+        }
+        return false;
+      }
+      if (profanityMatches_title.length) {
+        for (const match of profanityMatches_title) {
+          const { phraseMetadata } =
+            englishDataset.getPayloadWithPhraseMetadata(match);
+
+          setValidationError({
+            review_title: `Match for word ${phraseMetadata?.originalWord} is not allowed.`,
+          });
+        }
+        return false;
+      }
       if (rating === undefined || !ratingValues.includes(rating)) {
         setValidationError({
           ratings: "Please select a rating for this product.",
@@ -148,7 +200,6 @@ function EditReview() {
         return false;
       }
       if (!productId || !reviewerName || !reviewer) {
-        reviewerName, reviewer;
         setGlobalError([
           "The form encountered an error while filling the form. Please try again later.",
         ]);
@@ -172,12 +223,11 @@ function EditReview() {
     };
 
     if (!isFormValid()) {
-      ("form not valid");
       return;
     }
     const validAuth = await checkAuth();
     if (validAuth) {
-      ("good to go");
+      handleSaveReview();
     }
   };
 
@@ -322,7 +372,7 @@ function EditReview() {
             <TextArea
               value={reviewDesc}
               spellCheck="true"
-              onChange={(e) => setReviewDesc(e.target.value)}
+              onChange={(e) => handleReviewDesc(e)}
               rows={5}
               className={`dark:text-slate-100 py-1 px-2 rounded-lg dark:bg-slate-800`}
             ></TextArea>
@@ -330,7 +380,6 @@ function EditReview() {
           </TextField>
           <Button
             type="submit"
-            onPress={handleSaveReview}
             isDisabled={
               !enableSave ||
               saveReviewMutation.isPending ||

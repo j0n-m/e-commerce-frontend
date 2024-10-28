@@ -71,6 +71,7 @@ function CreateProductForm() {
   const [globalError, setGlobalError] = useState<[{ msg: string }] | undefined>(
     undefined
   );
+  console.log("globalError?", globalError);
   const tagList = tags.map((str, i) => ({ id: i, label: str }));
   const userCache = (queryClient.getQueryData(["auth"]) as AxiosResponse).data;
   const createFormMutate = useMutation({
@@ -108,24 +109,25 @@ function CreateProductForm() {
       });
     },
     onError: (error) => {
-      error;
       const res = error as AxiosError;
+      console.log(res);
       setFormReadyToSubmit(false);
-      setGlobalError(
-        res.response?.data?.errors || [
-            {
-              msg: `Error: ${res.status}, ${res.response?.data?.error[0]?.msg}`,
-            },
-          ] || [{ msg: [`Error: ${res.message}`] }]
-      );
+      setTimeout(() => {
+        window.scroll(0, 10000);
+      }, 200);
+
       if (res.status === 401 || res.status === 403) {
+        console.log("error", error);
+        setGlobalError([{ msg: "You must be signed in to do that." }]);
         queryClient.invalidateQueries({
           queryKey: ["auth"],
         });
       } else {
-        setTimeout(() => {
-          window.scroll(0, 10000);
-        }, 200);
+        setGlobalError([
+          {
+            msg: `Error: ${res.status}, ${res.response?.data?.error[0]?.msg || res.message}`,
+          },
+        ]);
       }
     },
   });
@@ -318,13 +320,13 @@ function CreateProductForm() {
           </div>
           <div className="btns dark:bg-amenusd p-3 flex gap-4">
             <Button
-              className={`border dark:border-a3sd p-2 rounded-sm`}
+              className={`border rounded-md dark:border-a3sd p-2`}
               onPress={() => setFormReadyToSubmit(false)}
             >
               Back to edit form
             </Button>
             <Button
-              className={`dark:bg-blue-500 p-2 rounded-sm`}
+              className={`bg-blue-500 p-2 rounded-md dark:text-a0d text-white`}
               onPress={() => createFormMutate.mutate()}
               isDisabled={createFormMutate.isPending}
             >
@@ -339,7 +341,7 @@ function CreateProductForm() {
   return (
     <div className="content max-w-[600px] mx-auto">
       <h1 className="font-bold text-xl">Create Product Form</h1>
-      <p className="text-sm text-a1d">
+      <p className="text-sm dark:text-a1d text-a1">
         <span className="text-red-500">*</span> denotes required fields.
       </p>
       <div className="divider dark:bg-a3sd h-[1px] mt-2 mb-2"></div>
@@ -389,7 +391,9 @@ function CreateProductForm() {
               }
               setName(e.target.value);
             }}
-            className={"dark:bg-a1sd dark:text-a0d p-2 rounded-lg"}
+            className={
+              "dark:bg-a1sd dark:text-a0d outline outline-a2s dark:outline-none p-2 rounded-lg"
+            }
           />
           <FieldError className={"text-red-500"} />
         </TextField>
@@ -405,15 +409,13 @@ function CreateProductForm() {
               className={"flex gap-2 flex-wrap"}
               items={categories}
               renderEmptyState={() => (
-                <p className="font-bold text-red-600">
-                  This product has no category.
-                </p>
+                <p className="text-red-600">This product has no category.</p>
               )}
             >
               {(items) => (
                 <Tag
                   className={
-                    "px-2 py-1 flex items-center justify-center outline dark:outline-a3sd"
+                    "px-2 py-1 flex items-center justify-center outline outline-1 outline-a3s dark:outline-a3sd rounded-md"
                   }
                   textValue={items.name}
                   id={items._id}
@@ -450,7 +452,7 @@ function CreateProductForm() {
                 selectedKeys={selectedCategory}
                 onSelectionChange={setSelectedCategory}
                 className={
-                  "outline dark:outline-a3sd p-1 max-h-[10rem] overflow-y-scroll"
+                  "outline outline-1 rounded-lg dark:outline-a3sd outline-a3s p-1 max-h-[14rem] overflow-y-scroll"
                 }
               >
                 {(items) => (
@@ -467,7 +469,7 @@ function CreateProductForm() {
                     }) => (
                       <>
                         <div
-                          className={`flex px-2 py-1 justify-between items-center ${isSelected ? "dark:bg-a3sd" : isHovered || isFocusVisible ? "dark:bg-a2sd cursor-pointer" : isDisabled ? "dark:text-a2d" : ""}`}
+                          className={`flex px-2 py-1 justify-between items-center ${isSelected ? "dark:bg-a3sd bg-a1s/90" : isHovered || isFocusVisible ? "dark:bg-a2sd bg-a1s cursor-pointer" : isDisabled ? "dark:text-a2d text-a1/70 bg-a2s dark:bg-amenusd" : ""}`}
                         >
                           <span>{items.name}</span>
                           {isSelected && (
@@ -481,8 +483,13 @@ function CreateProductForm() {
               </ListBox>
               <Button
                 type="button"
-                className={({ isFocusVisible, isHovered, isPressed }) =>
-                  `outline dark:outline-a3sd p-1 data-[disabled]:text-a2d rounded-lg ${isFocusVisible || isHovered || isPressed ? "dark:bg-a3sd" : ""}`
+                className={({
+                  isFocusVisible,
+                  isHovered,
+                  isPressed,
+                  isDisabled,
+                }) =>
+                  `outline outline-a2s dark:outline-a3sd p-1 rounded-lg ${isFocusVisible || isHovered || isPressed ? "dark:bg-a3sd" : isDisabled ? "dark:text-a2d text-a1/60 bg-a2s dark:bg-a2sd" : ""}`
                 }
                 onPress={() => {
                   if (error?.category) {
@@ -512,7 +519,9 @@ function CreateProductForm() {
               }
               setImageSrc(e.target.value);
             }}
-            className={"dark:bg-a1sd dark:text-a0d p-2 rounded-lg"}
+            className={
+              "dark:bg-a1sd dark:text-a0d p-2 rounded-lg outline outline-a2s dark:outline-none"
+            }
           />
           <FieldError className={"text-red-500"} />
         </TextField>
@@ -534,7 +543,9 @@ function CreateProductForm() {
               }
               setBrand(e.target.value);
             }}
-            className={"dark:bg-a1sd dark:text-a0d p-2 rounded-lg"}
+            className={
+              "dark:bg-a1sd dark:text-a0d p-2 rounded-lg outline outline-a2s dark:outline-none"
+            }
           />
           <FieldError className={"text-red-500"} />
         </TextField>
@@ -545,13 +556,13 @@ function CreateProductForm() {
               className={"flex gap-2 flex-wrap"}
               items={tagList}
               renderEmptyState={() => (
-                <p className="italic text-red-600">This product has no tags.</p>
+                <p className="text-red-600">This product has no tags.</p>
               )}
             >
               {(items) => (
                 <Tag
                   className={
-                    "px-2 py-1 flex items-center justify-center outline dark:outline-a3sd"
+                    "px-2 py-1 flex items-center justify-center outline outline-1 outline-a3s dark:outline-a3sd rounded-md"
                   }
                   textValue={items.label}
                   id={items.id}
@@ -587,7 +598,9 @@ function CreateProductForm() {
                   handleNewTag();
                 }
               }}
-              className={"dark:bg-a1sd dark:text-a0d p-2 rounded-lg"}
+              className={
+                "dark:bg-a1sd dark:text-a0d p-2 rounded-lg outline outline-a2s dark:outline-none"
+              }
             />
             <Button
               type="button"
@@ -598,7 +611,7 @@ function CreateProductForm() {
                 isPressed,
                 isDisabled,
               }) =>
-                `outline dark:outline-a3sd p-1 rounded-lg ${isFocusVisible || isHovered || isPressed ? "dark:bg-a3sd" : isDisabled ? "dark:text-a2d" : ""}`
+                `outline dark:outline-a3sd outline-a2s p-1 rounded-lg ${isFocusVisible || isHovered || isPressed ? "dark:bg-a3sd" : isDisabled ? "dark:text-a2d text-a1/60 bg-a1s dark:bg-a0sd" : ""}`
               }
               onPress={handleNewTag}
             >
@@ -706,7 +719,9 @@ function CreateProductForm() {
             rows={5}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className={"dark:bg-a1sd dark:text-a0d p-2 rounded-lg"}
+            className={
+              "dark:bg-a1sd dark:text-a0d p-2 rounded-lg outline outline-a2s dark:outline-none"
+            }
           />
         </TextField>
         <TextField className={"flex flex-col gap-1"}>
@@ -763,13 +778,13 @@ function CreateProductForm() {
               onChange={(e) => setNewHighlightsHeading(e.target.value)}
               value={newHighlightsHeading}
               className={({ isDisabled }) =>
-                `dark:bg-a1sd dark:text-a0d h-[38px] px-2 rounded-lg `
+                `dark:bg-a1sd dark:text-a0d h-[38px] px-2 rounded-lg outline outline-a2s dark:outline-none`
               }
             ></Input>
             <Label>Overview</Label>
             <Input
               className={({ isDisabled }) =>
-                `dark:bg-a1sd h-[38px] px-2 dark:text-a0d`
+                `dark:bg-a1sd dark:text-a0d h-[38px] px-2 rounded-lg outline outline-a2s dark:outline-none`
               }
               value={newHighlightsOverview}
               onChange={(e) => setNewHighlightsOverview(e.target.value)}
@@ -781,7 +796,7 @@ function CreateProductForm() {
                 isPressed,
                 isDisabled,
               }) =>
-                `outline dark:outline-a3sd max-w-max py-1 px-2 rounded-lg ${isFocusVisible || isHovered || isPressed ? "dark:bg-a3sd" : isDisabled ? "dark:text-a2d" : ""}`
+                `outline dark:outline-a3sd outline-a2s max-w-max py-1 px-2 rounded-lg ${isFocusVisible || isHovered || isPressed ? "dark:bg-a3sd" : isDisabled ? "dark:text-a2d bg-a1s text-a1/60 dark:bg-a0sd" : ""}`
               }
               isDisabled={
                 newHighlightsHeading.length < 1 ||
@@ -897,7 +912,7 @@ function CreateProductForm() {
             type="submit"
             autoFocus={false}
             className={({ isDisabled }) =>
-              `py-2 px-3 rounded-md ${isDisabled ? "bg-neutral-300" : "bg-blue-500"}`
+              `py-2 px-3 rounded-md dark:text-a0d text-white ${isDisabled ? "bg-neutral-300" : "bg-blue-500"}`
             }
           >
             Add product
