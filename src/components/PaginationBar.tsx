@@ -93,12 +93,12 @@ export function PaginationBar({
   return (
     <div className={`pagination-bar my-4 ${className ? className : ""}`}>
       <div className="pagination-container flex flex-col items-center lg:flex-row border border-[#e6e6e6] dark:border-[#30313D] rounded-md">
-        <p className="text-center px-4 flex items-center lg:pb-0">
+        <p className="text-center px-4 py-1 flex items-center lg:py-0">
           <span className="">
             Page {currentPage} of {totalPages}
           </span>
         </p>
-        <nav className="pagination-btns flex rounded-md border-t lg:border-t-0">
+        <nav className="pagination-btns flex rounded-md border-t dark:border-t-[#30313D] lg:border-t-0">
           <ul className="flex">
             <li>
               <Link
