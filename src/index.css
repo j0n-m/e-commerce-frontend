@@ -135,7 +135,7 @@ html.light .logo {
   animation-fill-mode: forwards;
 }
 .banner_home {
-  background: url("./assets/images/banners/fallbanner.svg");
+  background: url("/src/assets/images/banners/fallbanner.svg");
   background-size: cover;
   background-position: 25% 10%;
   background-repeat: no-repeat;

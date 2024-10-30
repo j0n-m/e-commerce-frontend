@@ -9,7 +9,6 @@ import noProductImage from "../assets/images/no_product_image.jpg";
 import { trimString } from "../utilities/trimString";
 import { IconChevronRight } from "@tabler/icons-react";
 import { Helmet } from "react-helmet-async";
-import fallBanner from "../assets/images/banners/fallbanner.svg";
 
 function useDealProducts() {
   const {
@@ -87,7 +86,7 @@ function Home() {
   return (
     <main className="page-container flex-1 pb-40 px-2 pt-1 lg:px-4">
       <Helmet>
-        <link rel="preload" href={fallBanner} as="image"></link>
+        {/* <link rel="preload" href={fallBanner} as="image"></link> */}
       </Helmet>
       <div className="banner-container w-full mb-2">
         <div className="">

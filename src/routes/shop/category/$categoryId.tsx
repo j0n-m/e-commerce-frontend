@@ -14,7 +14,8 @@ export function productsByCategoryOption(
   categoryId: string,
   { page = 1, sort, price_low, price_high, pageSize, sortBy }: ShopURLQuery
 ) {
-  const url = `/api/products/category/${categoryId}?page=${page}${pageSize ? `&limit=${pageSize}` : ""}${sortBy ? `&sortBy=${productsSortByMap.get(sortBy)}` : ""}${sort ? `&sort=${sort}` : ""}${price_low ? `&price_low=${price_low}` : ""}${price_high ? `&price_high=${price_high}` : ""}&deals=true`;
+  const url = `/api/products/category/${categoryId}?page=${page}${pageSize ? `&limit=${pageSize}` : ""}${sort ? `&sort=${sort}` : "&sort=-total_bought"}${sortBy ? `&sortBy=${productsSortByMap.get(sortBy)}` : ""}${price_low ? `&price_low=${price_low}` : ""}${price_high ? `&price_high=${price_high}` : ""}&deals=true`;
+
   return queryOptions({
     queryKey: [
       "category",
