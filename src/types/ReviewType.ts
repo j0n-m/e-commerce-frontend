@@ -8,7 +8,7 @@ export type ReviewType = {
   review_date: Date;
   review_edit_date?: Date;
   review_title: string;
-  product_id: ProductType[0];
+  product_id: ProductType;
   reviewer: Reviewer;
 };
 export type ReviewType2 = {

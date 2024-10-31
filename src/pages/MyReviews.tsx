@@ -14,6 +14,8 @@ import { PaginationResponse } from "../types/ProductType";
 import { ScreenSizeContext } from "../context/ScreenSizeContext";
 import SortBoxListItem from "../components/SortBoxListItem";
 import { Helmet } from "react-helmet-async";
+import { calculateStars } from "../components/ProductCard";
+import { trimString } from "../utilities/trimString";
 
 const reviewsSortItems = [
   {
@@ -125,29 +127,74 @@ function MyReviews() {
             </div>
           )}
           <div className="divider dark:bg-a2sd bg-a2s mb-2"></div>
-          <div className="customer-reviews">
+
+          <div className="customer-reviews border border-b-0 dark:border-a2sd">
             {customerReviews.length > 0 ? (
               customerReviews.map((review) => (
-                <div
-                  key={review._id}
-                  className="review-card mb-4 border dark:border-a2sd rounded-md"
-                >
-                  <div className="review-content p-2">
-                    <p>Product: {review.product_id.name}</p>
-                    <p>
-                      Review Date: {new Date(review.review_date).toDateString()}
-                    </p>
-                    <p>Rating: {review.rating}/5</p>
+                <>
+                  <div
+                    key={review._id}
+                    className="review-card rounded-md px-4 py-10 flex flex-col lg:flex-row"
+                  >
+                    <div className="review-content lg:flex-1">
+                      <div className="product">
+                        <Link
+                          to="/shop/product/$productId"
+                          params={{ productId: review.product_id._id }}
+                          className="block w-max hover:underline focus-visible:underline"
+                        >
+                          <p className="text-a1 dark:text-a1d lg:hidden">
+                            {trimString(review.product_id.name, 50)}
+                          </p>
+                          <p className="text-a1 dark:text-a1d hidden lg:block">
+                            {trimString(review.product_id.name, 80)}
+                          </p>
+                        </Link>
+                      </div>
+                      <div className="star-rating flex mt-3">
+                        {calculateStars(review.rating).stars}
+                        <div className="ml-2"> {review.rating} of 5</div>
+                      </div>
+                      <div className="review-title mt-4">
+                        <Link
+                          to="/shop/review/$reviewId"
+                          params={{ reviewId: review._id }}
+                          className="block w-max hover:underline focus-visible:underline"
+                        >
+                          <p className="font-bold">{review.review_title}</p>
+                        </Link>
+                      </div>
+                      <div className="review-desc mt-3">
+                        <p className="text-a1 dark:text-a1d">
+                          {trimString(review.review_description, 250)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="review-date mt-6 lg:-order-1 lg:w-[300px] lg:max-w-[300px]">
+                      <p className="text-a1 dark:text-a1d">
+                        {new Date(review.review_date).toLocaleString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </p>
+                      {review?.review_edit_date && (
+                        <p className="text-a1 dark:text-a1d">
+                          Edited on{" "}
+                          {new Date(review.review_edit_date).toLocaleString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            }
+                          )}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div className="dark:bg-a2sd bg-a1s px-2 py-1 text-sm">
-                    <Link
-                      className="hover:underline dark:text-green-400 text-green-600"
-                      to={`/shop/review/${review._id}`}
-                    >
-                      View details
-                    </Link>
-                  </div>
-                </div>
+                  <div className="border-b dark:border-b-a2sd"></div>
+                </>
               ))
             ) : (
               <p>You have no product reviews.</p>

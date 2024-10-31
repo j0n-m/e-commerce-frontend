@@ -1,10 +1,8 @@
 import { useReview } from "./EditReview";
 import { getRouteApi, Link } from "@tanstack/react-router";
-import { Link as LinkAria } from "react-aria-components";
 import useAuth from "../hooks/useAuth";
 import { calculateStars } from "../components/ProductCard";
 import noproductImage from "../assets/images/no_product_image.jpg";
-import { trimString } from "../utilities/trimString";
 const route = getRouteApi("/shop/review/$reviewId/");
 
 function ReviewDetails() {
@@ -14,66 +12,73 @@ function ReviewDetails() {
   const { stars } = calculateStars(review.rating);
   return (
     <main className="p-4 flex-1">
-      <div>
-        <h1 className="text-2xl font-bold">Customer Review</h1>
-
-        <div className="review-card dark:bg-a1sd p-4 bg-neutral-100 rounded-md mt-2">
-          <div className="flex gap-2 mb-4">
-            <LinkAria
-              href={`/shop/product/$productId`}
-              routerOptions={{ params: { productId: review.product_id._id } }}
-              className="group"
-            >
-              <div className="image-container bg-neutral-100 rounded-md">
-                <img
-                  src={
-                    review.product_id.image_src
-                      ? review.product_id.image_src
-                      : noproductImage
-                  }
-                  className="aspect-square max-w-[100px] object-contain"
-                  alt={
-                    review.product_id.image_src
-                      ? review.product_id.name
-                      : "No image available"
-                  }
-                />
-              </div>
-            </LinkAria>
-            <div>
-              <p className="">
-                <LinkAria
-                  className={
-                    "active:hunderline hover:underline focus-visible:underline"
-                  }
-                  href="/shop/product/$productId"
-                  routerOptions={{
-                    params: { productId: review.product_id._id },
-                  }}
+      <h1 className="font-bold text-xl lg:text-2xl py-3 lg:py-5">
+        Customer Review
+      </h1>
+      <div className="card border p-4 pt-8 dark:border-a2sd rounded-lg">
+        <div className="review-main flex flex-col lg:flex-row">
+          <div className="review-details flex-1 px-4">
+            <div className="product-name">
+              <p className="font-bold">
+                <Link
+                  to="/shop/product/$productId"
+                  params={{ productId: review.product_id._id }}
+                  className="hover:underline focus-visible:underline active:underline"
                 >
-                  <span>{trimString(review.product_id.name)}</span>
-                </LinkAria>
+                  {review.product_id.name}
+                </Link>
               </p>
-              <p className="dark:text-a1d text-a1">
-                ${review.product_id.price.toFixed(2)}
+            </div>
+            <div className="reviewer mt-3">
+              <p>{review.reviewer_name}</p>
+            </div>
+            <div className="review-stars mt-1">{stars}</div>
+            <div className="review-title mt-3">
+              <p className="font-bold">{review.review_title}</p>
+            </div>
+            <div className="review-desc mt-3">
+              <p className="text-a1 dark:text-a1d">
+                {review.review_description}
               </p>
             </div>
           </div>
-          <p>Reviewed by: {review.reviewer_name}</p>
-          <p>Rating: {review.rating} out of 5</p>
-          <div>{stars}</div>
-          <p className="text-sm dark:text-a1d">
-            Last Reviewed on{" "}
-            {review.review_edit_date
-              ? new Date(review.review_edit_date).toDateString()
-              : new Date(review.review_date).toDateString()}
-          </p>
-
-          <p className="mt-2 font-bold">{review.review_title}</p>
-          <p className="">{review.review_description}</p>
+          <div className="review-extra px-4 lg:px-0 lg:-order-1 lg:w-[220px] lg:max-w-[220px]">
+            <div className="img-container hidden lg:block rounded-md">
+              <img
+                src={review.product_id.image_src || noproductImage}
+                className="aspect-square w-[160px] object-contain rounded-md"
+                alt={
+                  review.product_id.image_src
+                    ? review.product_id.name
+                    : "No Product Image Available."
+                }
+              />
+            </div>
+            <div className="review-dates mt-6">
+              <p className="text-a1 dark:text-a1d">
+                {new Date(review.review_date).toLocaleString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </p>
+              {review?.review_edit_date && (
+                <p className="mt-1 text-a1 dark:text-a1d">
+                  Edited:{" "}
+                  {new Date(review.review_edit_date).toLocaleString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-center items-center lg:justify-end lg:border-none border-t dark:border-t-a2sd mt-6 pt-4">
           {(user?.id || "") === review.reviewer._id && (
             <Link
-              className="dark:text-purple-400 text-purple-700"
+              className="active:underline focus-visible:underline"
               to="/shop/review/$reviewId/edit"
               params={{ reviewId }}
               mask={{
@@ -82,7 +87,7 @@ function ReviewDetails() {
                 unmaskOnReload: true,
               }}
             >
-              <p className="mt-2">Edit this review</p>
+              <p className="">Edit this review</p>
             </Link>
           )}
         </div>
