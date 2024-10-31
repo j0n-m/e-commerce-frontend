@@ -13,6 +13,8 @@ import ProductSortBySelectBox from "../components/ProductSortBySelectBox";
 import { Section } from "react-aria-components";
 import SortBoxListItem from "../components/SortBoxListItem";
 import { Helmet } from "react-helmet-async";
+import getDeliveryStatus from "../utilities/getDeliveryStatus";
+import { IconCircleCheckFilled, IconMailFast } from "@tabler/icons-react";
 
 const route = getRouteApi("/account/orders");
 function useOrderHistory({
@@ -71,6 +73,12 @@ function Orders() {
     ["highest_price", "3"],
     ["lowest_price", "4"],
   ]);
+  const orderDeliveryStatusMap = new Map(
+    orderHistory.map((order) => [
+      order._id,
+      { ...getDeliveryStatus(new Date(order.order_date), order.shipping.code) },
+    ])
+  );
   const sortURL = new URLSearchParams(window.location.search).get("sort");
   useEffect(() => {
     const overlay = document.getElementById("select-box-overlay");
@@ -128,28 +136,27 @@ function Orders() {
                 return (
                   <div
                     key={order._id}
-                    className="order-card mb-4 ring-2 dark:ring-slate-800 ring-slate-200/60 rounded-md flex flex-col"
+                    className="order-card mb-4 rounded-md flex flex-col border dark:border-a2"
                   >
-                    <div className="card-heading dark:bg-a1sd bg-slate-200/60 rounded-t-md">
-                      <div className="card-inner-heading p-4 flex justify-between">
+                    <div className="card-heading dark:bg-a1sd bg-a1s rounded-t-md">
+                      <div className="card-inner-heading p-4 flex justify-between lg:p-6">
                         <div className="card-inner-left flex gap-6">
                           <div className="card-ordered-at">
-                            <p>Order Placed</p>
-                            <p>
+                            <p className="font-bold">Order placed</p>
+                            <p className="mt-1">
                               {new Date(order.order_date).toLocaleDateString(
                                 "en-US",
                                 {
                                   month: "short",
                                   day: "numeric",
                                   year: "numeric",
-                                  weekday: "short",
                                 }
                               )}
                             </p>
                           </div>
                           <div className="card-total">
-                            <p>Total</p>
-                            <p>
+                            <p className="font-bold">Total amount</p>
+                            <p className="mt-1">
                               $
                               {(order.cart_total + order.shipping.cost).toFixed(
                                 2
@@ -157,7 +164,7 @@ function Orders() {
                             </p>
                           </div>
                         </div>
-                        <div className="card-inner-right hidden lg:flex">
+                        {/* <div className="card-inner-right hidden lg:flex">
                           <div className="card-order-num">
                             <p className="">Order #</p>
                             <p className="">
@@ -166,25 +173,20 @@ function Orders() {
                               </span>
                             </p>
                           </div>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                     <div className="card-content">
-                      <div className="card-inner-content p-2 grid grid-cols-1 gap-1">
+                      <div className="card-inner-content p-4 grid grid-cols-1 gap-2 lg:gap-5 lg:p-6">
                         {order.cart.map((item) => {
                           const productInfo = order.product_info.find(
                             (product) => product._id === item._id
                           );
 
                           return (
-                            <Link
-                              key={item._id}
-                              to={`/shop/product/$productId`}
-                              params={{ productId: item._id }}
-                              className={`hover:underline underline-offset-2`}
-                            >
-                              <div className="item-card flex gap-2 p-[2px]">
-                                <div className="item-card-left bg-white">
+                            <>
+                              <div className="item-card flex gap-6">
+                                <div className="item-card-left bg-white max-w-[80px] max-h-[80px] lg:max-w-[160px] lg:max-h-[160px]">
                                   <img
                                     src={
                                       productInfo?.image_src || noProductImage
@@ -194,17 +196,87 @@ function Orders() {
                                         ? item.name
                                         : "No Product Image"
                                     }
-                                    className="max-w-[100px] max-h-[100px] aspect-square object-contain"
+                                    className="max-w-[80px] max-h-[80px] aspect-square object-contain lg:max-w-[160px] lg:max-h-[160px]"
                                   />
                                 </div>
-                                <div className="item-card-right flex-1">
-                                  <p>{trimString(item.name, 55)}</p>
-                                  <p>Qty: {item.cart_quantity}</p>
+                                <div className="item-card-right flex-1 flex flex-col justify-center lg:justify-normal">
+                                  <div className="product-info flex flex-col lg:flex-row">
+                                    <div className="info-left flex-1">
+                                      <Link
+                                        to="/shop/product/$productId"
+                                        className="w-max block hover:underline focus-visible:underline"
+                                        params={{ productId: item._id }}
+                                      >
+                                        <p className="font-bold lg:hidden">
+                                          {trimString(item.name, 25)}
+                                        </p>
+                                        <p className="font-bold hidden lg:block">
+                                          {trimString(item.name, 75)}
+                                        </p>
+                                      </Link>
+                                    </div>
+                                    <div className="info-right flex-1 lg:flex-none">
+                                      <p className="lg:text-end font-bold">
+                                        <span>${item.price.toFixed(2)} </span>
+                                        {item.cart_quantity > 1 && (
+                                          <span>x {item.cart_quantity}</span>
+                                        )}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="product-desc hidden lg:block dark:text-a1d text-a1 mt-2">
+                                    {trimString(
+                                      productInfo?.description || "",
+                                      250
+                                    )}
+                                  </div>
                                 </div>
                               </div>
-                            </Link>
+                            </>
                           );
                         })}
+                        <div className="card-footer mt-6 flex flex-col lg:flex-row lg:justify-between">
+                          <div className="delivery-status">
+                            <p className="dark:text-a1d text-a1 flex items-center">
+                              {orderDeliveryStatusMap.get(order._id)?.status ? (
+                                <IconCircleCheckFilled
+                                  color="#00A300"
+                                  className="mr-2 dark:fill-[#00CC00]"
+                                />
+                              ) : (
+                                <IconMailFast className="mr-2" />
+                              )}
+                              <span>
+                                {
+                                  orderDeliveryStatusMap.get(order._id)
+                                    ?.statusText
+                                }
+                              </span>
+                            </p>
+                            {orderDeliveryStatusMap.get(order._id)?.status ===
+                              false && (
+                              <p className="dark:text-a1d text-a1 mt-1">
+                                Estimate delivery on{" "}
+                                {orderDeliveryStatusMap
+                                  .get(order._id)
+                                  ?.deliveryDate?.toLocaleString("en-US", {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                  })}
+                              </p>
+                            )}
+                          </div>
+                          {/* <div className="footer-inner border-t dark:border-t-a2 mt-6 pt-4 lg:mt-0 lg:border-none lg:pt-0 flex lg:items-end">
+                            <Link
+                              // to={`/shop/product/$productId`}
+                              className="mx-auto w-max block active:underline"
+                              // params={{ productId: item._id }}
+                            >
+                              View product
+                            </Link>
+                          </div> */}
+                        </div>
                       </div>
                     </div>
                   </div>
