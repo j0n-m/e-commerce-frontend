@@ -9,6 +9,7 @@ import useAuth from "../hooks/useAuth";
 import checkAndParseCart from "../utilities/checkAndParseCart";
 import { queryClient } from "../App";
 import { useMutation } from "@tanstack/react-query";
+import { IconCircleCheckFilled } from "@tabler/icons-react";
 const stripePublishKey =
   "pk_test_51Q0TEsP2PfjUIESRgbKfEbmEtiIKYbJKRmaNsi27hTUCBNXiCUuy6PvIYsohIzECYR4rWEnrp6luTapCDrxY2Lq200hpM9dWSq";
 const stripePromise = loadStripe(stripePublishKey);
@@ -168,10 +169,15 @@ function Complete() {
     <>
       <div className="p-4">
         <div className="border dark:border-a3sd border-a1s rounded-lg p-5">
+          {isPaymentSuccess && (
+            <div className="flex justify-center items-center my-4 text-[#1C8745] dark:text-[#2ACB68]">
+              <IconCircleCheckFilled size={50} />
+            </div>
+          )}
           <h1 className="text-center text-2xl font-bold">
             {isPaymentSuccess ? "Order Complete" : "Payment Error"}
           </h1>
-          <p className="text-center text-lg">{message}</p>
+          <p className="text-center text-lg my-3">{message}</p>
           <br />
           <p className="text-center text-lg">
             <LinkAria

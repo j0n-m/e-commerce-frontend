@@ -12,6 +12,7 @@ import {
 import fetch from "../utilities/fetch";
 import { AxiosError } from "axios";
 import validDomains from "../utilities/validDomains";
+import { IconCircleCheckFilled } from "@tabler/icons-react";
 
 type IFormData = {
   first_name: string;
@@ -141,27 +142,30 @@ function SignUpForm() {
     const isValidForm = validateForm();
 
     if (!isValidForm) {
-      ("Invalid form");
       setPassword("");
       setConfirmPassword("");
       return;
     }
-    // ("is form valid?", isValidForm);
-    ("form is complete");
     signUpMutate.mutate();
   };
   if (signUpMutate.isSuccess) {
     return (
-      <section className="max-w-[500px] mx-auto bg-white p-6 rounded-md dark:bg-slate-800">
-        <h2 className="text-center text-2xl font-bold">
-          Sucessfully created your account.
+      <section className="max-w-[500px] mx-auto p-6 rounded-md">
+        <div className="flex justify-center my-4 items-center text-[#1C8745] dark:text-[#2ACB68]">
+          <IconCircleCheckFilled size={50} />
+        </div>
+        <h2 className="text-center text-xl md:text-2xl font-bold">
+          Account Created Successfully!
         </h2>
-        <p className="text-center mt-4">
+        <p className="text-center md:text-lg my-4 text-a1 dark:text-a1d">
+          Welcome to Cyber Den! <br></br>Please login to get started.
+        </p>
+        <p className="text-center mt-6">
           <Link
             to="/signin"
-            className={`text-purple-700 dark:text-purple-500 text-lg hover:underline focus-visible:underline underline-offset-4`}
+            className={`text-lg text-white font-bold bg-[#0070ba] px-10 py-2 rounded-full hover:bg-[#0087e0] focus-visible:bg-[#0087e0] transition-colors duration-300`}
           >
-            Sign in here
+            Login
           </Link>
         </p>
       </section>
@@ -299,6 +303,7 @@ function SignUpForm() {
           </Label>
           <Input
             type="password"
+            autoComplete="new-password"
             value={password}
             minLength={5}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -325,6 +330,7 @@ function SignUpForm() {
           </Label>
           <Input
             value={confirmPassword}
+            autoComplete="new-password"
             minLength={5}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               if (errorMessage?.confirm_password) {

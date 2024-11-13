@@ -184,55 +184,54 @@ function Orders() {
                           );
 
                           return (
-                            <>
-                              <div className="item-card flex gap-6">
-                                <div className="item-card-left bg-white max-w-[80px] max-h-[80px] lg:max-w-[160px] lg:max-h-[160px]">
-                                  <img
-                                    src={
-                                      productInfo?.image_src || noProductImage
-                                    }
-                                    alt={
-                                      productInfo?.image_src
-                                        ? item.name
-                                        : "No Product Image"
-                                    }
-                                    className="max-w-[80px] max-h-[80px] aspect-square object-contain lg:max-w-[160px] lg:max-h-[160px]"
-                                  />
-                                </div>
-                                <div className="item-card-right flex-1 flex flex-col justify-center lg:justify-normal">
-                                  <div className="product-info flex flex-col lg:flex-row">
-                                    <div className="info-left flex-1">
-                                      <Link
-                                        to="/shop/product/$productId"
-                                        className="w-max block hover:underline focus-visible:underline"
-                                        params={{ productId: item._id }}
-                                      >
-                                        <p className="font-bold lg:hidden">
-                                          {trimString(item.name, 25)}
-                                        </p>
-                                        <p className="font-bold hidden lg:block">
-                                          {trimString(item.name, 75)}
-                                        </p>
-                                      </Link>
-                                    </div>
-                                    <div className="info-right flex-1 lg:flex-none">
-                                      <p className="lg:text-end font-bold">
-                                        <span>${item.price.toFixed(2)} </span>
-                                        {item.cart_quantity > 1 && (
-                                          <span>x {item.cart_quantity}</span>
-                                        )}
+                            <div
+                              className="item-card flex gap-6"
+                              key={item._id}
+                            >
+                              <div className="item-card-left bg-white max-w-[80px] max-h-[80px] lg:max-w-[160px] lg:max-h-[160px]">
+                                <img
+                                  src={productInfo?.image_src || noProductImage}
+                                  alt={
+                                    productInfo?.image_src
+                                      ? item.name
+                                      : "No Product Image"
+                                  }
+                                  className="max-w-[80px] max-h-[80px] aspect-square object-contain lg:max-w-[160px] lg:max-h-[160px]"
+                                />
+                              </div>
+                              <div className="item-card-right flex-1 flex flex-col justify-center lg:justify-normal">
+                                <div className="product-info flex flex-col lg:flex-row">
+                                  <div className="info-left flex-1">
+                                    <Link
+                                      to="/shop/product/$productId"
+                                      className="w-max block hover:underline focus-visible:underline"
+                                      params={{ productId: item._id }}
+                                    >
+                                      <p className="font-bold lg:hidden">
+                                        {trimString(item.name, 25)}
                                       </p>
-                                    </div>
+                                      <p className="font-bold hidden lg:block">
+                                        {trimString(item.name, 75)}
+                                      </p>
+                                    </Link>
                                   </div>
-                                  <div className="product-desc hidden lg:block dark:text-a1d text-a1 mt-2">
-                                    {trimString(
-                                      productInfo?.description || "",
-                                      250
-                                    )}
+                                  <div className="info-right flex-1 lg:flex-none">
+                                    <p className="lg:text-end font-bold">
+                                      <span>${item.price.toFixed(2)} </span>
+                                      {item.cart_quantity > 1 && (
+                                        <span>x {item.cart_quantity}</span>
+                                      )}
+                                    </p>
                                   </div>
+                                </div>
+                                <div className="product-desc hidden lg:block dark:text-a1d text-a1 mt-2">
+                                  {trimString(
+                                    productInfo?.description || "",
+                                    250
+                                  )}
                                 </div>
                               </div>
-                            </>
+                            </div>
                           );
                         })}
                         <div className="card-footer mt-6 flex flex-col lg:flex-row lg:justify-between">

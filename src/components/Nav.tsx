@@ -192,7 +192,7 @@ function Nav() {
                                       isFocusVisible,
                                       isPressed,
                                     }) =>
-                                      `${isHovered || isFocusVisible || isPressed ? "text-a0/70 dark:text-a0d" : ""}`
+                                      `transition-colors duration-300 ${isHovered || isFocusVisible || isPressed ? "text-a0/70 dark:text-a1d" : ""}`
                                     }
                                   >
                                     Sign in
@@ -200,7 +200,9 @@ function Nav() {
                                 </div>
                               ) : (
                                 <Button
-                                  className={"flex lg:hidden"}
+                                  className={
+                                    "flex lg:hidden dark:hover:text-a1d hover:text-a1"
+                                  }
                                   onPress={() => {
                                     setShowAccountMenu(true);
                                     close();
@@ -568,7 +570,9 @@ function Nav() {
                                     </div>
                                     <div>
                                       <Button
-                                        className={"flex"}
+                                        className={
+                                          "flex gap-1 transition-all duration-300 dark:hover:text-a1d hover:text-a1"
+                                        }
                                         aria-label="Browse Menu"
                                         onPress={() => {
                                           setShowHamburgerMenu(true);
@@ -777,7 +781,7 @@ function Nav() {
                       },
                     }}
                     className={
-                      "border border-a2s py-[2px] px-2 rounded-md mr-2 hidden xs:block"
+                      "border border-a2s py-[2px] px-2 rounded-md mr-2 hidden xs:block hover:bg-a1s dark:hover:bg-slate-900 dark:hover:text-white/70 dark:active:text-white/70 transition-colors duration-300"
                     }
                   >
                     Sign In

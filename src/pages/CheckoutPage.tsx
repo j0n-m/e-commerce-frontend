@@ -1,4 +1,4 @@
-import { IconLock } from "@tabler/icons-react";
+import { IconChevronDown, IconLock } from "@tabler/icons-react";
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { Button, Radio, RadioGroup } from "react-aria-components";
@@ -26,6 +26,7 @@ function CheckoutPage() {
   const [shippingCode, setShippingCode] = useState("1");
   const [paymentIntentId, setPaymentIntentId] = useState("");
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+  const [showCC, setShowCC] = useState(false);
   const [isStripeLoading, setIsStripeLoading] = useState(true);
   const [amount, setAmount] = useState<null | {
     total: number;
@@ -266,6 +267,36 @@ function CheckoutPage() {
 
               <br />
               <h2 className="font-bold text-lg">Payment Method</h2>
+              <div className="my-4">
+                <Button
+                  className="flex items-center dark:bg-a2sd bg-a1s px-2 py-1 rounded-md transition-all duration-300 dark:hover:bg-a3sd hover:bg-a2s"
+                  onPress={() => setShowCC(!showCC)}
+                >
+                  {showCC ? (
+                    <span>Hide Test Credit Card</span>
+                  ) : (
+                    <span>Show Test Credit Card</span>
+                  )}
+                  <IconChevronDown
+                    size={22}
+                    className={`transition-all duration-300 ${showCC ? "rotate-180" : "rotate-0"}`}
+                  />
+                </Button>
+                <div
+                  className={`border-b dark:border-b-a5s border-b-a1d mb-4 py-3 w-max ${showCC ? "block" : "hidden"}`}
+                >
+                  <p>
+                    <span className="font-bold">Credit Card #</span>:
+                    5555555555554444
+                  </p>
+                  <p>
+                    <span className="font-bold">EXP</span>: Any future date
+                  </p>
+                  <p>
+                    <span className="font-bold">CVC</span>: Any 3 digits
+                  </p>
+                </div>
+              </div>
               <PaymentElement
                 className="mt-2"
                 options={{ layout: { type: "tabs", defaultCollapsed: true } }}

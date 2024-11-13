@@ -3,7 +3,7 @@ import { reviewsByCustomerQueryOption } from "../routes/account/myreviews";
 import useAuth from "../hooks/useAuth";
 import { ReviewType2 } from "../types/ReviewType";
 import { Link, useLoaderDeps } from "@tanstack/react-router";
-import { useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import ProductSortBySelectBox from "../components/ProductSortBySelectBox";
 import { Section } from "react-aria-components";
 import { ShopURLQuery } from "../routes/shop/category/$categoryId";
@@ -131,11 +131,8 @@ function MyReviews() {
           <div className="customer-reviews border border-b-0 dark:border-a2sd">
             {customerReviews.length > 0 ? (
               customerReviews.map((review) => (
-                <>
-                  <div
-                    key={review._id}
-                    className="review-card rounded-md px-4 py-10 flex flex-col lg:flex-row"
-                  >
+                <Fragment key={review._id}>
+                  <div className="review-card rounded-md px-4 py-10 flex flex-col lg:flex-row">
                     <div className="review-content lg:flex-1">
                       <div className="product">
                         <Link
@@ -194,10 +191,12 @@ function MyReviews() {
                     </div>
                   </div>
                   <div className="border-b dark:border-b-a2sd"></div>
-                </>
+                </Fragment>
               ))
             ) : (
-              <p>You have no product reviews.</p>
+              <p className="p-2 border-b dark:border-b-a2sd">
+                You have no product reviews.
+              </p>
             )}
           </div>
         </div>
