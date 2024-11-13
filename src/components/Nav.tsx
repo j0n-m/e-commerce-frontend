@@ -482,6 +482,7 @@ function Nav() {
                 ></Input>
                 <Button
                   type="submit"
+                  aria-label="Search"
                   className={({ isHovered, isFocusVisible }) =>
                     `absolute top-0 bottom-0 right-0 px-2 rounded-r-lg ${isHovered || isFocusVisible ? "dark:bg-slate-500" : "dark:bg-slate-700"}`
                   }
@@ -848,6 +849,7 @@ function Nav() {
               ></Input>
               <Button
                 type="submit"
+                aria-label="Search"
                 className={({ isHovered, isFocusVisible }) =>
                   `absolute top-0 bottom-0 right-0 px-2 rounded-r-lg ${isHovered || isFocusVisible ? "dark:bg-slate-500" : "dark:bg-slate-700"}`
                 }

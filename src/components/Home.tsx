@@ -130,7 +130,7 @@ function Home() {
         </div>
         <div className="see-more flex justify-center items-center mt-4">
           <Link
-            className="px-4 py-2 font-bold bg-blue-500 text-a0d rounded-full active:bg-blue-500/80 hover:bg-blue-500/95 hover:scale-105 transition-transform duration-200"
+            className="px-4 py-2 font-bold bg-[#0070ba] dark:text-a0d text-white rounded-full active:bg-[#0070ba]/80 hover:bg-[#0070ba]/95 hover:scale-105 transition-transform duration-200"
             to="/shop/category/best-deals"
           >
             See all deals
@@ -156,7 +156,7 @@ function Home() {
         </div>
         <div className="see-more flex justify-center items-center mt-4">
           <Link
-            className="px-4 py-2 font-bold bg-blue-500 text-a0d rounded-full active:bg-blue-500/80 hover:bg-blue-500/95 hover:scale-105 transition-transform duration-200"
+            className="px-4 py-2 font-bold bg-[#0070ba] dark:text-a0d text-white rounded-full active:bg-[#0070ba]/80 hover:bg-[#0070ba]/95 hover:scale-105 transition-transform duration-200"
             to="/shop/category/best-sellers"
           >
             See all best sellers
