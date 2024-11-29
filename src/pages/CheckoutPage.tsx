@@ -362,7 +362,7 @@ function CheckoutPage() {
                       <p>{trimString(item.name, 80)}</p>
                       <p>Qty: {item.cart_quantity}</p>
                       <p>
-                        ${(item.price * item.cart_quantity).toFixed(2)}
+                        ${item.price.toFixed(2)}
                         {item.cart_quantity > 1 && "/each"}
                       </p>
                     </div>

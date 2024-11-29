@@ -12,6 +12,7 @@ import ProductSortBySelectBox from "./ProductSortBySelectBox";
 import { Section } from "react-aria-components";
 import SortBoxListItem from "./SortBoxListItem";
 import { Helmet } from "react-helmet-async";
+import { CartContext } from "../context/CartContext";
 
 function useSearchProducts(query: string, searchDeps: ProductSearch) {
   const {
@@ -24,6 +25,8 @@ function useSearchProducts(query: string, searchDeps: ProductSearch) {
 function ProductResults() {
   const searchDeps = route.useSearch();
   const products_data = useSearchProducts(searchDeps.q, searchDeps);
+  const { cart } = useContext(CartContext);
+  const cartList = cart.map((p) => p._id);
   const productSortByOptionValues = [
     {
       name: "Best Selling",
@@ -141,6 +144,7 @@ function ProductResults() {
             <ProductCard
               item={product}
               reviewInfo={products_data.review_info}
+              cartList={cartList}
               key={i}
             />
           ))}

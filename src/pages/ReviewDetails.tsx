@@ -10,6 +10,7 @@ function ReviewDetails() {
   const { reviewId } = route.useParams();
   const review = useReview({ reviewId });
   const { stars } = calculateStars(review.rating);
+
   return (
     <main className="p-4 flex-1">
       <h1 className="font-bold text-xl lg:text-2xl py-3 lg:py-5">
@@ -30,7 +31,7 @@ function ReviewDetails() {
               </p>
             </div>
             <div className="reviewer mt-3">
-              <p>{review.reviewer_name}</p>
+              <p>{`${review.reviewer?.first_name} ${review.reviewer?.last_name}`}</p>
             </div>
             <div className="review-stars mt-1">{stars}</div>
             <div className="review-title mt-3">

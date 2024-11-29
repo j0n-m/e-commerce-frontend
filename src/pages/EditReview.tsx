@@ -50,7 +50,9 @@ function EditReview() {
   const { reviewId } = route.useParams();
   const review = useReview({ reviewId });
   const [rating, setRating] = useState<RatingValues | undefined>(review.rating);
-  const [reviewerName, setReviewerName] = useState("");
+  const [reviewerName, setReviewerName] = useState(
+    `${review.reviewer?.first_name || ""} ${review.reviewer?.last_name || ""}`
+  );
   const [reviewTitle, setReviewTitle] = useState(review.review_title);
   const [reviewDesc, setReviewDesc] = useState(review.review_description);
   // const [reviewDate, setReviewDate] = useState<undefined | Date>(undefined);
@@ -237,6 +239,7 @@ function EditReview() {
       setReviewer(user.id);
       setReviewerName(`${user.first_name} ${user.last_name}`);
     }
+    console.log("user ->", user);
   }, [user, reviewer]);
   useEffect(() => {
     if (

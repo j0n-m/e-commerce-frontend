@@ -66,8 +66,7 @@ function Profile() {
         }
       );
     },
-    onSuccess: (data, payload) => {
-      queryClient.invalidateQueries({ queryKey: ["auth"] });
+    onSuccess: async (data, payload) => {
       if (user) {
         setUser({
           ...user,
@@ -77,6 +76,7 @@ function Profile() {
       }
       setShowNameEdit(false);
       setSnackBarMessage("Successfully changed name");
+      await queryClient.invalidateQueries();
       setShowSnackBar(true);
     },
     onError: (error) => {
@@ -99,8 +99,7 @@ function Profile() {
         }
       );
     },
-    onSuccess: (data, payload) => {
-      queryClient.invalidateQueries({ queryKey: ["auth"] });
+    onSuccess: async (data, payload) => {
       if (user) {
         setUser({
           ...user,
@@ -110,6 +109,7 @@ function Profile() {
       setNewUsername("");
       setShowUsernameEdit(false);
       setSnackBarMessage("Successfully changed username");
+      await queryClient.invalidateQueries({ queryKey: ["auth"] });
       setShowSnackBar(true);
     },
     onError: (error) => {
@@ -132,9 +132,9 @@ function Profile() {
       );
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["auth"] });
       setShowPasswordEdit(false);
       setSnackBarMessage("Successfully changed password");
+      await queryClient.invalidateQueries({ queryKey: ["auth"] });
       setShowSnackBar(true);
     },
     onError: (error) => {
@@ -147,7 +147,6 @@ function Profile() {
 
   const handleNameFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    ("test");
     const name = newName.trim().split(" ");
 
     const [first, ...last] = name;

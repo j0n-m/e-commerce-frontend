@@ -114,6 +114,9 @@ function EditProduct() {
       queryClient.invalidateQueries({
         queryKey: ["category"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["reviews"],
+      });
       await navigate({
         to: "/shop/product/$productId",
         params: { productId: product._id },

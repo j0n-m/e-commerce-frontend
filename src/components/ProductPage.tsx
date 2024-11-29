@@ -102,7 +102,14 @@ function ProductPage() {
       );
       const dupedItem = cart.find((product) => product._id === cartItem._id);
       if (dupedItem) {
-        dupedItem.cart_quantity += cartItem.cart_quantity;
+        const newCartQuantity = (dupedItem.cart_quantity +=
+          cartItem.cart_quantity);
+        if (newCartQuantity > cartItem.quantity) {
+          dupedItem.cart_quantity = cartItem.quantity;
+        } else {
+          dupedItem.cart_quantity = newCartQuantity;
+        }
+
         const newCart = [...cartWithoutDupedItem, dupedItem];
         setCart(newCart);
         localStorage.setItem("cart", JSON.stringify(newCart));
@@ -537,7 +544,7 @@ function ProductPage() {
             </section>
             <section
               id="reviews"
-              className="product-card reviews flex flex-col md:flex-row pt-6 px-4 mt-4 border-t border-t-gray-400"
+              className="product-card reviews flex flex-col md:flex-row gap-8 pt-6 px-4 mt-4 border-t border-t-gray-400"
             >
               <div className="review-left py-4">
                 <h2 className="font-semibold pb-3 text-lg">Customer Reviews</h2>
@@ -599,9 +606,9 @@ function ProductPage() {
                         <div className="review-card lg:w-[625px]" key={r._id}>
                           <div className="reviewer flex items-center mb-1 gap-2">
                             <div className="reviewer-icon h-[25px] w-[25px] text-center rounded-full bg-gray-300 dark:text-black inline-flex justify-center items-center">
-                              {r.reviewer_name[0].toUpperCase()}
+                              {r.reviewer[0].first_name[0].toUpperCase()}
                             </div>
-                            <span>{r.reviewer_name}</span>
+                            <span>{`${r.reviewer[0]?.first_name} ${r.reviewer[0]?.last_name}`}</span>
                           </div>
                           <Link
                             to="/shop/review/$reviewId"

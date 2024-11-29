@@ -62,7 +62,12 @@ function ProductCard_Category({
       const dupedItem = cart.find((product) => product._id === item._id);
 
       if (dupedItem) {
-        dupedItem.cart_quantity++;
+        const newCartQuantity = ++dupedItem.cart_quantity;
+        if (newCartQuantity > cartItem.quantity) {
+          dupedItem.cart_quantity = cartItem.quantity;
+        } else {
+          dupedItem.cart_quantity = newCartQuantity;
+        }
         setCart([...cartWithoutDupes, dupedItem]);
         localStorage.setItem(
           "cart",
