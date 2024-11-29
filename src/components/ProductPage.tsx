@@ -48,7 +48,7 @@ const route = getRouteApi("/shop/product/$productId");
 function useProductPage({ productId }: { productId: string }) {
   const { data } = useSuspenseQuery(singleProductQueryOption(productId));
   const review = useSuspenseQuery(productReviewsQuery(productId));
-  // ("data", data);
+
   const productData = data.product as ProductType;
   const product = productData;
   const reviews = review.data.data as SingleProductReview;
@@ -606,7 +606,7 @@ function ProductPage() {
                         <div className="review-card lg:w-[625px]" key={r._id}>
                           <div className="reviewer flex items-center mb-1 gap-2">
                             <div className="reviewer-icon h-[25px] w-[25px] text-center rounded-full bg-gray-300 dark:text-black inline-flex justify-center items-center">
-                              {r.reviewer[0].first_name[0].toUpperCase()}
+                              {r.reviewer[0]?.first_name[0]?.toUpperCase()}
                             </div>
                             <span>{`${r.reviewer[0]?.first_name} ${r.reviewer[0]?.last_name}`}</span>
                           </div>
