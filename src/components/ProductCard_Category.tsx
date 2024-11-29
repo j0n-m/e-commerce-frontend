@@ -235,7 +235,7 @@ function ProductCard_Category({
                               <img
                                 src={product.image_src}
                                 alt={product.name}
-                                className="max-w-[200px] aspect-square object-contain"
+                                className="object-contain mx-auto max-h-[180px]"
                               ></img>
                             )}
                             <Link

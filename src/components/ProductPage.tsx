@@ -475,8 +475,7 @@ function ProductPage() {
                                               <img
                                                 src={product.image_src}
                                                 alt={product.name}
-                                                className="object-contain"
-                                                height={100}
+                                                className="object-contain mx-auto max-h-[180px]"
                                               ></img>
                                             )}
                                             <Link

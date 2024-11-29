@@ -339,9 +339,9 @@ function ProductCard({ item, reviewInfo, cartList }: ProductCardProps) {
                             <div className="cart-product-details py-2">
                               {item.image_src && (
                                 <img
+                                  className="object-contain mx-auto max-h-[180px]"
                                   src={item.image_src}
                                   alt={item.name}
-                                  height={100}
                                 ></img>
                               )}
                               <Link
