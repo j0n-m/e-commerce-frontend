@@ -50,9 +50,7 @@ body {
   width: 100%;
   height: 100%;
 }
-.app-container {
-  /* overflow-x: hidden; */
-}
+
 #root {
   width: 100%;
   height: 100%;
@@ -135,9 +133,9 @@ html.light .logo {
   animation-fill-mode: forwards;
 }
 .banner_home {
-  background: url("/src/assets/images/banners/fallbanner.svg");
+  background: url("/src/assets/images/banners/winterbanner.svg");
   background-size: cover;
-  background-position: 25% 10%;
+  background-position: center 88%;
   background-repeat: no-repeat;
   /* background-attachment: fixed; */
   min-height: 35svh;

@@ -91,21 +91,21 @@ function Home() {
       <div className="banner-container w-full mb-2">
         <div className="">
           <div className="banner_home rounded-md select-none relative flex flex-col justify-center items-center py-4">
-            <h3 className="text-orange-700 text-[50px] lg:text-[60px] lg:mt-8 font-[MumbaiSticker]">
-              Autumn
+            <h3 className="text-white text-[50px] lg:text-[70px] font-[MumbaiSticker]">
+              Winter Sale
             </h3>
-            <h3 className="text-orange-800 uppercase lg:-mt-14 text-[60px] -mt-10 lg:text-[90px] font-bold">
-              Sale
-            </h3>
-            <h3 className="uppercase text-orange-800 text-[18px] -mt-4 lg:-mt-6 font-semibold">
+            {/* <h3 className="text-orange-800 uppercase lg:-mt-14 text-[60px] -mt-10 lg:text-[90px] font-bold">
+              Winter Sale
+            </h3> */}
+            <h3 className="uppercase text-white text-[18px] -mt-3 lg:-mt-4 font-semibold">
               Discount up to 50% off
             </h3>
             <Link
               to="/shop/category/best-deals"
-              className="lg:mt-2 mt-2 hover:scale-105 transition-transform duration-300"
+              className="lg:mt-4 mt-4 hover:scale-105 transition-transform duration-300"
             >
-              <span className="uppercase rounded-full bg-orange-700 text-white lg:px-3 lg:py-1 px-3 py-1">
-                Shop now
+              <span className="uppercase rounded-full font-semibold bg-blue-700 text-white lg:py-2 px-4 py-1">
+                Shop Deals
               </span>
             </Link>
           </div>
