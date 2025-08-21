@@ -1,7 +1,10 @@
 # Cyber Den - Frontend
 Backend Code: https://github.com/j0n-m/e-commerce-backend
 
-Cyber Den is a fake online e-commerce website
+Live Demo: https://cyberden.jon-m.xyz/
+
+Cyber Den, a full stack ecommerce web application using TypeScript and React, offering dynamic product listings, filtering, and shopping cart functionality
+
 
 # Tools used - Frontend
 - Tailwind CSS
