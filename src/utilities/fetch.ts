@@ -5,9 +5,8 @@ import axios from "axios";
 
 // export const backendURL = "http://172.31.28.70:3000";
 // export const backendURL = "http://localhost:3000";
-export const backendURL = import.meta.env.PROD
-  ? "https://cyberden.jon-m.xyz"
-  : "http://localhost:3000";
+const url = "/";
+export const backendURL = import.meta.env.PROD ? url : "http://localhost:3000";
 
 const fetch = axios.create({
   baseURL: backendURL,
